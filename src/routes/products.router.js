@@ -11,9 +11,9 @@ router.get('/', async (req, res) => {
     try {
         //Traigo todos los productos si no me envian ningun limit
         const products = await ProductManager.getProducts();
-        //Si no me envian un numero envio mensaje de error
-        if (isNaN(limit)) return res.status(400).send({ status: 'error', message: 'Please enter a valid amount' });
         if (!limit) return res.status(200).send({ products });
+        //Si el limit que me envian es menor a 0 o una letra me manda error
+        if (limit<0 ||isNaN(limit)) return res.status(400).send({ status: 'error', message: 'Please enter a valid value' }); 
         //Si me envian un limit hago slice del array por el limite enviado y traigo solo esos productos
         const limitedProducts = products.slice(0, limit);
         return res.status(200).send({ limitedProducts });
