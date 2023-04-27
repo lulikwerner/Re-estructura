@@ -40,27 +40,26 @@ router.get('/:pid', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const { title, description, code, price, status, stock, category } = req.body;
+    const { title, description, code, price, status, stock, category, thumbnails } = req.body;
     try {
         //Si no me envian alguno de estos campos a excepcion de thumbnails(que no es obligatorio) arrojo error
         if (!title || !description || !code || !price || !status || !stock || !category) {
             return res.status(400).send({ status: "error", message: "One or more fields are incomplete" });
         }
         const product = {
-            id: req.body.id,
-            title: req.body.title,
-            description: req.body.description,
-            code: req.body.code,
-            price: req.body.price,
+            title,
+            description,
+            code,
+            price,
             status: true,
-            stock: req.body.stock,
-            category: req.body.category,
-            thumbnails: req.body.thumbnails,
+            stock,
+            category,
+            thumbnails,
         }
         //Agrego el producto con la informacion enviada
         const addedProduct = await ProductManager.addProducts(product);
-        //Si no encuentra el producto a modificar envio un error
-        if (!addedProduct) return res.status(400).send({ status: 'error', message: 'Product not found' });
+        //Si queda undefined o null tira error de agregar
+        if (!addedProduct) return res.status(400).send({ status: 'error', message: 'Product not added' });
         //Devuelo el producto agregado
         return res.status(200).send({ addedProduct });
     } catch (error) {
