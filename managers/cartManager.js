@@ -6,22 +6,32 @@ export default class CartManager {
     this.path = './files/Carts.json';
 
   }
-
-  addCart = async ({ pid, qty }) => {
+  addCart = async (products) => {
     try {
-      //Traigo todos los carritoa
       const carts = await this.getCarts();
-      //Asigno el id al carrito si no hay ninguno por defecto es 1 sino le sumo uno al id del ultimo agregado
-      const cid = carts.length > 0 ? carts[carts.length - 1].cid + 1 : 1;
-      //Creo el new cart
-      const newCart = { cid, products: [{ pid, qty }] };
+      //Genero el id del cart
+      const newCid = carts.length > 0 ? carts[carts.length - 1].cid + 1 : 1;
+      //creo el objeto donde voy a guardar el nuevo cart
+      const newCart = { cid: newCid, products: [] };
+      //Chequeo que los valores ingresados sean  numeros
+      products.forEach((product) => {
+        if (isNaN(product.pid) || isNaN(product.qty)) {
+          throw new Error("Enter a valid value");
+        }
+        //Chequeo si alguno de los campos esta vacio
+        if (!product.pid || !product.qty) {
+          throw new Error("One or more fields are incomplete");
+        }
+        newCart.products.push(product);
+      });
       carts.push(newCart);
-      await fs.promises.writeFile(this.path, JSON.stringify(carts, null, '\t'));
+      await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
       return newCart;
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+  
 
   getCarts = async () => {
     try {
@@ -39,9 +49,10 @@ export default class CartManager {
   };
 
   getCartsById = async (cid) => {
-    //Valido que el valor ingresado de carrito sea un numero
-    if (isNaN(cid)) return res.status(400).send({ status: 'error', message: 'Please enter a valid id' });
     try {
+       //Valido que el valor ingresado de carrito sea un numero
+    if (isNaN(cid)) return res.status(400).send({ status: 'error', message: 'Please enter a valid id' });
+   
       const data = await fs.promises.readFile(this.path, 'utf-8');
       const carts = JSON.parse(data);
       //Busco en los carts por por id
@@ -64,8 +75,6 @@ export default class CartManager {
     try {
       const data = await fs.promises.readFile(this.path, 'utf-8');
       const carts = JSON.parse(data);
-      //Si no me envian un numero para el id del carrito retorno error
-      if (isNaN(Number(cid))) return { status: "error", message: 'It is not a valid id' };
       //Busco por index el cart de acuerdo al cid enviado
       const cartIndex = carts.findIndex(c => c.cid === parseInt(cid));
       //Si no lo encuentro arrojo error

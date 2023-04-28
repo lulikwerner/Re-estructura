@@ -29,7 +29,7 @@ router.get('/:pid', async (req, res) => {
     try {
         const result = await ProductManager.getProductsById(Number(pid))
         //Si no me envian un numero envio mensaje de error
-        if (isNaN(pid)) return res.status(400).send({ status: 'error', message: 'Please enter a valid id' });
+        if (pid<0 ||isNaN(pid)) return res.status(400).send({ status: 'error', message: 'Please enter a valid id' });
         // Si no encuentro el id enviado en el array arrojo producto no encontrado
         if (!result) return res.status(400).send({ status: 'error', message: 'Product not found' })
         //Si lo encuentro devuelvo la informacion del producto solicitado
@@ -40,6 +40,7 @@ router.get('/:pid', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
     try {
         //Si no me envian alguno de estos campos a excepcion de thumbnails(que no es obligatorio) arrojo error
@@ -72,6 +73,9 @@ router.put('/:pid', async (req, res) => {
     const { pid } = req.params;
     const productUpdate = req.body;
     try {
+        //Chequeo que el pid existe en mi array de productos 
+        const result = await ProductManager.getProductsById(Number(pid))
+        if(!result) return res.status(400).send({ status: 'error', message: 'Product not updated because it cannot be found' });
         const updateProduct = await ProductManager.updateProduct(pid, productUpdate);
         //Si Modifico algo retorno que el producto fue modificado con exito
         if (updateProduct) return res.status(200).send({ status: "success", message: `The product with id ${pid} has been succesfully updated` });
