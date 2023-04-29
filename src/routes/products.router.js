@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import productManager from '../../managers/productManager.js';
+import productManager from '../managers/productManager.js';
 
 
 const router = Router();
 const ProductManager = new productManager();
+
+
 
 
 router.get('/', async (req, res) => {
@@ -11,7 +13,9 @@ router.get('/', async (req, res) => {
     try {
         //Traigo todos los productos si no me envian ningun limit
         const products = await ProductManager.getProducts();
-        if (!limit) return res.status(200).send({ products });
+        if (!limit) return res.status(200).render('home',{products});
+      
+        //if (!limit) return res.status(200).send({ products });
         //Si el limit que me envian es menor a 0 o una letra me manda error
         if (limit<0 ||isNaN(limit)) return res.status(400).send({ status: 'error', message: 'Please enter a valid value' }); 
         //Si me envian un limit hago slice del array por el limite enviado y traigo solo esos productos
@@ -59,6 +63,9 @@ router.post('/', async (req, res) => {
         }
         //Agrego el producto con la informacion enviada
         const addedProduct = await ProductManager.addProducts(product);
+        //Vuelvo a traer a mis productos
+        const resultProducts = await ProductManager.getProducts();
+        req.io.emit('resultProducts', resultProducts)
         //Si queda undefined o null tira error de agregar
         if (!addedProduct) return res.status(400).send({ status: 'error', message: 'Product not added' });
         //Devuelo el producto agregado

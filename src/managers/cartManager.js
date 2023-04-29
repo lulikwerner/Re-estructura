@@ -1,9 +1,10 @@
 import fs from 'fs';
+import __dirname from '../utils.js'
 
 export default class CartManager {
 
   constructor() {
-    this.path = './files/Carts.json';
+    this.path = `${__dirname}/files/Products.json`;
 
   }
   addCart = async (products) => {

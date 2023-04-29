@@ -1,0 +1,103 @@
+[
+	{
+		"title": "Chopard Mille Miglia",
+		"description": "Stainless Steel Rubber 39mm Mille Miglia Chronograph Automatic Watch Silver",
+		"code": "WACH",
+		"price": 2995,
+		"status": true,
+		"stock": 5,
+		"category": "Watches",
+		"thumbnails": "No image",
+		"id": 2
+	},
+	{
+		"title": "Ulysses Nardin Freak One",
+		"description": "The Submariner's design has been entirely dictated by the practical needs of divers.",
+		"code": "WARO",
+		"price": 14500,
+		"status": true,
+		"stock": 10,
+		"category": "Watches",
+		"thumbnails": "No image",
+		"id": 3
+	},
+	{
+		"title": "LOVE BRACELET",
+		"description": "LOVE bracelet, 18K yellow gold (750/1000)",
+		"code": "BRCA",
+		"price": 7350,
+		"status": true,
+		"stock": 5,
+		"category": "Bracelet",
+		"thumbnails": "No image",
+		"id": 9
+	},
+	{
+		"title": "Vintage Alhambra necklace, 10 motifs",
+		"description": "18K yellow gold, Mother-of-pearl",
+		"code": "NEVC",
+		"price": 8400,
+		"status": true,
+		"stock": 5,
+		"category": "Necklace",
+		"thumbnails": "No image",
+		"id": 11
+	},
+	{
+		"id": 12
+	},
+	{
+		"id": 13
+	},
+	{
+		"id": 15
+	},
+	{
+		"id": 16
+	},
+	{
+		"id": 17
+	},
+	{
+		"id": 18
+	},
+	{
+		"id": 19
+	},
+	{
+		"id": 20
+	},
+	{
+		"id": 21
+	},
+	{
+		"id": 25
+	},
+	{
+		"id": 26
+	},
+	{
+		"id": 27
+	},
+	{
+		"id": 28
+	},
+	{
+		"id": 29
+	},
+	{
+		"id": 30
+	},
+	{
+		"id": 31
+	},
+	{
+		"id": 32
+	},
+	{
+		"id": 36
+	},
+	{
+		"id": 37
+	}
+]

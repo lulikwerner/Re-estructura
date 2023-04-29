@@ -1,10 +1,13 @@
 import fs from 'fs';
+import __dirname from '../utils.js'
 
-export default class ProductManager {
+ class ProductManager {
 
     constructor() {
-        this.path = './files/Products.json';
+        this.path = `${__dirname}/files/Products.json`;
     }
+
+    
 
     getProducts = async () => {
         if (fs.existsSync(this.path)) {
@@ -17,34 +20,45 @@ export default class ProductManager {
 
     addProducts = async ({ title, description, code, price, status, stock, category, thumbnails }) => {
         try {
-            if (!title || !description || !code || !price || !status || !stock || !category) {
-                return console.log('Error! one or more fields are incomplete');
-            }
-            const products = await this.getProducts();
-            const product = {
-                title,
-                description,
-                code,
-                price,
-                status,
-                stock,
-                category,
-                thumbnails,
-
-            }
-            //Asigno el id al producto. Si no hay ningun producto en el array le asigno 1 sino le asigno 1 mas que el ultimo del array
-            if (products.length === 0) {
-                product.id = 1;
-            } else {
-                product.id = products[products.length - 1].id + 1;
-            }
-            products.push(product);
-            await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
-            return product;
+          /*if (!title || !description || !code || !price || !status || !stock || !category) {
+            return console.log('Error! one or more fields are incomplete');
+          }*/
+      
+          const products = await this.getProducts();
+      
+          const product = {
+            id: products.length ? products[products.length - 1].id + 1 : 1,
+            title,
+            description,
+            code,
+            price,
+            status,
+            stock,
+            category,
+            thumbnails, 
+          }
+         
+console.log('Values of the variables:');
+console.log('title:', title);
+console.log('description:', description);
+console.log('code:', code);
+console.log('price:', price);
+console.log('status:', status);
+console.log('stock:', stock);
+console.log('category:', category);
+console.log('thumbnails:', thumbnails);
+console.log('Product:', product);
+          products.push(product);
+      
+          await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
+      
+          return product;
         } catch (error) {
-            console.log(error)
+          console.log(error); 
         }
-    }
+      }
+      
+    
 
 
     getProductsById = async (id) => {
@@ -87,17 +101,18 @@ export default class ProductManager {
 
     deleteProduct = async (id) => {
         try {
+            console.log(`Deleting product with id ${id}`);
             const data = await fs.promises.readFile(this.path, 'utf-8');
             const products = JSON.parse(data);
             //Busco el producto
-            const productIndex = products.findIndex(p => p.id === parseInt(id));
+            const productIndex = products.findIndex(p => parseInt(p.id) === parseInt(id));
             //Si no encuentro el producto devuelvo null
             if (productIndex === -1) {
                 console.log(`We could not find a product that matches the id: ${id}`);
                 return null;
             } else {
             //Si lo encuentro devuelvo el array de los productos menos el que solicito borrar
-                const productNotEliminated = products.filter(p => p.id !== parseInt(id));
+                const productNotEliminated = products.filter(p => parseInt(p.id) !== parseInt(id));
                 await fs.promises.writeFile(this.path, JSON.stringify(productNotEliminated, null, '\t'));
                 console.log(`The product with id ${id} has been eliminated`);
                 return products[productIndex];
@@ -107,6 +122,8 @@ export default class ProductManager {
         }
     }
 }
+
+export default ProductManager;
 
 
 
