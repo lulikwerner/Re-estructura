@@ -62,13 +62,16 @@ const btnDelete = () => {
         })
     })
 }
-console.log("Form submit event listener added");
+
 // Listen for the submit event on the form  
 form.addEventListener('submit', event => {
     event.preventDefault();
     console.log("Submit event listener function called");
     const formData = new FormData(form);
-    console.log('Sending formData:', formData);
-    socket.emit('newProduct', formData);
+    const data = Object.fromEntries(formData);
+    console.log(data);
+    socket.emit('newProduct', data);
+    console.log('Sending formData:', data);
+   
     //form.reset();
   });
