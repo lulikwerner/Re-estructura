@@ -47,15 +47,17 @@ io.on('connection', async socket=>{
 
   socket.on('newProduct', async data => {
     console.log('Received new product:', data);
+    const { title, description, code, price, status, stock, category, thumbnails } = data;
     const product = await productManager.addProducts({
-      title: data.title,
-      description: data.description,
-      code: data.code,
-      price: data.price,
-      status: data.status,
-      stock: data.stock,
-      category: data.category,
-      thumbnails: data.thumbnails ?? 'No image'
+      title ,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnails: data.thumbnail ? JSON.stringify(data.thumbnail) : 'No image',
+
     });
   
     console.log('Added new product:', product);
