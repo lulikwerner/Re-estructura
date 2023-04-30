@@ -55,7 +55,7 @@ io.on('connection', async socket=>{
       status: data.status,
       stock: data.stock,
       category: data.category,
-      thumbnails: data.thumbnails,
+      thumbnails: data.thumbnails ?? 'No image'
     });
   
     console.log('Added new product:', product);

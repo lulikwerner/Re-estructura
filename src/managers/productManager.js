@@ -20,12 +20,11 @@ import __dirname from '../utils.js'
 
     addProducts = async ({ title, description, code, price, status, stock, category, thumbnails }) => {
         try {
-          /*if (!title || !description || !code || !price || !status || !stock || !category) {
+          if (!title || !description || !code || !price || !status || !stock || !category) {
             return console.log('Error! one or more fields are incomplete');
-          }*/
+          }
       
           const products = await this.getProducts();
-      
           const product = {
             id: products.length ? products[products.length - 1].id + 1 : 1,
             title,
@@ -37,21 +36,8 @@ import __dirname from '../utils.js'
             category,
             thumbnails, 
           }
-         
-console.log('Values of the variables:');
-console.log('title:', title);
-console.log('description:', description);
-console.log('code:', code);
-console.log('price:', price);
-console.log('status:', status);
-console.log('stock:', stock);
-console.log('category:', category);
-console.log('thumbnails:', thumbnails);
-console.log('Product:', product);
           products.push(product);
-      
           await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
-      
           return product;
         } catch (error) {
           console.log(error); 

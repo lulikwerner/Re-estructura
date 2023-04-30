@@ -145,5 +145,96 @@
 		"status": "true",
 		"stock": "1",
 		"category": "1"
+	},
+	{
+		"id": 29,
+		"title": "luli",
+		"description": "lu",
+		"code": "1",
+		"price": "1",
+		"status": "true",
+		"stock": "1",
+		"category": "1"
+	},
+	{
+		"id": 30,
+		"title": "ro",
+		"description": "pw",
+		"code": "2",
+		"price": "2",
+		"status": "true",
+		"stock": "2",
+		"category": "2"
+	},
+	{
+		"id": 31,
+		"title": "prueba",
+		"description": "magica",
+		"code": "1",
+		"price": "2000",
+		"status": "true",
+		"stock": "12",
+		"category": "2"
+	},
+	{
+		"id": 32,
+		"title": "prueba",
+		"description": "magica",
+		"code": "1",
+		"price": "2000",
+		"status": "true",
+		"stock": "12",
+		"category": "2"
+	},
+	{
+		"id": 33,
+		"title": "prueba",
+		"description": "magica",
+		"code": "1",
+		"price": "2000",
+		"status": "true",
+		"stock": "12",
+		"category": "2"
+	},
+	{
+		"id": 34,
+		"title": "prueba",
+		"description": "magica",
+		"code": "1",
+		"price": "2000",
+		"status": "true",
+		"stock": "12",
+		"category": "2"
+	},
+	{
+		"id": 35,
+		"title": "po",
+		"description": "wo`",
+		"code": "2",
+		"price": "23",
+		"status": "true",
+		"stock": "2",
+		"category": "1"
+	},
+	{
+		"id": 36,
+		"title": "1",
+		"description": "1",
+		"code": "1",
+		"price": "1",
+		"status": "true",
+		"stock": "1",
+		"category": "1"
+	},
+	{
+		"id": 37,
+		"title": "2",
+		"description": "2",
+		"code": "2",
+		"price": "2",
+		"status": "true",
+		"stock": "2",
+		"category": "2",
+		"thumbnails": "No image"
 	}
 ]

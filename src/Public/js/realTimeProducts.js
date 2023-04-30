@@ -1,5 +1,3 @@
-
-
 console.log('realTimeProducts.js loaded');
 const socket = io();
 
@@ -8,13 +6,11 @@ const form = document.querySelector('form')
 const products = document.getElementById('products');
 
 
-
 socket.on('products', (data) => {
-  
     let productos = '';
    data.forEach(producto => {
         productos += `<div class="card bg-secondary mb-3 mx-4 my-4" style="max-width: 20rem;">
-                        <div class="card-header">code: ${producto.code}</div>
+                       
                         <div class="card-body">
                             <h4 class="card-title">${producto.title}</h4>
                             <p class="card-text">
@@ -22,19 +18,23 @@ socket.on('products', (data) => {
                                     id: ${producto.id}
                                 </li>
                                 <li>
+                                    category: ${producto.category}
+                                </li>
+                                <li>
                                     description: ${producto.description}
                                 </li>
                                 <li>
                                     price: $${producto.price}
                                 </li>
+                                
                                 <li>
-                                    category: ${producto.category}
-                                </li>
-                                <li>
-                                    status: ${producto.status}
-                                </li>
+                                code: ${producto.code}
+                            </li>
                                 <li>
                                     stock: ${producto.stock}
+                                </li>
+                                <li>
+                                status: ${producto.status}
                                 </li>
                                 <li>
                                     thumbnail: ${producto.thumbnails}
@@ -43,6 +43,7 @@ socket.on('products', (data) => {
                         </div>
                         <div class="d-flex justify-content-center mb-4">
                             <button type="button" class=" btn btn-danger" id="${producto.id}">Delete</button>
+                            <br>
                         </div>
                         
                     </div>
@@ -69,9 +70,8 @@ form.addEventListener('submit', event => {
     console.log("Submit event listener function called");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    console.log(data);
     socket.emit('newProduct', data);
-    console.log('Sending formData:', data);
+  
    
-    //form.reset();
+    form.reset();
   });
