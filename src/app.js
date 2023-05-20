@@ -43,15 +43,16 @@ const startServer = async () => {
 
   app.use('/', productRouter);
   app.use('/api/realtimeProducts', viewsRouter);
+  app.use('/chat',viewsRouter)
 
   io.on('connection', async socket => {
     console.log('Socket connected');
     const data = await productManager.getProducts();
     socket.emit('products', data);
 
-    socket.on('newProduct', async data => {
-      console.log('Received new product:', data);
-      const { title, description, code, price, status, stock, category, thumbnails } = data;
+    socket.on('newProduct', async newProductData => {
+      console.log('Received new product:',newProductData);
+      const { title, description, code, price, status, stock, category, thumbnails } = newProductData;
       const product = await productManager.createProduct({
         title,
         description,
@@ -60,19 +61,21 @@ const startServer = async () => {
         status,
         stock,
         category,
-        thumbnails: data.thumbnail ? JSON.stringify(data.thumbnails) : 'No image',
+        thumbnails,
       });
 
       console.log('Added new product:', product);
-      socket.emit('products', product);
+      socket.emit('productsAdd', product);
     });
 
     socket.on('deleteProduct', async data => {
       await productManager.deleteProduct(data);
       const product = await productManager.getProducts();
-      socket.emit('deleteProduct', product);
+      socket.emit('products', product);
     });
   });
+
+
 
   app.use('/api/carts', cartRouter);
 };

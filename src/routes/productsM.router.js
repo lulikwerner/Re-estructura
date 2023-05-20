@@ -42,6 +42,7 @@ router.post('/', async(req,res) => {
             category,
             thumbnail: thumbnails !== undefined ? thumbnails : 'No image'
         }
+        console.log('este es del post',product)
         //Agrego el producto con la informacion enviada
         const addedProduct = await productsM.createProduct(product);
         //Vuelvo a traer a mis productos

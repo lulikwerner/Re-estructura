@@ -10,8 +10,9 @@ export default  class ProductManager {
         return productModel.findOne(params);
     };
 
-    createProduct = (product) => {
-        return productModel.create(product);
+    createProduct = async (product) => {
+        return  productModel.create(product);
+ 
     };
 
     updateProduct = (id, product) => {

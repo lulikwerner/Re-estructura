@@ -8,7 +8,7 @@ const product = new  productManager ();
 
 router.get('/', async(req, res) => {
   const product = await  productManager.getProducts;
-  res.render('realTimeProducts');
+  res.render('realTimeProducts',product);
 });
 
 router.get('/chat',async(req,res)=>{

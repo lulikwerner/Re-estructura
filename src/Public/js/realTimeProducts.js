@@ -5,6 +5,54 @@ const socket = io();
 const form = document.querySelector('form')
 const products = document.getElementById('products');
 
+socket.on('productsAdd', (data) => {
+    console.log(data)
+
+    products.innerHTML  += `<div class="card bg-secondary mb-3 mx-4 my-4" style="max-width: 20rem;">
+                       
+                        <div class="card-body">
+                            <h4 class="card-title">${data.title}</h4>
+                            <p class="card-text">
+                                <li>
+                                    id: ${data._id}
+                                </li>
+                                <li>
+                                    category: ${data.category}
+                                </li>
+                                <li>
+                                    description: ${data.description}
+                                </li>
+                                <li>
+                                    price: $${data.price}
+                                </li>
+                                
+                                <li>
+                                code: ${data.code}
+                            </li>
+                                <li>
+                                    stock: ${data.stock}
+                                </li>
+                                <li>
+                                status: ${data.status}
+                                </li>
+                                <li>
+                                    thumbnail: ${data.thumbnails}
+                                </li>
+                            </p>
+                        </div>
+                        <div class="d-flex justify-content-center mb-4">
+                            <button type="button" class=" btn btn-danger" id="${data._id}">Delete</button>
+                            <br>
+                        </div>
+                        
+                    </div>
+                </div>`;
+  
+
+    btnDelete(); // Call btnEliminar function here
+});
+
+
 
 socket.on('products', (data) => {
     let productos = '';
