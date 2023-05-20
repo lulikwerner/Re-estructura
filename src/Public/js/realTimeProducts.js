@@ -15,7 +15,7 @@ socket.on('products', (data) => {
                             <h4 class="card-title">${producto.title}</h4>
                             <p class="card-text">
                                 <li>
-                                    id: ${producto.id}
+                                    id: ${producto._id}
                                 </li>
                                 <li>
                                     category: ${producto.category}
@@ -42,7 +42,7 @@ socket.on('products', (data) => {
                             </p>
                         </div>
                         <div class="d-flex justify-content-center mb-4">
-                            <button type="button" class=" btn btn-danger" id="${producto.id}">Delete</button>
+                            <button type="button" class=" btn btn-danger" id="${producto._id}">Delete</button>
                             <br>
                         </div>
                         

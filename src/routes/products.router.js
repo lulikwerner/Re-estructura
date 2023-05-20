@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     try {
         //Traigo todos los productos si no me envian ningun limit
         const products = await ProductManager.getProducts();
-        if (!limit) return res.status(200).render('home',{products});
+        if (!limit) return res.status(200).render('home',products);
       
         //if (!limit) return res.status(200).send({ products });
         //Si el limit que me envian es menor a 0 o una letra me manda error
