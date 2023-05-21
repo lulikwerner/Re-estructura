@@ -9,27 +9,23 @@ const cartsM = new CartManager();
 //Agrega producto al carrito
 router.post('/', async (req, res) => {
     const products = req.body;
+  
     try {
-      // Create the cart
-      const createdCart = await cartsM.createCart();
+      const createdCart = await cartsM.createCart(products);
+      console.log('Cart created:', createdCart);
   
-      if (!createdCart) {
-        return res.status(400).send({ status: 'error', message: 'Failed to create the cart' });
-      }
+      // Alternatively, you can update an existing cart instead of creating a new one
+      // const existingCartId = '...'; // Provide the ID of the existing cart
+      // const updatedCart = await CartManager.updateCart(existingCartId, products);
+      // console.log('Cart updated:', updatedCart);
   
-      // Add products to the cart
-      for (const { pid, qty } of products) {
-        const cartProducts = await cartsM.updateCart(pid, createdCart._id, qty);
-        console.log(`Product ${pid} added to cart ${createdCart._id}`);
-      }
-  
-      return res.status(200).send({ status: 'success', message: 'Cart created and products added' });
-    } catch (err) {
-      console.log(err);
-      res.status(500).send({ status: 'error', message: 'Internal server error' });
+      return res.status(200).json({ message: 'Cart created and products added successfully' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
-  });
-  
+});
+
 
 
 
