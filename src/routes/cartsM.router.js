@@ -8,31 +8,31 @@ const cartsM = new CartManager();
 
 //Agrega producto al carrito
 router.post('/', async (req, res) => {
-    const cart = req.body;
+    const products = req.body;
     try {
-        if (!Array.isArray(cart)) {
-        return res.status(400).send({ status: 'error', message: 'Cart should be an array' });
-        }
-      // Check if any product is incomplete or has invalid values
-        for (const product of cart) {
-            if (isNaN(product.qty)) {
-                return res.status(400).send({ status: 'error', message: 'Enter valid values for all products' });
-        }
-            if (!product.pid || !product.qty) {
-                return res.status(400).send({ status: 'error', message: 'One or more fields are incomplete for a product' });
-        }
-        }
-      // Create the cart and add all the products to it
-        const createdCart = await cartsM.createCart({ products: cart });
-        if (!createdCart) {
-            return res.status(400).send({ status: 'error', message: 'Failed to create the cart' });
-        }
-        return res.send({ status: 'success', cart: createdCart });
+      // Create the cart
+     const createdCart = await cartsM.createCart(products);
+      console.log(createdCart)
+      if (!createdCart) {
+        return res.status(400).send({ status: 'error', message: 'Failed to create the cart' });
+      }
+      return res.status(200).send({ status: 'succes', message: 'create the cart' });
+      // Add products to the cart
+      /*for (const product of cart) {
+        const { pid, qty } = product;
+        await cartsM.updateCart(pid, createdCart._id, qty);
+      }
+  
+      // Fetch the updated cart with populated products
+      const updatedCart = await cartsM.getCartById(createdCart._id);
+  
+      return res.send({ status: 'success', cart: updatedCart });*/
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ status: 'error', message: 'Internal server error' });
+      console.log(err);
+      res.status(500).send({ status: 'error', message: 'Internal server error' });
     }
-});
+  });
+  
 
 
 
@@ -62,46 +62,39 @@ router.get('/:cid', async (req, res) => {
 router.post('/:cid/product/:pid', async (req, res) => {
     const { cid, pid } = req.params;
     const { qty } = req.body;
-    const pidNumber = parseInt(pid);
+   ;
     try {
-        // Valido que el valor para el product id sea mayor a cero y un numero
-        console.log('pidNumber:', pidNumber);
-    
-        if (isNaN(pidNumber) || pidNumber < 0) {
-            console.log('Invalid values');
-            return res.status(400).send({ status: 'error', message: 'Please enter a valid value' });
-        }
-        // Valido que entre una cantidad
-        if (!qty) {
-            console.log('Quantity is missing');
-            return res.status(400).send({ status: 'error', message: 'Please enter a quantity' });
-        }
-        // Valido que el valor que se envía como qty sea un número y mayor a 0
-        if (isNaN(qty) || qty < 0) {
-            console.log('Invalid quantity');
-            console.log('qty:', qty);
-            console.log('typeof qty:', typeof qty);
-            return res.status(400).send({ status: 'error', message: 'Quantity should be a valid value' });
-        }
-        const cart = await cartsM.getCartBy({ _id: mongoose.Types.ObjectId(cid) });
-        // Busco el producto en el array de carrito
-        const index = cart.products.findIndex(product => product.pid == pid);
-        if (index !== -1) {
-            // Si está, le sumo las cantidades
-            cart.products[index].qty += Number(qty);
-        } else {
-            // Si no está, lo creo con las cantidades
-            cart.products.push({ pid: pidNumber, qty: Number(qty) });
-        }
-        await cartsM.updateCart(cid, cart);
-        console.log('Product added successfully');
-        return res.status(200).send({ status: 'success', message: 'Product added successfully' });
-    } catch (error) {
-        console.log('Error:', error);
-        return res.status(400).send({ status: 'failed', message: 'Product could not be added' });
-    }
-});
+        if (!cid) {
+            // If cart is not found, return an error or handle the situation accordingly
+            console.log('Cart not found');
+            return;
+          }
+      // Validate the product ID value
+      console.log('cid',cid)
+      console.log('pidNumber:', pid);
 
+      // Validate the quantity
+      if (!qty) {
+        console.log('Quantity is missing');
+        return res.status(400).send({ status: 'error', message: 'Please enter a quantity' });
+      }
+      // Validate the quantity value
+      if (isNaN(qty) || qty < 0) {
+        console.log('Invalid quantity');
+        console.log('qty:', qty);
+        console.log('typeof qty:', typeof qty);
+        return res.status(400).send({ status: 'error', message: 'Quantity should be a valid value' });
+      }
+      // Update the cart
+      await cartsM.updateCart(pid, cid, qty);
+      console.log('Product added successfully');
+      return res.status(200).send({ status: 'success', message: 'Product added successfully' });
+    } catch (error) {
+      console.log('Error:', error);
+      return res.status(400).send({ status: 'failed', message: 'Product could not be added' });
+    }
+  });
+  
 
 
 export default router;

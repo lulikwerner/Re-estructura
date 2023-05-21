@@ -12,34 +12,38 @@ export default  class CartManager {
         return cartModel.findOne(params);
     };
 
-    createCart = async (cart,pid) => {
+    createCart = async (products) => {
+        const cart = { products: products };
+        const createdCart = await cartModel.create(cart);
+        return createdCart;
+      };
 
-       /* const cart = new cartModel();
 
-        const products = await productModel.find({ _id: { $in: pid } });
-        const productRefs = products.map(product => ({ product: product._id }));
-        cart.products = productRefs;
-        await cart.save();*/
 
-        const newCart = await cartModel.create(pid)
-       await cartModel.updateOne(
-            {_id:cid},
-            {$push:{products: {product: new mongoose.Types.ObjectId(pid)}}});
-        //const cart = await cartModel.find().populate('products.product');
-        /*const newCart = new cartModel({
-            products:[]
-        }) 
-        return newCart.save()*/
-    }
-      
-
-      
-    updateCart = async (pid, cid) => {
-        await cartModel.updateOne(
+        updateCart = async (pid, cid, qty) => {
+            const cart = await cartModel.findById(cid).populate('products.product');
+            console.log(cid);
+            // Find the product in the array of cart products
+            const product = cart.products.find((product) => product.pid === pid);
+            console.log(pid);
+            // Find the index of the product in the products array
+            const index = cart.products.findIndex((product) => product.pid === pid);
+            if (index !== -1) {
+              // If it exists, update the quantity
+              cart.products[index].qty += Number(qty);
+            } else {
+              // If it doesn't exist, create a new entry with the provided quantity
+              cart.products.push({ pid: new mongoose.Types.ObjectId(pid), qty: Number(qty) });
+            }
+            await cart.save(); // Save the updated cart
+            console.log('Product added successfully');
+          };
+          
+    
+       /* await cartModel.updateOne(
             {_id:cid},
             {$push:{products: {product: new mongoose.Types.ObjectId(pid)}}});
        // const cart = await cartModel.find().populate('products.product');
-        console.log(JSON.stringify(cart,null,'\t'))
+        console.log(JSON.stringify(cart,null,'\t'))*/
     };
 
-}

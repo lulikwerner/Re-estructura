@@ -42,7 +42,7 @@ const startServer = async () => {
 
   app.use(ioMiddleware);
 
-  app.use('/api/product', productRouter);
+  app.use('/api', productRouter);
   app.use('/api/realtimeProducts', viewsRouter);
   app.use('/',viewsRouter)
 
@@ -65,7 +65,7 @@ const startServer = async () => {
         status,
         stock,
         category,
-        thumbnails,
+        thumbnails: data.thumbnails ? JSON.stringify(data.thumbnail) : 'No image',
       });
       socket.emit('productsAdd', product);
     });
