@@ -9,16 +9,29 @@ const cartsM = new CartManager();
 //Agrega producto al carrito
 router.post('/', async (req, res) => {
     const products = req.body;
-  
+    const cart = req.body;
     try {
+        if (!Array.isArray(cart)) {
+            return res.status(400).send({ status: 'error', message: 'Cart should be an array' });
+            }
+          // Check if any product is incomplete or has invalid values
+            for (const products of cart) {
+                if ( !products.qty) {
+                    return res.status(400).send({ status: 'error', message: 'One or more fields are incomplete for a product' });
+            }
+            if (isNaN(products.qty)|| products.qty < 0) {
+                return res.status(400).send({ status: 'error', message: 'Enter a valid value for the  products' });
+        }
+          
+          
+            }
+
       const createdCart = await cartsM.createCart(products);
+      if (!createdCart) {
+        return res.status(400).send({ status: 'error', message: 'Failed to create the cart' });
+      }
       console.log('Cart created:', createdCart);
-  
-      // Alternatively, you can update an existing cart instead of creating a new one
-      // const existingCartId = '...'; // Provide the ID of the existing cart
-      // const updatedCart = await CartManager.updateCart(existingCartId, products);
-      // console.log('Cart updated:', updatedCart);
-  
+
       return res.status(200).json({ message: 'Cart created and products added successfully' });
     } catch (error) {
       console.error(error);
