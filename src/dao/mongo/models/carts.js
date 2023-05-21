@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const collection = "Carts";
 
 const schema = new mongoose.Schema({
-    pid: Number,
-    qty: Number,
+  
     products: {
+   
         type:[
             {
         product: {

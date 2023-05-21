@@ -1,4 +1,5 @@
 import cartModel from "../models/carts.js";
+import productModel from "../models/products.js";
 import mongoose from "mongoose";
 
 export default  class CartManager {
@@ -12,25 +13,32 @@ export default  class CartManager {
     };
 
     createCart = async (cart,pid) => {
-       const createdCart = await cartModel.create(cart);
-        await cartModel.updateOne(
-            {_id:createdCart._id },
+
+       /* const cart = new cartModel();
+
+        const products = await productModel.find({ _id: { $in: pid } });
+        const productRefs = products.map(product => ({ product: product._id }));
+        cart.products = productRefs;
+        await cart.save();*/
+
+        const newCart = await cartModel.create(pid)
+       await cartModel.updateOne(
+            {_id:cid},
             {$push:{products: {product: new mongoose.Types.ObjectId(pid)}}});
-        const populatedCart = await cartModel.findById(createdCart._id ).populate('products.product');
-        console.log(populatedCart)
-        console.log(JSON.stringify(populatedCart, null, '\t'));
-        return populatedCart;
-      };
+        //const cart = await cartModel.find().populate('products.product');
+        /*const newCart = new cartModel({
+            products:[]
+        }) 
+        return newCart.save()*/
+    }
       
 
-      
-          
       
     updateCart = async (pid, cid) => {
         await cartModel.updateOne(
             {_id:cid},
             {$push:{products: {product: new mongoose.Types.ObjectId(pid)}}});
-        const cart = await cartModel.find().populate('products.product');
+       // const cart = await cartModel.find().populate('products.product');
         console.log(JSON.stringify(cart,null,'\t'))
     };
 

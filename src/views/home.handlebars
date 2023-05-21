@@ -1,11 +1,10 @@
 <h1>PRODUCTOS</h1>
-{{this.price}}
-{{!-- <h3>{{price}} nada</h3> --}}
+
 <div>
-    {{#each products }}
+    {{#each producth }}
         <ul>
             <li>
-                id: {{this.id}}
+                id: {{this.this._id}}
             </li>
             <li>
                 title: {{this.title}}
@@ -31,7 +30,7 @@
             <li>
                 thumbnail: {{this.thumbnail}}
             </li>
-
         </ul>
     {{/each}}
 </div>
+

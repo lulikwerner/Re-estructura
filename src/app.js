@@ -7,6 +7,7 @@ import ProductManager from './dao/mongo/managers/productManager.js';
 import productRouter from './routes/productsM.router.js';
 import cartRouter from './routes/cartsM.router.js';
 import viewsRouter from './routes/views.router.js';
+import registerChatHandler from './listeners/chatHandler.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -41,11 +42,14 @@ const startServer = async () => {
 
   app.use(ioMiddleware);
 
-  app.use('/', productRouter);
+  app.use('/api/product', productRouter);
   app.use('/api/realtimeProducts', viewsRouter);
-  app.use('/chat',viewsRouter)
+  app.use('/',viewsRouter)
 
   io.on('connection', async socket => {
+
+    registerChatHandler(io,socket);
+
     console.log('Socket connected');
     const data = await productManager.getProducts();
     socket.emit('products', data);
@@ -63,10 +67,9 @@ const startServer = async () => {
         category,
         thumbnails,
       });
-
-      console.log('Added new product:', product);
       socket.emit('productsAdd', product);
     });
+
 
     socket.on('deleteProduct', async data => {
       await productManager.deleteProduct(data);
@@ -74,6 +77,7 @@ const startServer = async () => {
       socket.emit('products', product);
     });
   });
+
 
 
 
