@@ -13,7 +13,7 @@ export default  class CartManager {
     };
 
     createCart = async (products) => {
-        const cart = { products: products };
+        const cart =( { products: products });
         const createdCart = await cartModel.create(cart);
         return createdCart;
       };

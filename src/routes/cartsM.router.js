@@ -11,22 +11,19 @@ router.post('/', async (req, res) => {
     const products = req.body;
     try {
       // Create the cart
-     const createdCart = await cartsM.createCart(products);
-      console.log(createdCart)
+      const createdCart = await cartsM.createCart();
+  
       if (!createdCart) {
         return res.status(400).send({ status: 'error', message: 'Failed to create the cart' });
       }
-      return res.status(200).send({ status: 'succes', message: 'create the cart' });
+  
       // Add products to the cart
-      /*for (const product of cart) {
-        const { pid, qty } = product;
-        await cartsM.updateCart(pid, createdCart._id, qty);
+      for (const { pid, qty } of products) {
+        const cartProducts = await cartsM.updateCart(pid, createdCart._id, qty);
+        console.log(`Product ${pid} added to cart ${createdCart._id}`);
       }
   
-      // Fetch the updated cart with populated products
-      const updatedCart = await cartsM.getCartById(createdCart._id);
-  
-      return res.send({ status: 'success', cart: updatedCart });*/
+      return res.status(200).send({ status: 'success', message: 'Cart created and products added' });
     } catch (err) {
       console.log(err);
       res.status(500).send({ status: 'error', message: 'Internal server error' });
