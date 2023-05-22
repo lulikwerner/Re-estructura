@@ -42,7 +42,7 @@ const startServer = async () => {
 
   app.use(ioMiddleware);
 
-  app.use('/api', productRouter);
+  app.use('/api/', productRouter);
   app.use('/api/realtimeProducts', viewsRouter);
   app.use('/',viewsRouter)
 
