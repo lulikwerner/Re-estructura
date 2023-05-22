@@ -30,27 +30,43 @@ export default  class CartManager {
         }
 }
 
-    updateCart = async (cartId, products) => {
-        try {
-            const cart = await cartModel.findById(cartId);
-
-            for (const { pid, qty } of products) {
-                const product = await productModel.findById(pid);
-                if (product) {
-                    const existingProduct = cart.products.find(p => p.product.equals(product._id));
-                if (existingProduct) {
-                        existingProduct.quantity += qty;
-                } else {
-                    cart.products.push({ product: product._id, quantity: qty });
-                        }
-                }
-            }
-            await cart.save();  
-            return cart;    
-        } catch (error) {
-            throw new Error('Failed to update the cart');
-                        }
+updateCart = async (products, cid) => {
+    try {
+        //Busco el carrito
+        const cart = await cartModel.findById(cid);
+        for (const { pid, qty } of products) {
+            console.log('Product:', pid);
+            console.log('el cart', cid);
+     //Busco el producto
+        const product = await productModel.findById(pid);
+        console.log('Found product:', product);
+        //Si el producto existe busco si esta en el cart
+        if (product) {
+          const existingProduct = cart.products.find(p => p.product.equals(product._id));
+          //Si esta en el cart le sumo las cantidades
+          if (existingProduct) {
+            existingProduct.quantity += qty;
+          } else {
+            console.log('antes del push');
+            const newProduct = { product: product._id, quantity: qty };
+            cart.products.push(newProduct);
+            console.log('Added product:', newProduct);
+          }
+        }
+      }
+  
+      console.log('despues del push');
+      await cart.save();
+      console.log('Updated cart:', cart);
+      return cart;
+    } catch (error) {
+      console.log('Error:', error);
+      throw new Error('Failed to update the cart');
     }
+  };
+  
+  
+  
 };
     
        /* await cartModel.updateOne(
