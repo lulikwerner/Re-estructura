@@ -67,9 +67,8 @@ router.get('/:cid', async (req, res) => {
 
 router.post('/:cid/product/:pid', async (req, res) => {
     const { cid, pid } = req.params;
-    const { qty } = req.body;
-    const products = [{ pid, qty }];
-   ;
+    const { qty, title, description, code, price, stock, category, thumbnails} = req.body;
+    const products = [{ qty, title, description, code, price, stock, category, thumbnails}];
     try {
         //Si no se encuentra el carrito
         if (!cid) { console.log('Cart not found');
@@ -78,6 +77,10 @@ router.post('/:cid/product/:pid', async (req, res) => {
       console.log('cid',cid)
       console.log('pidNumber:', pid);
 
+      //Tiene que enviar algun dato aunque sea para modificar
+      if (!title && !description && !code && !price && !status && !stock && !category) {
+        return res.status(400).send({ status: "error", message: "Please send a new value to update" });
+    }
       // Si paso el parametro qty para modificar
       if (isNaN(qty) || qty < 0) {
         console.log('Invalid quantity');

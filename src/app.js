@@ -42,9 +42,9 @@ const startServer = async () => {
 
   app.use(ioMiddleware);
 
-  app.use('/api/', productRouter);
-  app.use('/api/realtimeProducts', viewsRouter);
+  app.use('/api/products', productRouter);
   app.use('/',viewsRouter)
+  app.use('/api/carts',cartRouter)
 
   io.on('connection', async socket => {
 
