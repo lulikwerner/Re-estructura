@@ -32,5 +32,12 @@
             </li>
         </ul>
     {{/each}}
+    {{#if hasPrevPage}}
+    <a href="/?page={{prevPage}}"><button>Anterior</button></a>
+    {{/if}}
+    {{page}}
+     {{#if hasNextPage}}
+    <a href="/?page={{nextPage}}"><button>Siguiente</button></a>
+    {{/if}}
 </div>
 

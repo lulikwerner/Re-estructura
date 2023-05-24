@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
         // Si me envían un limit, hago un slice del array por el límite enviado y traigo solo esos productos
         const limitedProducts = products.slice(0, limit);
         res.status(200).send({ status: 'success', payload: limitedProducts });
+        
             }      
     } catch (error) {
         console.log(error);
