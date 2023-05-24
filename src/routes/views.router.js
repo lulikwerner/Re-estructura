@@ -15,7 +15,7 @@ router.get('/realTimeProducts', async(req, res) => {
 
 router.get('/',async(req,res)=>{
   const {page=1} = req.query
-  const{docs, hasPrevPage, hasNextPage, prevPage, nextPage,...rest} = await productModel.paginate({},{page,limit:10,lean:true})
+  const{docs, hasPrevPage, hasNextPage, prevPage, nextPage,...rest} = await productModel.paginate({/*aca va el query*/},{page,limit:10,lean:true})
 const producth =docs;
 res.render('home',{producth,hasPrevPage, hasNextPage, prevPage, nextPage,page:rest.page});
 })

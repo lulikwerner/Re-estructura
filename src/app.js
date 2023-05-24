@@ -58,18 +58,33 @@ const startServer = async () => {
     const data = await productManager.getProducts();
     socket.emit('products', data);
 
-    socket.on('newProduct', async (newProductData) => {
-      console.log('Received new product:', newProductData);
-      // Create the new product and emit it to clients
+    socket.on('newProduct', async newProductData => {
+      console.log('Received new product:',newProductData);
+      const { title, description, code, price, status, stock, category, thumbnails } = newProductData;
+      const product = await productManager.createProduct({
+        title,
+        description,
+        code,
+        price,
+        status,
+        stock,
+        category,
+        thumbnails: data.thumbnails ? JSON.stringify(data.thumbnail) : 'No image',
+      });
+      socket.emit('productsAdd', product);
     });
 
-    socket.on('deleteProduct', async (data) => {
-      // Delete the product and emit the updated product list to clients
+
+    socket.on('deleteProduct', async data => {
+      await productManager.deleteProduct(data);
+      const product = await productManager.getProducts();
+      socket.emit('products', product);
     });
-
-    // Other socket events and handlers
-
   });
+
+
+
+ 
 
   // Call the cartSocket function after the io object is defined
   cartSocket(io);
