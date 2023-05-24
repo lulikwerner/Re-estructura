@@ -1,13 +1,20 @@
 <h1>Carts</h1>
+<div class="row mt-4" id="cartContent"></div>
+<h3>Cart ID: {{carth._id}}</h3>
+<ul>
+  {{#each carth.products}}
+    <li>
+      <h4>Title: {{this.product.title}}</h4>
+      <h2>Title: {{this.product._id}}</h2>
+      <p>Description: {{this.product.description}}</p>
+      <h4>Code: {{this.product.code}}</h4>
+      <p>Price: {{this.product.price}}</p>
+      <p>Status: {{this.product.status}}</p>
+      <p>Image: {{this.product.thumbnail}}</p>
+    </li>
+  {{/each}}
+</ul>
 
-{{#each carth}}
-  <h3>Cart ID: {{this._id}}</h3>
-  <ul>
-    {{#each this.products}}
-      <li>
-        <h4>{{this.product.title}}</h4>
-        <p>{{this.product.description}}</p>
-      </li>
-    {{/each}}
-  </ul>
-{{/each}}
+<div class="row mt-4" id="cart"></div>
+
+

@@ -4,10 +4,12 @@ import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import { __dirname } from './utils.js';
 import ProductManager from './dao/mongo/managers/productManager.js';
+import CartManager from './dao/mongo/managers/cartManager.js';
 import productRouter from './routes/productsM.router.js';
 import cartRouter from './routes/cartsM.router.js';
 import viewsRouter from './routes/views.router.js';
 import registerChatHandler from './listeners/chatHandler.js';
+import cartSocket from './sockets/cart.sockets.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -25,7 +27,9 @@ const startServer = async () => {
   });
 
   const io = new Server(server);
+
   const productManager = new ProductManager();
+  const cartManager = new CartManager();
 
   app.engine('handlebars', handlebars.engine());
   app.set('views', `${__dirname}/views`);
@@ -43,45 +47,32 @@ const startServer = async () => {
   app.use(ioMiddleware);
 
   app.use('/api/products', productRouter);
-  app.use('/',viewsRouter)
-  app.use('/api/carts',cartRouter)
+  app.use('/', viewsRouter);
+  app.use('/api/carts', cartRouter);
 
-  io.on('connection', async socket => {
-
-    registerChatHandler(io,socket);
-
+  io.on('connection', async (socket) => {
+    registerChatHandler(io, socket);
+    
     console.log('Socket connected');
+
     const data = await productManager.getProducts();
     socket.emit('products', data);
 
-    socket.on('newProduct', async newProductData => {
-      console.log('Received new product:',newProductData);
-      const { title, description, code, price, status, stock, category, thumbnails } = newProductData;
-      const product = await productManager.createProduct({
-        title,
-        description,
-        code,
-        price,
-        status,
-        stock,
-        category,
-        thumbnails: data.thumbnails ? JSON.stringify(data.thumbnail) : 'No image',
-      });
-      socket.emit('productsAdd', product);
+    socket.on('newProduct', async (newProductData) => {
+      console.log('Received new product:', newProductData);
+      // Create the new product and emit it to clients
     });
 
-
-    socket.on('deleteProduct', async data => {
-      await productManager.deleteProduct(data);
-      const product = await productManager.getProducts();
-      socket.emit('products', product);
+    socket.on('deleteProduct', async (data) => {
+      // Delete the product and emit the updated product list to clients
     });
+
+    // Other socket events and handlers
+
   });
 
-
-
-
-  app.use('/api/carts', cartRouter);
+  // Call the cartSocket function after the io object is defined
+  cartSocket(io);
 };
 
 startServer();

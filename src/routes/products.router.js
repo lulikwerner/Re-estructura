@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
             status: true,
             stock,
             category,
-            thumbnail: thumbnails !== undefined ? thumbnails : 'No image'
+            thumbnail: thumbnails ? thumbnails.toString('base64') : 'No image'
         }
         //Agrego el producto con la informacion enviada
         const addedProduct = await ProductManager.addProducts(product);

@@ -5,11 +5,13 @@ const router = Router();
 const productsM = new ProductManager();
 
 router.get('/', async (req, res) => {
-    const { limit } = req.query;
+    const { limit, page, sort, category } = req.query;
     try {
         const products = await productsM.getProducts();
         if (!limit) {
-            res.send({ status: 'success', payload: products });
+            const withoutlimit = products.slice(0, 10);
+        res.status(200).send({ status: 'success', payload: withoutlimit });
+           // res.send({ status: 'success', payload: products });
         } else {
         // Si el limit que me envían es menor a 0 o una letra, me manda un error
         if (limit < 0 || isNaN(limit)) {

@@ -55,8 +55,11 @@ router.get('/:cid', async (req, res) => {
         if (!cart) {
         return res.status(404).send({ status: 'error', message: 'Cart not found' });
         }   
+
+        io.emit('cartiD',cid);
       // If the cart is found, send the product information
-        res.send({ status: 'success', payload: cart });
+      res.render('cart',cart);
+        //res.send({ status: 'success', payload: cart });
     } catch (error) {
         console.log(error);
         res.status(500).send({ status: 'error', message: 'Internal server error' });

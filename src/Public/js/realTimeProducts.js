@@ -1,10 +1,9 @@
-console.log('realTimeProducts.js loaded');
 const socket = io();
-
 // Obtengo el Formulario
 const form = document.querySelector('form')
 const products = document.getElementById('products');
 
+//Muestro el producto agregado
 socket.on('productsAdd', (data) => {
     console.log(data)
 
@@ -50,10 +49,10 @@ socket.on('productsAdd', (data) => {
   
 
     btnDelete(); // Call btnEliminar function here
-});
+})
 
 
-
+//Muestro todos los productos
 socket.on('products', (data) => {
     let productos = '';
    data.forEach(producto => {

@@ -6,15 +6,13 @@ export default  class CartManager {
 
     getCarts = async() => {
    const populatedCart = await cartModel.find().populate('products.product').lean();;
-   console.log(JSON.stringify(populatedCart, null, '\t'));
+   //console.log(JSON.stringify(populatedCart, null, '\t'));
    return populatedCart;  
     };
     
     getCartBy = async (params) => {
-        //return cartModel.findOne(params);
-        console.log('entro')
-        const populatedCart = await cartModel.findById(params).populate('products.product');
-        console.log(JSON.stringify(populatedCart, null, '\t'));
+        const populatedCart = await cartModel.findById(params).populate('products.product').lean();
+        //console.log(JSON.stringify(populatedCart, null, '\t'));
         return populatedCart
     };
 

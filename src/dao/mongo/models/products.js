@@ -14,7 +14,10 @@ const schema = new mongoose.Schema({
     } ,
     stock: Number,
     category:String,
-    thumbnail:[]
+    thumbnail:{
+        type:[],
+        default: "No image "
+    } 
 },
 {timestamps:{createdAt: 'created_at', updatedAt: 'updated_at'}}
 );
