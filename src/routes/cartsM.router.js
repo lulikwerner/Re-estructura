@@ -101,7 +101,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     console.log('pidNumber:', pid);
     
     // If no cart ID is provided, send an error response
-    if (!cid) {
+    if (!cid || !mongoose.Types.ObjectId.isValid(cid))  {
       return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
     }
     
@@ -112,8 +112,10 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     if (!cart) {
       return res.status(404).send({ status: 'error', message: 'Cart not found' });
     }
-    
-    console.log(JSON.stringify(cart, null, '\t'));
+    if (cart.products.length === 0) {
+      return res.status(400).send({ status: 'error', message: 'The cart is empty' });
+    }
+
     
     // If no product ID is provided, send an error response
     if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
