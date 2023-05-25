@@ -48,8 +48,19 @@ router.get('/', async (req, res) => {
       const query = category ? { category } : {}; 
       const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest } = await productModel.paginate(query, { page, limit: 10, lean: true });
       const producth = docs;
-      
-     
+      const response = {
+        status: 'success',
+        payload: docs,
+        totalPages: rest.totalPages,
+        prevPage: prevPage,
+        nextPage: nextPage,
+        page: rest.page,
+        hasPrevPage: hasPrevPage,
+        hasNextPage: hasNextPage,
+        prevLink: hasPrevPage ? `/?limit=${limit}&page=${prevPage}&sort=${sort}&category=${category}` : null,
+        nextLink: hasNextPage ? `/?limit=${limit}&page=${nextPage}&sort=${sort}&category=${category}` : null
+      };
+     console.log(response)
       return res.render('home', { producth, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest });
     }
 
