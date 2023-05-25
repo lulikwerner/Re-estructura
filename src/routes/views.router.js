@@ -27,9 +27,9 @@ router.get('/', async (req, res) => {
     if (sort) {
       let sortedProducts = 'desc';
       if (sort === 'desc') {
-        sortedProducts = await productModel.find({ category }).sort({ price: -1 }).limit(limit).lean();
+        sortedProducts = await productModel.find({ }).sort({ price: -1 }).limit(limit).lean();
       } else {
-        sortedProducts = await productModel.find({ category }).sort({ price: 1 }).limit(limit).lean();
+        sortedProducts = await productModel.find({ }).sort({ price: 1 }).limit(limit).lean();
       }
       return res.render('home', { producth: sortedProducts });
     }
