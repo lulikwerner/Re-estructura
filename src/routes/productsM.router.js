@@ -89,7 +89,6 @@ router.get('/:pid', async (req, res) => {
 });
 
 
-
 router.put('/:pid', async(req,res) => {
     const { pid } = req.params;
     const productUpdate = req.body;
@@ -101,13 +100,11 @@ router.put('/:pid', async(req,res) => {
         //Si Modifico algo retorno que el producto fue modificado con exito
         if (updateProduct) return res.status(201).send({ status: "success", message: `The product with id ${pid} has been succesfully updated` });
         //Sino devuelvot que no se pudo modifica
-        return res.status(404).send({ error: "Update product failed" });
-        
+        return res.status(404).send({ error: "Update product failed" }); 
     }
     catch (error) {
         console.log(error);
     }
-
 })
 
 router.delete('/:pid', async(req,res) => {

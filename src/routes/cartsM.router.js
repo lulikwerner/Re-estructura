@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import CartManager from "../dao/mongo/managers/cartManager.js";
+import ProductManager from "../dao/mongo/managers/productManager.js"
 import mongoose from "mongoose"
 
 
 const router = Router();
 const cartsM = new CartManager();
+const productM = new ProductManager()
 
 //Agrega producto al carrito
 router.post('/', async (req, res) => {
@@ -114,7 +116,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     console.log(JSON.stringify(cart, null, '\t'));
     
     // If no product ID is provided, send an error response
-    if (!pid) {
+    if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
       return res.status(400).send({ status: 'error', message: 'Please enter a valid product ID' });
     }
     
@@ -145,17 +147,53 @@ router.delete('/:cid/products/:pid', async (req, res) => {
   }
 });
 
+
+
 //deberá eliminar todos los productos del carrito 
 router.delete('api/carts/:cid', async (req,res) =>{
 
 });
 //deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
 router.put('/carts/:cid', async (req,res)=>{
-
 })
 //deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
 router.put('/carts/:cid/products/:pid ', async (req,res)=>{
-  
+  const { cid, pid } = req.params;
+    const { qty} = req.body;
+    const products = [{ qty, title, description, code, price, stock, category, thumbnails}];
+    try {
+      const checkProduct = await productM.getProductById(pid);
+        if (!checkProduct) return response.status(404).send({error: `The ID product: ${pid} not found`})
+        const checkCart = await cartsM.getCartBy({ _id: cid });
+        if (!checkCart) {
+          return res.status(404).send({ status: 'error', message: `We couldn't find the cart ${cid}`  });
+        }
+        //Si no se encuentra el carrito
+        if (!cid) { console.log('Cart not found');
+            return;}
+      // Validate the product ID value
+      console.log('cid',cid)
+      console.log('pidNumber:', pid);
+
+      //Tiene que enviar la cantidad a modificar
+      if (!qty) {
+        return res.status(400).send({ status: "error", message: "Please send a new value to update" });
+    }
+      // Si paso el parametro qty para modificar
+      if (isNaN(qty) || qty < 0) {
+        console.log('Invalid quantity');
+        console.log('qty:', qty);
+        console.log('typeof qty:', typeof qty);
+        return res.status(400).send({ status: 'error', message: 'Quantity should be a valid value' });
+      }
+      // Hago un update del cart , enviando el products y el cid
+      const up=await cartsM.updateCart (products, cid);
+      console.log('Product updated successfully',up);
+      return res.status(200).send({ status: 'success', message: 'Product updated successfully' });
+    } catch (error) {
+      console.log('Error:', error);
+      return res.status(400).send({ status: 'failed', message: 'Product could not be updated' });
+    }
 })
 
 export default router;
