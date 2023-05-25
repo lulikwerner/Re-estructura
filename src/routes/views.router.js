@@ -2,6 +2,7 @@ import { Router } from "express";
 import productManager from "../dao/mongo/managers/productManager.js"
 import cartManager from "../dao/mongo/managers/cartManager.js"
 import productModel from "../dao/mongo/models/products.js";
+import categoriesAndStatus from "../dao/mongo/managers/productManager.js"
 
 const router = Router();
 const product = new  productManager ();
@@ -18,6 +19,7 @@ router.get('/realTimeProducts', async (req, res) => {
   const products = await product.getProducts();
   res.render('realTimeProducts', { producth: products });
 });
+
 router.get('/', async (req, res) => {
   const { limit, page = 1, sort, category } = req.query;
 
@@ -43,16 +45,18 @@ router.get('/', async (req, res) => {
     }
 
     if (page) {
-      const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest } = await productModel.paginate({}, { page, limit: 10, lean: true });
+      const query = category ? { category } : {}; 
+      const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest } = await productModel.paginate(query, { page, limit: 10, lean: true });
       const producth = docs;
       
-      console.log('prev', hasPrevPage);
-      console.log('next', hasNextPage);
+     
       return res.render('home', { producth, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest });
     }
 
     const products = await product.getProducts();
-    return res.render('home', { producth: products });
+    const { categories, statuses } = await categoriesAndStatus(); 
+    console.log('entro en categoria')// Retrieve categories and statuses
+    return res.render('home', { producth: products, categories, statuses }); 
   } catch (error) {
     console.error(error);
     return res.status(500).send({ status: 'error', message: 'An internal server error occurred.' });

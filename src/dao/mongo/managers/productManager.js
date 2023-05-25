@@ -1,27 +1,29 @@
 import productModel from "../models/products.js";
 
-export default  class ProductManager {
 
-    /*categories = async () => {
-        try {
-            const categories = await productModel.aggregate([
-                {
-                    $group: {
-                        _id: null,
-                        categories: { $addToSet: "$category" }
-                    }
-                }
-            ])
+export default class ProductManager {
 
-            return categories[0].categories
-
+    categoriesAndStatus = async () => {
+    try {
+      const categoriesData = await productModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            categories: { $addToSet: "$category" },
+            statuses: { $addToSet: "$status" }
+          }
         }
-        catch (err) {
-            console.log(err);
-            return err
-        }
+      ]);
 
-    }*/
+      const { categories, statuses } = categoriesData[0];
+      return { categories, statuses };
+    } catch (err) {
+      console.log(err);
+      return err;
+    }
+  };
+
+
 
 
     getProducts = () => {
