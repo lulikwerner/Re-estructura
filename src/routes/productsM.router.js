@@ -1,42 +1,18 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongo/managers/productManager.js";
 import productModel from "../dao/mongo/models/products.js";
+import views from "./views.router.js"
 const router = Router();
 const productsM = new ProductManager();
 
-router.get('/', async (req, res) => {
+/*router.get('/', async (req, res) => {
 const { limit, page, sort, category } = req.query;
-let sortAux = "asc";
+
+   // const result  = await productModel.paginate({},{limit:10,lean:true})
+   //console.log(result)
+   // res.status(200).send({ status: 'success', payload: result});    
 
 
-    const result  = await productModel.paginate({},{limit:10,lean:true})
-    console.log(result)
-    res.status(200).send({ status: 'success', payload: result});
-  
-    /*aca tengo que devoler {
-	status:success/error
-    payload: Resultado de los productos solicitados
-    totalPages: Total de páginas
-    prevPage: Página anterior
-    nextPage: Página siguiente
-    page: Página actual
-    hasPrevPage: Indicador para saber si la página previa existe
-    hasNextPage: Indicador para saber si la página siguiente existe.
-    prevLink: Link directo a la página previa (null si hasPrevPage=false)
-    nextLink: Link directo a la página siguiente (null si hasNextPage=false)
-    }*/
-    
-  
-    try {
-        if(sort=="asc"){
-            sortAux = -1;
-        }else{
-            if(sort=="des"){
-                sortAux = 1;
-            }
-        }
-    
-        
         const products = await productsM.getProducts();
         if (!limit) {
             const withoutlimit = products.slice(0, 10);
@@ -55,7 +31,7 @@ let sortAux = "asc";
     } catch (error) {
         console.log(error);
     }
-});
+});*/
 
 
 router.post('/', async(req,res) => {

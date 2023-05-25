@@ -13,12 +13,53 @@ router.get('/realTimeProducts', async(req, res) => {
   res.render('realTimeProducts',products);
 });
 
-router.get('/',async(req,res)=>{
-  const {page=1} = req.query
-  const{docs, hasPrevPage, hasNextPage, prevPage, nextPage,...rest} = await productModel.paginate({/*aca va el query*/},{page,limit:10,lean:true})
-const producth =docs;
-res.render('home',{producth,hasPrevPage, hasNextPage, prevPage, nextPage,page:rest.page});
-})
+
+router.get('/realTimeProducts', async (req, res) => {
+  const products = await product.getProducts();
+  res.render('realTimeProducts', { producth: products });
+});
+router.get('/', async (req, res) => {
+  const { limit, page = 1, sort, category } = req.query;
+
+  try {
+    if (sort) {
+      let sortedProducts = 'desc';
+      if (sort === 'desc') {
+        sortedProducts = await productModel.find().sort({ price: -1 }).limit(limit).lean();
+      } else {
+        sortedProducts = await productModel.find().sort({ price: 1 }).limit(limit).lean();
+      }
+      return res.render('home', { producth: sortedProducts });
+    }
+
+    if (limit) {
+      const products = await product.getProducts();
+
+      if (limit < 0 || isNaN(limit)) {
+        return res.status(400).send({ status: 'error', message: 'Please enter a valid value for limit.' });
+      }
+      const limitedProducts = products.slice(0, limit);
+      return res.render('home', { producth: limitedProducts });
+    }
+
+    if (page) {
+      const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest } = await productModel.paginate({}, { page, limit: 10, lean: true });
+      const producth = docs;
+      
+      console.log('prev', hasPrevPage);
+      console.log('next', hasNextPage);
+      return res.render('home', { producth, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest });
+    }
+
+    const products = await product.getProducts();
+    return res.render('home', { producth: products });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ status: 'error', message: 'An internal server error occurred.' });
+  }
+});
+
+
 
 
 
