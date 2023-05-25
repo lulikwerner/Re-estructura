@@ -97,62 +97,75 @@ router.post('/:cid/product/:pid', async (req, res) => {
 router.delete('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   try {
-    console.log('cid', cid);
-    console.log('pidNumber:', pid);
     
-    // If no cart ID is provided, send an error response
+    // Si no se envia ningun id de carrito
     if (!cid || !mongoose.Types.ObjectId.isValid(cid))  {
       return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
     }
-    
-    // Retrieve the cart by its ID
+    // Busco el Id del carrito en carts
     const cart = await cartsM.getCartBy({ _id: cid });
-    
-    // If the cart is not found, send an error response
+    // Si no se encuentra el carrito en carts
     if (!cart) {
       return res.status(404).send({ status: 'error', message: 'Cart not found' });
     }
     if (cart.products.length === 0) {
       return res.status(400).send({ status: 'error', message: 'The cart is empty' });
     }
-
-    
-    // If no product ID is provided, send an error response
+    // Si no se envia ningun pid
     if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
       return res.status(400).send({ status: 'error', message: 'Please enter a valid product ID' });
     }
-    
-    // Find the index of the product in the cart's products array
+    // Busco el pid en el carrito
     const productIndex = cart.products.findIndex((product) => {
       const productId = product.product._id.toString(); // Access the nested _id value
-      console.log('productId:', productId);
-      console.log('pid:', pid);
       return productId === pid;
     });
     
-    // If the product is not found in the cart, send an error response
+    // Si no encuentro el producto en el array
     if (productIndex === -1) {
       return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
     }
     
-    // Remove the product from the cart's products array
+    //Si encuentro el producto en el array lo borro
     cart.products.splice(productIndex, 1);
     
-    // Update the cart in the database
+    // Hago el update en el carrito
     await cartsM.deleteProductInCart(cid, cart.products);
     
     // Send a success response with the updated cart
     return res.status(200).send({ status: 'success', message: `Product with ID ${pid} removed from the cart`, cart });
   } catch (error) {
-    console.log('Error:', error);
     return res.status(400).send({ status: 'failed', message: 'Product could not be removed from the cart' });
   }
 });
 
 
 
-//deberá eliminar todos los productos del carrito 
-router.delete('api/carts/:cid', async (req,res) =>{
+//Deberá eliminar todos los productos del carrito 
+router.delete('/:cid', async (req,res) =>{
+  const { cid } = req.params;
+  try {
+    console.log('cid', cid);
+    // Si no se envia ningun id de carrito
+    if (!cid || !mongoose.Types.ObjectId.isValid(cid))  {
+      return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
+    }
+    // Busco el Id del carrito en carts
+    const cart = await cartsM.getCartBy({ _id: cid });
+    // Si no se encuentra el carrito en carts
+    if (!cart) {
+      return res.status(404).send({ status: 'error', message: 'Cart not found' });
+    
+    }
+    console.log('llego')
+ //Update el carrito
+ await cartsM. emptyCart (cid);
+ console.log('paso')
+   // Send a success response
+   return res.status(200).send({ status: 'success', message: 'The cart is empty'})
+    } catch (error) {
+      return res.status(400).send({ status: 'failed', message: 'Product could not be removed from the cart' });
+    }
 
 });
 //deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
