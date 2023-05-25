@@ -40,32 +40,22 @@ router.post('/', async (req, res) => {
 });
 
 
-
-
 router.get('/:cid', async (req, res) => {
-    const { cid } = req.params;
-    const cidNumber = parseInt(cid);
-    try {
-      // Chequeo que el numero de carrito sea mayor a 0
-        if (cidNumber < 0 || isNaN(cidNumber)) {
-        return res.status(400).send({ status: 'error', message: 'Please enter a valid id' });
-        }
-        const cart = await cartsM.getCartBy({_id: cid});
-      // If the cart is not found, send an error response
-        if (!cart) {
-        return res.status(404).send({ status: 'error', message: 'Cart not found' });
-        }   
+  const { cid } = req.params;
 
-        io.emit('cartiD',cid);
-      // If the cart is found, send the product information
-      res.render('cart',cart);
-        //res.send({ status: 'success', payload: cart });
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({ status: 'error', message: 'Internal server error' });
-    }
+  try {
+      const cart = await cartsM.getCartBy({_id: cid});
+    // If the cart is not found, send an error response
+      if (!cart) {
+      return res.status(404).send({ status: 'error', message: 'Cart not found' });
+      }   
+    // If the cart is found, send the product information
+      res.send({ status: 'success', payload: cart });
+  } catch (error) {
+      console.log(error);
+      res.status(500).send({ status: 'error', message: 'Internal server error' });
+  }
 });
-
 
 
 router.post('/:cid/product/:pid', async (req, res) => {
@@ -101,6 +91,71 @@ router.post('/:cid/product/:pid', async (req, res) => {
     }
   });
   
+//deberá eliminar del carrito el producto seleccionado.
+router.delete('/:cid/products/:pid', async (req, res) => {
+  const { cid, pid } = req.params;
+  try {
+    console.log('cid', cid);
+    console.log('pidNumber:', pid);
+    
+    // If no cart ID is provided, send an error response
+    if (!cid) {
+      return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
+    }
+    
+    // Retrieve the cart by its ID
+    const cart = await cartsM.getCartBy({ _id: cid });
+    
+    // If the cart is not found, send an error response
+    if (!cart) {
+      return res.status(404).send({ status: 'error', message: 'Cart not found' });
+    }
+    
+    console.log(JSON.stringify(cart, null, '\t'));
+    
+    // If no product ID is provided, send an error response
+    if (!pid) {
+      return res.status(400).send({ status: 'error', message: 'Please enter a valid product ID' });
+    }
+    
+    // Find the index of the product in the cart's products array
+    const productIndex = cart.products.findIndex((product) => {
+      const productId = product.product._id.toString(); // Access the nested _id value
+      console.log('productId:', productId);
+      console.log('pid:', pid);
+      return productId === pid;
+    });
+    
+    // If the product is not found in the cart, send an error response
+    if (productIndex === -1) {
+      return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
+    }
+    
+    // Remove the product from the cart's products array
+    cart.products.splice(productIndex, 1);
+    
+    // Update the cart in the database
+    await cartsM.deleteProductInCart(cid, cart.products);
+    
+    // Send a success response with the updated cart
+    return res.status(200).send({ status: 'success', message: `Product with ID ${pid} removed from the cart`, cart });
+  } catch (error) {
+    console.log('Error:', error);
+    return res.status(400).send({ status: 'failed', message: 'Product could not be removed from the cart' });
+  }
+});
 
+//deberá eliminar todos los productos del carrito 
+router.delete('api/carts/:cid', async (req,res) =>{
+
+});
+//deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+router.put('/carts/:cid', async (req,res)=>{
+
+})
+//deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
+router.put('/carts/:cid/products/:pid ', async (req,res)=>{
+  
+})
 
 export default router;

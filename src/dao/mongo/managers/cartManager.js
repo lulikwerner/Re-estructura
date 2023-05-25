@@ -17,44 +17,6 @@ export default  class CartManager {
     };
 
 
-   /* createCart = async () => {
-      return  cartModel.create();
-
-  };
-
-  updateCart = async (id, product) => {
-    try {
-      //Busco el carrito
-      const cart = await cartModel.findById(cid);
-      if(!cart){}
-      for (const { pid, qty } of products) {
-   //Busco el producto
-      const product = await productModel.findById(pid);
-      console.log('Found product:', product);
-      //Si el producto existe busco si esta en el cart
-      if (product) { 
-        const existingProduct = cart.products.find(p => p.product.equals(product._id));
-        //Si esta en el cart le sumo las cantidades
-        if (existingProduct) {
-          existingProduct.quantity += qty;
-        } else {
-          const newProduct = { product: product._id, quantity: qty };
-          cart.products.push(newProduct);
-          console.log('Added product:', newProduct);
-        }
-      }
-    }
-    await cart.save();
-    console.log('Updated cart:', cart);
-    return cart;
-  } catch (error) {
-    console.log('Error:', error);
-    throw new Error('Failed to update the cart');
-  }
-
-      return productModel.findByIdAndUpdate(id,{$set:product});
-  };*/
-
   createCart = async (products) => {
         try {
             const cart = new cartModel();
@@ -107,14 +69,20 @@ updateCart = async (products, cid) => {
     return cartModel.findByIdAndDelete(cid)
   }
   
+
+deleteProductInCart = async (cid, products) => {
+  try {
+      return await cartModel.findOneAndUpdate(
+          { _id: cid },
+          { products },
+          { new: true })
+
+  } catch (err) {
+      return err
+  }
+}
 };
 
+    
 
-    
-       /* await cartModel.updateOne(
-            {_id:cid},
-            {$push:{products: {product: new mongoose.Types.ObjectId(pid)}}});
-       // const cart = await cartModel.find().populate('products.product');
-        console.log(JSON.stringify(cart,null,'\t'))*/
-    
 
