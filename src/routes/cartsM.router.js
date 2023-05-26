@@ -97,7 +97,6 @@ router.post('/:cid/product/:pid', async (req, res) => {
 router.delete('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   try {
-    
     // Si no se envia ningun id de carrito
     if (!cid || !mongoose.Types.ObjectId.isValid(cid))  {
       return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
@@ -120,18 +119,14 @@ router.delete('/:cid/products/:pid', async (req, res) => {
       const productId = product.product._id.toString(); // Access the nested _id value
       return productId === pid;
     });
-    
     // Si no encuentro el producto en el array
     if (productIndex === -1) {
       return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
     }
-    
     //Si encuentro el producto en el array lo borro
     cart.products.splice(productIndex, 1);
-    
     // Hago el update en el carrito
     await cartsM.deleteProductInCart(cid, cart.products);
-    
     // Send a success response with the updated cart
     return res.status(200).send({ status: 'success', message: `Product with ID ${pid} removed from the cart`, cart });
   } catch (error) {
@@ -139,13 +134,10 @@ router.delete('/:cid/products/:pid', async (req, res) => {
   }
 });
 
-
-
 //Deberá eliminar todos los productos del carrito 
 router.delete('/:cid', async (req,res) =>{
   const { cid } = req.params;
   try {
-    console.log('cid', cid);
     // Si no se envia ningun id de carrito
     if (!cid || !mongoose.Types.ObjectId.isValid(cid))  {
       return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
@@ -155,60 +147,73 @@ router.delete('/:cid', async (req,res) =>{
     // Si no se encuentra el carrito en carts
     if (!cart) {
       return res.status(404).send({ status: 'error', message: 'Cart not found' });
-    
     }
-    console.log('llego')
- //Update el carrito
+ //Update el carrito con un array vacio
  await cartsM. emptyCart (cid);
- console.log('paso')
-   // Send a success response
+// Send a success response
    return res.status(200).send({ status: 'success', message: 'The cart is empty'})
     } catch (error) {
-      return res.status(400).send({ status: 'failed', message: 'Product could not be removed from the cart' });
+      return res.status(400).send({ status: 'failed', message: 'Could not empty cart' });
     }
 
 });
 //deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
-router.put('/carts/:cid', async (req,res)=>{
+router.put('/:cid', async (req,res)=>{
 })
 //deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
-router.put('/carts/:cid/products/:pid ', async (req,res)=>{
+router.put('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
-    const { qty} = req.body;
-    const products = [{ qty, title, description, code, price, stock, category, thumbnails}];
-    try {
-      const checkProduct = await productM.getProductById(pid);
-        if (!checkProduct) return response.status(404).send({error: `The ID product: ${pid} not found`})
-        const checkCart = await cartsM.getCartBy({ _id: cid });
-        if (!checkCart) {
-          return res.status(404).send({ status: 'error', message: `We couldn't find the cart ${cid}`  });
-        }
-        //Si no se encuentra el carrito
-        if (!cid) { console.log('Cart not found');
-            return;}
-      // Validate the product ID value
-      console.log('cid',cid)
-      console.log('pidNumber:', pid);
+  const { qty } = req.body;
+  
 
-      //Tiene que enviar la cantidad a modificar
-      if (!qty) {
-        return res.status(400).send({ status: "error", message: "Please send a new value to update" });
+
+  try {
+    if (!cid || !mongoose.Types.ObjectId.isValid(cid)) {
+      return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
     }
-      // Si paso el parametro qty para modificar
-      if (isNaN(qty) || qty < 0) {
-        console.log('Invalid quantity');
-        console.log('qty:', qty);
-        console.log('typeof qty:', typeof qty);
-        return res.status(400).send({ status: 'error', message: 'Quantity should be a valid value' });
-      }
-      // Hago un update del cart , enviando el products y el cid
-      const up=await cartsM.updateCart (products, cid);
-      console.log('Product updated successfully',up);
-      return res.status(200).send({ status: 'success', message: 'Product updated successfully' });
-    } catch (error) {
-      console.log('Error:', error);
-      return res.status(400).send({ status: 'failed', message: 'Product could not be updated' });
+    
+    const cart = await cartsM.getCartBy({ _id: cid });
+    
+    if (!cart) {
+      return res.status(404).send({ status: 'error', message: 'Cart not found' });
     }
-})
+    
+    if (cart.products.length === 0) {
+      return res.status(400).send({ status: 'error', message: 'The cart is empty' });
+    }
+    
+    if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
+      return res.status(400).send({ status: 'error', message: 'Please enter a valid product ID' });
+    }
+    
+    if (!qty) {
+      return res.status(400).send({ status: 'error', message: 'Please send a new value to update' });
+    }
+    
+    if (isNaN(qty) || qty < 0) {
+      return res.status(400).send({ status: 'error', message: 'Quantity should be a valid value' });
+    }
+    
+    const productToUpdate = cart.products.find(product => product.product._id.toString() === pid);
+    
+    if (!productToUpdate) {
+      return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
+    }
+    
+    productToUpdate.qty = Number(qty);
+    
+
+    const cartUpd = await cartsM.updateQtyCart(cid, pid, qty);
+    await cartUpd.save();
+    console.log(JSON.stringify(cartUpd, null, '\t'));
+
+    return res.status(200).send({ status: 'success', message: 'Product updated successfully' });
+  } catch (error) {
+    console.log('Error:', error);
+    return res.status(400).send({ status: 'failed', message: 'Product could not be updated' });
+  }
+});
 
 export default router;
+
+
