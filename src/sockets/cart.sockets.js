@@ -11,14 +11,22 @@ export default function socketCarts(io) {
  
         
         socket.on('addedProduct', async data => {
-          console.log('pid',data)
-          const productToAdd = await productManager.getProductBy({ _id: data })
-         console.log( 'el producto agregadp',productToAdd)
-          console.log(data)
-          await cartManager.createCart(data);
-          console.log('carro creado')
-          
+          const productId = data; // Assuming data is the product ID
+          console.log('Product ID:', productId);
         
+          const productToAdd = await productManager.getProductBy({ _id: productId });
+          console.log('Product to add:', productToAdd);
+        
+          const productsArray = Object.values(productToAdd); // Convert the product object to an array
+          const carritoNuevo = await cartManager.createCart(productsArray);
+          console.log('Cart created:', carritoNuevo);
         });
+       
+        
+        
+        
+        
+        
+        
       })
     }

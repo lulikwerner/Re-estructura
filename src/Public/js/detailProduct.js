@@ -20,5 +20,5 @@ document.addEventListener('DOMContentLoaded', AddProductToCart);
 
 
 
-//document.getElementById('addProductButton').addEventListener('click', AddProductToCart);
+
 
