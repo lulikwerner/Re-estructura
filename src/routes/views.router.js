@@ -9,18 +9,12 @@ const product = new  productManager ();
 const cart = new cartManager();
 
 
-router.get('/realTimeProducts', async(req, res) => {
-  const products = await  product.getProducts();
-  res.render('realTimeProducts',products);
-});
-
-
 router.get('/realTimeProducts', async (req, res) => {
   const products = await product.getProducts();
   res.render('realTimeProducts', { producth: products });
 });
 
-router.get('/', async (req, res) => {
+router.get('/products', async (req, res) => {
   const { limit, page = 1, sort, category } = req.query;
 
   try {
@@ -74,11 +68,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
-
-
-
-
 router.get('/chat',async(req,res)=>{
   res.render('chat');
 })
@@ -89,7 +78,6 @@ router.get('/cart/:cid',async(req,res)=>{
   console.log(JSON.stringify(carts, null, '\t'));
   res.render('cart',{carth:carts} );
 })
-
 
 router.get("/realTimeCart/:cid", async (req, res) => {
   res.render("realTimeCart");

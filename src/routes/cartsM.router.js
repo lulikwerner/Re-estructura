@@ -18,11 +18,11 @@ router.post('/', async (req, res) => {
             }
           // Chequeo si el pid o el qty tiene valores
             for (const products of cart) {
-                if (!products.pid || !products.qty) {
+                if (!products.pid || !products.stock) {
                     return res.status(400).send({ status: 'error', message: 'One or more fields are incomplete for a product' });
             }
             //Chequeo si las cantidades sean un numero o mayor a 0
-            if (isNaN(products.qty)|| products.qty < 0) {
+            if (isNaN(products.stock)|| products.stock< 0) {
                 return res.status(400).send({ status: 'error', message: 'Enter a valid value for the  products' });
         }
             }
@@ -158,55 +158,65 @@ router.delete('/:cid', async (req,res) =>{
 
 });
 //deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
-router.put('/:cid', async (req,res)=>{
-})
+router.put('/:cid', async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const products = req.body;
+
+    console.log(products);
+    if (!Array.isArray(products)) {
+      return res.status(400).json({ message: 'Products must be an array' });
+    }
+
+    const productIds = products.map((product) => product.pid);
+
+    // Call the updateProductsInCart function with the necessary arguments
+    const updatedCart = await updateProductsInCart(cid, products, productIds);
+
+    if (updatedCart) {
+      res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
+    } else {
+      res.status(404).json({ message: 'Cart not found' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error', error: err });
+  }
+});
+
+
 //deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
 router.put('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   const { qty } = req.body;
-  
-
-
   try {
     if (!cid || !mongoose.Types.ObjectId.isValid(cid)) {
       return res.status(400).send({ status: 'error', message: 'Please enter a cart ID' });
     }
-    
     const cart = await cartsM.getCartBy({ _id: cid });
-    
     if (!cart) {
       return res.status(404).send({ status: 'error', message: 'Cart not found' });
     }
-    
     if (cart.products.length === 0) {
       return res.status(400).send({ status: 'error', message: 'The cart is empty' });
     }
-    
     if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
       return res.status(400).send({ status: 'error', message: 'Please enter a valid product ID' });
     }
-    
-    if (!qty) {
+    if (qty === undefined || qty === '') {
       return res.status(400).send({ status: 'error', message: 'Please send a new value to update' });
     }
-    
     if (isNaN(qty) || qty < 0) {
       return res.status(400).send({ status: 'error', message: 'Quantity should be a valid value' });
     }
-    
     const productToUpdate = cart.products.find(product => product.product._id.toString() === pid);
-    
     if (!productToUpdate) {
       return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
     }
-    
     productToUpdate.qty = Number(qty);
-    
-
     const cartUpd = await cartsM.updateQtyCart(cid, pid, qty);
     await cartUpd.save();
     console.log(JSON.stringify(cartUpd, null, '\t'));
-
     return res.status(200).send({ status: 'success', message: 'Product updated successfully' });
   } catch (error) {
     console.log('Error:', error);

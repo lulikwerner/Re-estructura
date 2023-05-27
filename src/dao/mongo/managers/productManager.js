@@ -14,7 +14,7 @@ export default class ProductManager {
           }
         }
       ]);
-
+console.log(categoriesData)
       const { categories, statuses } = categoriesData[0];
       return { categories, statuses };
     } catch (err) {
@@ -22,9 +22,6 @@ export default class ProductManager {
       return err;
     }
   };
-
-
-
 
     getProducts = () => {
         return productModel.find().lean();

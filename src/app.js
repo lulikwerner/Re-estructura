@@ -11,6 +11,7 @@ import viewsRouter from './routes/views.router.js';
 import registerChatHandler from './listeners/chatHandler.js';
 import cartSocket from './sockets/cart.sockets.js';
 
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -73,7 +74,6 @@ const startServer = async () => {
       });
       socket.emit('productsAdd', product);
     });
-
 
     socket.on('deleteProduct', async data => {
       await productManager.deleteProduct(data);

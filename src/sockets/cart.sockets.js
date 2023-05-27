@@ -1,21 +1,24 @@
 import CartManager from "../dao/mongo/managers/cartManager.js";
+import ProductManager from "../dao/mongo/managers/productManager.js";
 
 
 const cartManager = new CartManager();
-
+const productManager = new ProductManager
 
 export default function socketCarts(io) {
     io.on("connection", async (socket) => {
         console.log('Socket cart pre conexion');
  
         
-        socket.on('cart', async (data) => {
-            const cid = data.cid; // Obtain the 'cid' value from the data sent by the client
-            console.log('Socket cart conexion');
-            const carts = await cartManager.getCartBy(cid);
-            console.log(cid);
-            console.log(JSON.stringify(carts, null, '\t'));
-            socket.emit('homeCart', carts);
-          });
+        socket.on('addedProduct', async data => {
+          console.log('pid',data)
+          const productToAdd = await productManager.getProductBy({ _id: data })
+         console.log( 'el producto agregadp',productToAdd)
+          console.log(data)
+          await cartManager.createCart(data);
+          console.log('carro creado')
+          
+        
         });
-      }
+      })
+    }

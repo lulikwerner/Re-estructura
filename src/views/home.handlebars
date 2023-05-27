@@ -1,7 +1,8 @@
 <h1>PRODUCTOS</h1>
 
-<div>
+
     {{#each producth }}
+   
         <ul>
             <li>
                 id: {{this.this._id}}
@@ -30,7 +31,11 @@
             <li>
                 thumbnail: {{this.thumbnail}}
             </li>
-        </ul>
+              </ul>
+             
+<button id="addProductButton" type="submit" class="btn addButtonStyle m-3" data-id="{{this._id}}">Comprar</button>
+AddProductToCart()
+    </div>
     {{/each}}
     {{#if hasPrevPage}}
     <a href="/?page={{prevPage}}"><button>Anterior</button></a>
@@ -40,4 +45,6 @@
     <a href="/?page={{nextPage}}"><button>Siguiente</button></a>
     {{/if}}
 </div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/detailProduct.js" type="module"></script>
 
