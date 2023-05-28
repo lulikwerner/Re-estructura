@@ -44,3 +44,5 @@ console.log(categoriesData)
         return productModel.findByIdAndDelete(id);
     };
 }
+
+

@@ -43,9 +43,6 @@ import __dirname from '../utils.js'
           console.log(error); 
         }
       }
-      
-    
-
 
     getProductsById = async (id) => {
         try {

@@ -62,7 +62,7 @@ router.get('/:cid', async (req, res) => {
 
 router.post('/:cid/product/:pid', async (req, res) => {
     const { cid, pid } = req.params;
-    const { qty, title, description, code, price, stock, category, thumbnails} = req.body;
+    const {  title, description, code, price, stock, category, thumbnails} = req.body;
     const products = [{ qty, title, description, code, price, stock, category, thumbnails}];
     try {
         //Si no se encuentra el carrito
@@ -77,10 +77,10 @@ router.post('/:cid/product/:pid', async (req, res) => {
         return res.status(400).send({ status: "error", message: "Please send a new value to update" });
     }
       // Si paso el parametro qty para modificar
-      if (isNaN(qty) || qty < 0) {
-        console.log('Invalid quantity');
-        console.log('qty:', qty);
-        console.log('typeof qty:', typeof qty);
+      if (isNaN(stock) || stock < 0) {
+        console.log('Invalid stock');
+        console.log('stock:', stock);
+ 
         return res.status(400).send({ status: 'error', message: 'Quantity should be a valid value' });
       }
       // Hago un update del cart , enviando el products y el cid
@@ -171,18 +171,19 @@ router.put('/:cid', async (req, res) => {
     const productIds = products.map((product) => product.pid);
 
     // Call the updateProductsInCart function with the necessary arguments
-    const updatedCart = await updateProductsInCart(cid, products, productIds);
-
-    if (updatedCart) {
+    const updatedCart = await cartsM.updateProductsInCart(cid, products);
+   await updatedCart.save();
+ console.log(JSON.stringify(updatedCart, null, '\t'));
+  
       res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
-    } else {
-      res.status(404).json({ message: 'Cart not found' });
-    }
+     
+   
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error', error: err });
   }
 });
+
 
 
 //deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body

@@ -35,8 +35,6 @@
         }
       };
       
- 
-      
       //Actualiza la cantidad en un cart
       updateCart = async (products, cid) => {
     try {
@@ -67,18 +65,75 @@
       throw new Error('Failed to update the cart');
     }
       };
-    //Actualiza los productos en un cart
-     updateProductsInCart = async (cid, products, productId) => {
+
+    
+      updateProductsInCart = async (cartId, products) => {
+        console.log(products);
         try {
-          return await cartModel.findOneAndUpdate(
-            { _id: cid },
-            { $set: { products: products } },
-            { new: true }
-          );
-        } catch (err) {
-          return err;
+          const cart = await cartModel.findById(cartId).populate('products.product');
+      
+          if (!cart) {
+            return null; // Cart not found
+          }
+      
+          let updatedCart = null; // Initialize updatedCart
+      
+          products.forEach((product) => {
+            const productId = product.pid;
+            console.log(productId);
+            const cartProduct = cart.products.find((cartProduct) => cartProduct.product.id === productId);
+            if (cartProduct) {
+              // Product exists in the cart, update the fields
+              const { title, description, code, price, stock, category, thumbnails } = product;
+      
+              if (title) {
+                cartProduct.product.title = title;
+              }
+              if (description) {
+                cartProduct.product.description = description;
+              }
+              if (code) {
+                cartProduct.product.code = code;
+              }
+              if (price) {
+                cartProduct.product.price = price;
+              }
+              if (stock) {
+                cartProduct.product.stock = stock;
+              }
+              if (category) {
+                cartProduct.product.category = category;
+              }
+              if (thumbnails) {
+                cartProduct.product.thumbnails = thumbnails;
+              }
+            }
+          });
+      
+          try {
+            const updatedCart = await cart.save();
+            console.log(JSON.stringify(updatedCart, null, '\t'));
+            return updatedCart;
+            // Save operation completed successfully
+          } catch (error) {
+            console.error('Error while saving the cart:', error);
+            // Handle the error appropriately (e.g., log, return error response, etc.)
+          }
+        } catch (error) {
+          // Handle the error
         }
       };
+      
+      
+    
+  
+    
+    
+    
+
+    
+     
+    
 
       
 
