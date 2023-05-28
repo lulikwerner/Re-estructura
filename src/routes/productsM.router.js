@@ -1,7 +1,7 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongo/managers/productManager.js";
-import productModel from "../dao/mongo/models/products.js";
-import views from "./views.router.js"
+import mongoose from "mongoose";
+
 const router = Router();
 const productsM = new ProductManager();
 
@@ -93,12 +93,21 @@ router.put('/:pid', async(req,res) => {
     const { pid } = req.params;
     const productUpdate = req.body;
     try {
+        //Si no envian parametro de pid
+        if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
+        return res.status(400).send({ status: 'error', message: 'Please enter a product ID' });
+        }
+       //Si no se envia nada en el body a modificar
+        if (Object.keys(productUpdate).length === 0) {
+        return res.status(400).send({ status: 'error', message: 'No updates provided. Product not modified' });
+         }
         //Chequeo que el pid existe en mi array de productos 
         const result = await productsM.getProductBy({_id: pid})
         if(!result) return res.status(404).send({ status: 'error', message: 'Product not updated because it cannot be found' });
         const updateProduct = await productsM.updateProduct(pid, productUpdate);
+       
         //Si Modifico algo retorno que el producto fue modificado con exito
-        if (updateProduct) return res.status(201).send({ status: "success", message: `The product with id ${pid} has been succesfully updated` });
+        if (updateProduct) return res.status(201).send({ status: 'success', message: `The product with id ${pid} has been succesfully updated` });
         //Sino devuelvot que no se pudo modifica
         return res.status(404).send({ error: "Update product failed" }); 
     }
@@ -110,7 +119,9 @@ router.put('/:pid', async(req,res) => {
 router.delete('/:pid', async(req,res) => {
     const { pid } = req.params
     try {
-       
+        if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
+            return res.status(400).send({ status: 'error', message: 'Please enter a product ID' });
+          }
         const resultDelete = await productsM.deleteProduct({_id: pid})
         //Busco el id del producto a eliminar si no lo encuentro devuelvo error sino devuelvo producto eliminado
         if (!resultDelete) return res.status(400).send({ status: 'error', message: 'Product not found' })

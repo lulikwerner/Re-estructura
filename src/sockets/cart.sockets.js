@@ -8,7 +8,6 @@ const productManager = new ProductManager
 export default function socketCarts(io) {
     io.on("connection", async (socket) => {
         console.log('Socket cart pre conexion');
- 
         
         socket.on('addedProduct', async data => {
           const productId = data; // Assuming data is the product ID
@@ -20,6 +19,7 @@ export default function socketCarts(io) {
           const productsArray = Object.values(productToAdd); // Convert the product object to an array
           const carritoNuevo = await cartManager.createCart(productsArray);
           console.log('Cart created:', carritoNuevo);
+         
         });
        
         

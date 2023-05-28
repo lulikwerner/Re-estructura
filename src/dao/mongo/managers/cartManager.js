@@ -18,50 +18,24 @@
       //Crea un cart
       createCart = async (products) => {
         try {
-          console.log('Products to add:', products);
+
           const cart = new cartModel();
           const productIds = products.map(product => product._id);
           const productsToAdd = await productModel.find({ _id: { $in: productIds } });
-          console.log('Products fetched:', productsToAdd);
-      
           for (const product of productsToAdd) {
             const matchingProduct = products.find(p => p._id.toString() === product._id.toString());
-            console.log('Matching product:', matchingProduct);
             if (matchingProduct) {
               cart.products.push({ product: product._id, quantity: matchingProduct.qty });
             }
           }
-      
-          console.log('Cart to save:', cart);
           await cart.save();
-          console.log('Cart saved:', cart);
           return cart;
-        } catch (error) {
-          console.error('Error creating cart:', error);
+        } catch (error) {  
           throw new Error('Failed to create the cart');
         }
       };
       
-      /*createCart = async (products) => {
-        try {
-          const cart = new cartModel();
-          console.log('Products:', products);
-          for (const { pid, qty } of products) {
-            console.log('Product ID:', pid);
-            // Busco el pid en la colección de productos
-            const product = await productModel.findById(pid);
-            console.log('Product:', product);
-            // Si existe el producto, empujo la cantidad y el id
-            if (product) {
-              cart.products.push({ product: product._id, quantity: qty });
-            }
-          }
-          await cart.save();
-          return cart;
-        } catch (error) {
-          throw new Error('Failed to create the cart');
-        }
-      }*/
+ 
       
       //Actualiza la cantidad en un cart
       updateCart = async (products, cid) => {
