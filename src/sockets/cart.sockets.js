@@ -7,7 +7,7 @@ const productManager = new ProductManager
 
 export default function socketCarts(io) {
     io.on("connection", async (socket) => {
-        console.log('Socket cart pre conexion');
+        console.log('Cart conexion');
         
         socket.on('addedProduct', async data => {
           const productId = data; // Assuming data is the product ID

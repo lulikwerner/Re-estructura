@@ -66,9 +66,7 @@
     }
       };
 
-    
       updateProductsInCart = async (cartId, products) => {
-        console.log(products);
         try {
           const cart = await cartModel.findById(cartId).populate('products.product');
       
@@ -109,36 +107,25 @@
               }
             }
           });
-      
           try {
-            const updatedCart = await cart.save();
+            updatedCart = await cart.save(); // Intenta guardar el carrito actualizado
             console.log(JSON.stringify(updatedCart, null, '\t'));
+            console.log(JSON.stringify(updatedCart, null, '\t'));
+          
             return updatedCart;
-            // Save operation completed successfully
           } catch (error) {
-            console.error('Error while saving the cart:', error);
-            // Handle the error appropriately (e.g., log, return error response, etc.)
+            console.error('Error al guardar el carrito:', error);
+            // Maneja el error de acuerdo a tus necesidades (por ejemplo, registra un mensaje de error, devuelve una respuesta de error, etc.)
           }
+         
+          
+      
+          return updatedCart;
         } catch (error) {
           // Handle the error
         }
       };
       
-      
-    
-  
-    
-    
-    
-
-    
-     
-    
-
-      
-
-      
-
       updateQtyCart = async (cid, pid, qty) => {
       try {
         const cart = await cartModel.findById(cid).populate('products.product');

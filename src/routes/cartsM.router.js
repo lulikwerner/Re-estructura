@@ -163,28 +163,28 @@ router.put('/:cid', async (req, res) => {
     const { cid } = req.params;
     const products = req.body;
 
-    console.log(products);
+ 
     if (!Array.isArray(products)) {
       return res.status(400).json({ message: 'Products must be an array' });
     }
 
     const productIds = products.map((product) => product.pid);
-
     // Call the updateProductsInCart function with the necessary arguments
     const updatedCart = await cartsM.updateProductsInCart(cid, products);
-   await updatedCart.save();
- console.log(JSON.stringify(updatedCart, null, '\t'));
-  
+    console.log(JSON.stringify(updatedCart, null, '\t'));
+  const verificar = await cartsM.getCartBy(cid)
+  console.log(JSON.stringify(verificar, null, '\t'));
+    if (updatedCart) {
       res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
-     
-   
+      //console.log(JSON.stringify(updatedCart, null, '\t'));
+    } else {
+      res.status(404).json({ message: 'Cart not found' });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error', error: err });
   }
 });
-
-
 
 //deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
 router.put('/:cid/products/:pid', async (req, res) => {
