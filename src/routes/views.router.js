@@ -18,16 +18,7 @@ router.get('/products', async (req, res) => {
   const { limit, page = 1, sort, category } = req.query;
 
   try {
-    if (sort) {
-      let sortedProducts = 'desc';
-      if (sort === 'desc') {
-        sortedProducts = await productModel.find({ }).sort({ price: -1 }).limit(limit).lean();
-      } else {
-        sortedProducts = await productModel.find({ }).sort({ price: 1 }).limit(limit).lean();
-      }
-      return res.render('home', { producth: sortedProducts });
-    }
-
+  
     if (limit) {
       const products = await product.getProducts();
 
@@ -40,7 +31,8 @@ router.get('/products', async (req, res) => {
 
     if (page) {
       const query = category ? { category } : {}; 
-      const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest } = await productModel.paginate(query, { page, limit: 10, lean: true });
+      const sortQuery = sort === 'desc' ? { price: -1 } : { price: 1 };
+      const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest } = await productModel.paginate(query, { page, limit: 10, sort: sortQuery, lean: true });
       const producth = docs;
       const response = {
         status: 'success',
@@ -67,6 +59,11 @@ router.get('/products', async (req, res) => {
     return res.status(500).send({ status: 'error', message: 'An internal server error occurred.' });
   }
 });
+
+
+
+
+
 
 router.get('/chat',async(req,res)=>{
   res.render('chat');

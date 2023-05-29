@@ -38,11 +38,11 @@
     </div>
     {{/each}}
     {{#if hasPrevPage}}
-    <a href="/?page={{prevPage}}"><button>Anterior</button></a>
+    <a href="/products?page={{prevPage}}"><button>Anterior</button></a>
     {{/if}}
     <p>page: {{page}}</p>
      {{#if hasNextPage}}
-    <a href="/?page={{nextPage}}"><button>Siguiente</button></a>
+    <a href="/products?page={{nextPage}}"><button>Siguiente</button></a>
     {{/if}}
 </div>
 <script src="/socket.io/socket.io.js"></script>

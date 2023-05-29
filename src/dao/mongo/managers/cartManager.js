@@ -108,10 +108,14 @@
             }
           });
           try {
+            console.log('hola')
             updatedCart = await cart.save(); // Intenta guardar el carrito actualizado
             console.log(JSON.stringify(updatedCart, null, '\t'));
-            console.log(JSON.stringify(updatedCart, null, '\t'));
-          
+            if (updatedCart.isNew) {
+              console.log('El carrito fue guardado correctamente y es nuevo');
+            } else {
+              console.log('El carrito fue guardado correctamente y se actualizó');
+            }
             return updatedCart;
           } catch (error) {
             console.error('Error al guardar el carrito:', error);
