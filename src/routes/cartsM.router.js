@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-
+//Busca un cart
 router.get('/:cid', async (req, res) => {
   const { cid } = req.params;
 
@@ -59,7 +59,7 @@ router.get('/:cid', async (req, res) => {
   }
 });
 
-
+//Modifica la cantidad de un producto
 router.post('/:cid/product/:pid', async (req, res) => {
     const { cid, pid } = req.params;
     const {  title, description, code, price, stock, category, thumbnails} = req.body;
@@ -93,7 +93,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
     }
   });
   
-//deberá eliminar del carrito el producto seleccionado.
+//Elimina del carrito seleccionado el producto seleccionado
 router.delete('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
   try {
@@ -134,7 +134,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
   }
 });
 
-//Deberá eliminar todos los productos del carrito 
+//Elimina la productos del carrito. Lo vacia
 router.delete('/:cid', async (req,res) =>{
   const { cid } = req.params;
   try {
@@ -157,28 +157,27 @@ router.delete('/:cid', async (req,res) =>{
     }
 
 });
-//deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+//Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
 router.put('/:cid', async (req, res) => {
   try {
     const { cid } = req.params;
     const products = req.body;
-
- 
     if (!Array.isArray(products)) {
       return res.status(400).json({ message: 'Products must be an array' });
     }
-
     const productIds = products.map((product) => product.pid);
-    // Call the updateProductsInCart function with the necessary arguments
+    // Mano a llamar a updateProductsInCart 
     const updatedCart = await cartsM.updateProductsInCart(cid, products);
     console.log(JSON.stringify(updatedCart, null, '\t'));
-  const verificar = await cartsM.getCartBy(cid)
-  console.log(JSON.stringify(verificar, null, '\t'));
+    const verificar = await cartsM.getCartBy(cid)
+    //Conso.log para verificar que se efectivamente se hicieron los cambios
+    console.log(JSON.stringify(verificar, null, '\t'));
+    //Si se hizo el update del carrito mando successfully sino
     if (updatedCart) {
       res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
       //console.log(JSON.stringify(updatedCart, null, '\t'));
     } else {
-      res.status(404).json({ message: 'Cart not found' });
+      res.status(404).json({ message: 'Cart could not be modify' });
     }
   } catch (err) {
     console.error(err);

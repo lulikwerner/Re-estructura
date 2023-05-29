@@ -35,7 +35,7 @@
         }
       };
       
-      //Actualiza la cantidad en un cart
+     //Actualiza los productos delc art con el POST
       updateCart = async (products, cid) => {
     try {
         //Busco el carrito
@@ -66,6 +66,7 @@
     }
       };
 
+      //Actualiza 
       updateProductsInCart = async (cartId, products) => {
         try {
           const cart = await cartModel.findById(cartId).populate('products.product');
@@ -108,7 +109,6 @@
             }
           });
           try {
-            console.log('hola')
             updatedCart = await cart.save(); // Intenta guardar el carrito actualizado
             console.log(JSON.stringify(updatedCart, null, '\t'));
             if (updatedCart.isNew) {
@@ -121,15 +121,21 @@
             console.error('Error al guardar el carrito:', error);
             // Maneja el error de acuerdo a tus necesidades (por ejemplo, registra un mensaje de error, devuelve una respuesta de error, etc.)
           }
-         
-          
-      
+          /*Copy code
+          const cartIndex = carts.findIndex(c => c.cid === parseInt(cid));
+
+          if (cartIndex === -1) {
+          throw new Error(`We cannot make an update to the cart with id ${cid} because it does not exist`);
+          }
+
+          const cartToUpdate = { ...carts[cartIndex], ...updatedCart };
+          carts[cartIndex] = cartToUpdate;*/
           return updatedCart;
         } catch (error) {
-          // Handle the error
+          throw error;
         }
       };
-      
+       //Actualiza la cantidad en un cart
       updateQtyCart = async (cid, pid, qty) => {
       try {
         const cart = await cartModel.findById(cid).populate('products.product');
@@ -146,10 +152,12 @@
       }
       }
 
+      //Elimina el carrito. No lo estoy usando
       deleteCart = async (cid) => {
       return cartModel.findByIdAndDelete(cid)
       }
     
+      //Borra el producto del carrito
       deleteProductInCart = async (cid, products) => {
     try {
         return await cartModel.findOneAndUpdate(
@@ -162,6 +170,7 @@
     }
       }
 
+      //Vacia el carrito
       emptyCart = async (cid)=> {
     try {
       if (!mongoose.Types.ObjectId.isValid(cid)) {

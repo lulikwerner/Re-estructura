@@ -8,17 +8,17 @@ const router = Router();
 const product = new  productManager ();
 const cart = new cartManager();
 
-
+//Formulario para cargar productos nuevos y muestra los productos y los puedo eliminar 
 router.get('/realTimeProducts', async (req, res) => {
   const products = await product.getProducts();
   res.render('realTimeProducts', { producth: products });
 });
 
+//Muestra los productos, filtro y orden
 router.get('/products', async (req, res) => {
   const { limit, page = 1, sort, category } = req.query;
 
   try {
-  
     if (limit) {
       const products = await product.getProducts();
 
@@ -60,15 +60,12 @@ router.get('/products', async (req, res) => {
   }
 });
 
-
-
-
-
-
+//Abre el chat
 router.get('/chat',async(req,res)=>{
   res.render('chat');
 })
 
+//Muestro los productos que tiene el carrito
 router.get('/cart/:cid',async(req,res)=>{
   const { cid } = req.params;
   const carts = await cart.getCartBy(cid);
@@ -76,8 +73,5 @@ router.get('/cart/:cid',async(req,res)=>{
   res.render('cart',{carth:carts} );
 })
 
-router.get("/realTimeCart/:cid", async (req, res) => {
-  res.render("realTimeCart");
-});
 
 export default router;
