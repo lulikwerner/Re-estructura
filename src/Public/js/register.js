@@ -15,7 +15,14 @@ form.addEventListener('submit', async(event)=>{
     })
     const responseData = await response.json();
     if(responseData.status="succes"){
-        //Agregar modale de registrado exitosamente
+        Swal.fire({
+            toast:true,
+            position:'top-end',
+            showCOnfirmButton: false,
+            timer: 4000,
+            title:`Se ha registrado exitosamente`,
+            icon:"succes"
+        })
         window.location.replace('/login');
     }
 })
