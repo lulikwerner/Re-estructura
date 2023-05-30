@@ -1,12 +1,16 @@
 import express from "express";
+import session from "express-session"
 import handlebars from "express-handlebars";
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo"
 import { Server } from "socket.io";
 import { __dirname } from "./utils.js";
 
 import productRouter from "./routes/productsM.router.js";
 import cartRouter from "./routes/cartsM.router.js";
 import viewsRouter from "./routes/views.router.js";
+import sessionsRouter from "./routes/session.router.js"
+
 
 import registerChatHandler from "./listeners/chatHandler.js";
 import cartSocket from "./sockets/cart.sockets.js";
@@ -26,6 +30,8 @@ const startServer = async () => {
     console.error("Failed to connect to MongoDB:", error);
   }
 
+ 
+
   //Conecto a mi puerto
   const server = app.listen(PORT, () => {
     console.log(`Listening on ${PORT}`);
@@ -40,6 +46,16 @@ const startServer = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static(`${__dirname}/public`));
 
+  app.use(session({
+    store:new MongoStore({
+      mongoUrl: "mongodb+srv://lulikwerner:123@clustercitofeliz.ro8b1xi.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      ttl:3600
+    }),
+    secret:"CoderS3cr3t",
+    resave:false,
+    saveUninitialized:false 
+  }))
+
   const ioMiddleware = (req, res, next) => {
     req.io = io;
     next();
@@ -50,7 +66,7 @@ const startServer = async () => {
   app.use("/api/products", productRouter);
   app.use("/", viewsRouter);
   app.use("/api/carts", cartRouter);
-
+app.use("/api/sessions", sessionsRouter)
   //El chat 
   io.on("connection", async (socket) => {
     registerChatHandler(io, socket);

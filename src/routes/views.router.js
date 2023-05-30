@@ -26,7 +26,7 @@ router.get('/products', async (req, res) => {
         return res.status(400).send({ status: 'error', message: 'Please enter a valid value for limit.' });
       }
       const limitedProducts = products.slice(0, limit);
-      return res.render('home', { producth: limitedProducts });
+      return res.render('home', { producth: limitedProducts, user: req.session.user  });
     }
 
     if (page) {
@@ -47,13 +47,14 @@ router.get('/products', async (req, res) => {
         nextLink: hasNextPage ? `/?limit=${limit}&page=${nextPage}&sort=${sort}&category=${category}` : null
       };
      console.log(response)
-      return res.render('home', { producth, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest });
+      return res.render('home', { producth, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest, user: req.session.user  });
     }
 
     const products = await product.getProducts();
     const { categories, statuses } = await categoriesAndStatus(); 
     console.log('entro en categoria')// Retrieve categories and statuses
-    return res.render('home', { producth: products, categories, statuses }); 
+    console.log('el usuario',req.session.user)
+    return res.render('home', { producth: products, categories, statuses, user: req.session.user });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ status: 'error', message: 'An internal server error occurred.' });
@@ -73,5 +74,12 @@ router.get('/cart/:cid',async(req,res)=>{
   res.render('cart',{carth:carts} );
 })
 
+router.get('/register',async(req,res)=>{
+  res.render('register');
+})
+
+router.get('/login',async(req,res)=>{
+  res.render('login');
+})
 
 export default router;
