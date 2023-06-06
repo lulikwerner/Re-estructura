@@ -1,4 +1,5 @@
 import { Router } from "express";
+import {privacy} from "../middlewares/auth.js"
 import productManager from "../dao/mongo/managers/productManager.js"
 import cartManager from "../dao/mongo/managers/cartManager.js"
 import productModel from "../dao/mongo/models/products.js";
@@ -74,11 +75,11 @@ router.get('/cart/:cid',async(req,res)=>{
   res.render('cart',{carth:carts} );
 })
 
-router.get('/register',async(req,res)=>{
+router.get('/register',privacy('NO_AUTHENTICATED'), async(req,res)=>{
   res.render('register');
 })
 
-router.get('/login',async(req,res)=>{
+router.get('/login', privacy('NO_AUTHENTICATED'), async(req,res)=>{
   res.render('login');
 })
 

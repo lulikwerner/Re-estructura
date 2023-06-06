@@ -19,7 +19,7 @@ form.addEventListener('submit', async(event)=>{
             toast:true,
             position:'top-end',
             showCOnfirmButton: false,
-            timer: 4000,
+            timer:4000,
             title:`Se ha registrado exitosamente`,
             icon:"succes"
         })
