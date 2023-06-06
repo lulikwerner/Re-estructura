@@ -66,7 +66,7 @@ const startServer = async () => {
   app.use("/api/products", productRouter);
   app.use("/", viewsRouter);
   app.use("/api/carts", cartRouter);
-app.use("/api/sessions", sessionsRouter)
+  app.use("/api/sessions", sessionsRouter)
   //El chat 
   io.on("connection", async (socket) => {
     registerChatHandler(io, socket);

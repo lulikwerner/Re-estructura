@@ -2,8 +2,10 @@
 {{#if user}}
     <div>
         <h1>Hola {{user.name}}</h1>
+        <p>Tu rol es de {{user.role}}</p>
      
     </div>
+    <button id="logOutButton" type="submit" class="btn logOutButtonStyle m-3" >Log Out</button>
 {{/if}}
 
 <h2>PRODUCTOS</h2>
@@ -55,5 +57,7 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/detailProduct.js" type="module"></script>
+<script src="/js/logOut.js" type="module"></script>
 

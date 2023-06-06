@@ -38,9 +38,24 @@ router.post('/login', async(req, res) => {
     // If the user and password are valid
     req.session.user = {
       name: `${user.first_name} ${user.last_name}`,
-      email: user.email
+      email: user.email,
+      role: user.role
     };
     console.log('Logged in user:', req.session.user); 
     return res.status(200).json({ status: "success" });
+  }); 
+
+router.post('/logout', (req, res) => {
+    // Destruye la sesion de la cookie
+    req.session.destroy(err => {
+      if (err) {
+        console.error('Error destroying session:', err);
+      }
+      // Redirigo al Login
+      res.redirect('/login');
+    });
   });
+
   export default router;
+
+  

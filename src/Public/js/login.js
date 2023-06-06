@@ -18,7 +18,7 @@ form.addEventListener('submit', async(event)=>{
     
     const responseData = JSON.parse(responseText);
     if(responseData.status === "success"){
-        // Agregar modale de logeado exitosamente y los datos del usuario
+        // Agregar modal de logeado exitosamente y los datos del usuario
         window.location.replace('/products');
     }
     
