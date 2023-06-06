@@ -18,8 +18,23 @@ form.addEventListener('submit', async(event)=>{
     
     const responseData = JSON.parse(responseText);
     if(responseData.status === "success"){
-        // Agregar modal de logeado exitosamente y los datos del usuario
-        window.location.replace('/products');
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Login Exitoso',
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            window.location.replace('/products');
+          });
+    }else{
+        Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: 'Usuario o contrasenia invalidos',
+            showConfirmButton: false,
+            timer: 1500
+          });
     }
     
 })

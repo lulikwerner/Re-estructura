@@ -4,6 +4,10 @@ import userModel from "../dao/mongo/models/user.js"
 const router = Router();
 
 router.post('/register', async(req,res)=>{
+  const { first_name, last_name, email, password } = req.body;
+  if(!first_name || !last_name || !email || !password){
+    return res.status(401).json({ status: 'error', error: 'Por favor completar todos los campos' });
+  }
     const result = await userModel.create(req.body);
     res.send({status:"success", payload:result})
 })

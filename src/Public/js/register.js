@@ -14,15 +14,25 @@ form.addEventListener('submit', async(event)=>{
 
     })
     const responseData = await response.json();
-    if(responseData.status="succes"){
+    if(responseData.status ==="succes"){
         Swal.fire({
             toast:true,
             position:'top-end',
-            showCOnfirmButton: false,
-            timer:4000,
+            showConfirmButton: false,
+            timer:2000,
             title:`Se ha registrado exitosamente`,
             icon:"succes"
         })
         window.location.replace('/login');
+    }else{
+        Swal.fire({
+            toast:true,
+            position:'top-end',
+            showConfirmButton: false,
+            timer:2000,
+            title:`Por favor complete todos los campos`,
+            icon:"error"
+        }) 
     }
+    
 })

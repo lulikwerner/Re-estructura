@@ -2,12 +2,13 @@ const logOutButton = document.getElementById('logOutButton');
 
 logOutButton.addEventListener('click', () => {
   Swal.fire({
-    title: 'Do you want to close the session?',
+    title: 'Desea cerrar su sesion?',
     icon: 'question',
     showCancelButton: true,
     confirmButtonColor: '#73be73',
     cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes!'
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No'
   }).then(response => {
     if (response.isConfirmed) {
       fetch('/api/sessions/logout', {
@@ -18,16 +19,15 @@ logOutButton.addEventListener('click', () => {
             window.location.replace('/login');
           } else {
             Swal.fire({
-              title: 'Failed to log out',
+              title: 'No ha podido deslogearse',
               icon: 'error'
             });
           }
         })
         .catch(error => {
-          console.error('Error logging out:', error);
+          console.error('Error al deslogearse:', error);
           Swal.fire({
-            title: 'An error occurred',
-            text: 'Please try again',
+            title: 'Vuelva a intentarlo',
             icon: 'error'
           });
         });
