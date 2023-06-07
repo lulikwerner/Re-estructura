@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import MongoStore from "connect-mongo"
 import { Server } from "socket.io";
 import { __dirname } from "./utils.js";
+import passport from "passport";
+
 
 import productRouter from "./routes/productsM.router.js";
 import cartRouter from "./routes/cartsM.router.js";
@@ -15,6 +17,7 @@ import sessionRouter from "./routes/session.router.js"
 import registerChatHandler from "./listeners/chatHandler.js";
 import cartSocket from "./sockets/cart.sockets.js";
 import productSocket from "./sockets/product.sockets.js";
+import initlizePassport from "./config/passport.config.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -61,6 +64,9 @@ const startServer = async () => {
     next();
   };
   app.use(ioMiddleware);
+
+  app.use(passport.initialize());
+  initlizePassport();
 
   //Son las rutas que uso
   app.use("/api/products", productRouter);
