@@ -2,9 +2,12 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 
+export const createHash = async(password) =>{
+    const salts = await bcrypt.genSalt(10);
+    return bcrypt.hash(password,salts)
+}
 
-export const createHash = password => bcrypt.hashSync(password,bcrypt.genSaltSync(10));
-export const isValidPassword = (user,password) => bcrypt.compareSync(password,user.password)
+export const isValidPassword = (password,hashedPassword) => bcrypt.compareSync(password,hashedPassword);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

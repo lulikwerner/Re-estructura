@@ -5,6 +5,7 @@ form.addEventListener('submit', async(event)=>{
     const data = new FormData(form);
     const  obj ={};
     data.forEach((value,key)=>(obj[key] = value));
+    console.log(obj);
     const response = await fetch('/api/sessions/register', {
         method:'POST',
         body:JSON.stringify(obj),
@@ -14,7 +15,9 @@ form.addEventListener('submit', async(event)=>{
 
     })
     const responseData = await response.json();
-    if(responseData.status ==="succes"){
+    console.log(responseData);
+    if(responseData.status ==="success"){
+        console.log("Registration success");
         Swal.fire({
             toast:true,
             position:'top-end',

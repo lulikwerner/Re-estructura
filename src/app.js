@@ -9,7 +9,7 @@ import { __dirname } from "./utils.js";
 import productRouter from "./routes/productsM.router.js";
 import cartRouter from "./routes/cartsM.router.js";
 import viewsRouter from "./routes/views.router.js";
-import sessionsRouter from "./routes/session.router.js"
+import sessionRouter from "./routes/session.router.js"
 
 
 import registerChatHandler from "./listeners/chatHandler.js";
@@ -62,11 +62,11 @@ const startServer = async () => {
   };
   app.use(ioMiddleware);
 
-  //Son las turas que uso
+  //Son las rutas que uso
   app.use("/api/products", productRouter);
   app.use("/", viewsRouter);
   app.use("/api/carts", cartRouter);
-  app.use("/api/sessions", sessionsRouter)
+  app.use("/api/sessions", sessionRouter)
   //El chat 
   io.on("connection", async (socket) => {
     registerChatHandler(io, socket);
