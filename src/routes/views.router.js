@@ -83,4 +83,7 @@ router.get('/login', privacy('NO_AUTHENTICATED'), async(req,res)=>{
   res.render('login');
 })
 
+router.get('/profile', privacy('PRIVATE'), (req,res) => {
+  res.render('profile', {user:req.session.user})
+})
 export default router;
