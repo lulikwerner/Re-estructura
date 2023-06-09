@@ -1,9 +1,10 @@
 import passport from "passport";
 import local from "passport-local";
+import GithubStrategy from "passport-github2";
 import userModel from "../dao/mongo/models/user.js";
 import { createHash, isValidPassword } from "../utils.js";
 
-const LocalStrategy = local.Strategy
+const LocalStrategy = local.Strategy; //Es la estrategia
 
 const initlizePassport = () => {
     //username y password son obligatorios extraerlos por eso te lo pide. Pongo el valor en true passReqToCallback: true para que me deje extraer la otra info del user y le digo que el email va a ser el username field usernameField:'email' 
@@ -20,6 +21,8 @@ const initlizePassport = () => {
         if(exists) done(null,false,{message:'El usuario ya existe'})
         //Si no existe el usuario en la db. Encripto la contrasenia
         const hashedPassword = await createHash(password);
+
+
         //Construyo el usuario que voy a registrar
         const user = {
           first_name,
@@ -68,6 +71,35 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
     };
     return done(null,user);
 }));
+
+passport.use('github', new GithubStrategy({
+  clientID:"Iv1.1dd1410ac14946b5",
+  clientSecret:"795760751219fa0e7038b9f9bbaa1e1f5d768235",
+  callbackURL:"http://localhost:8080/api/sessions/githubcallback"
+}, async(accessToken, refreshToken, profile, done )=>{
+    try{
+      console.log(profile);
+      //Tomo los datos que me sirven
+      const{name,email} = profile._json;
+      const user = await userModel.findOne({email});
+      if(!user){
+        //Si el usuario no existe lo creo yo
+        const newUser = {
+          first_name: name,
+          email,
+          password:''
+        }
+        //Creo el nuevo usuario
+        const result = await userModel.create(newUser);
+        done(null,result)
+      }
+      //Si el usuario ya existia
+      done(null,user);
+
+    }catch(error){
+      done(error);
+    }
+}))
 
 //Lo transforma en un unico id para su tablita
 passport.serializeUser(function(user,done){
