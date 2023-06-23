@@ -19,14 +19,7 @@ export default function socketCarts(io) {
           const productsArray = Object.values(productToAdd); // Convert the product object to an array
           const carritoNuevo = await cartManager.createCart(productsArray);
           console.log('Cart created:', carritoNuevo);
-         
         });
-       
-        
-        
-        
-        
-        
-        
+
       })
     }

@@ -7,6 +7,15 @@ const schema = new mongoose.Schema({
     last_name:String,
     email:String,
     password:String,
+    age:Number,
+    cart: [],
+       /*[ {
+          cart: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Carts' // Use the actual model name here
+          }
+        }
+      ],*/
     role:{
             type:String,
             default:"user"
@@ -15,3 +24,8 @@ const schema = new mongoose.Schema({
 
 const userModel = mongoose.model(collection,schema);
 export default userModel;
+
+
+
+
+

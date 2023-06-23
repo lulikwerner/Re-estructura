@@ -1,13 +1,31 @@
-import { Router } from "express";
 import passport from 'passport';
+import BaseRouter from "./Router.js";
+import { generateToken, passportCall } from '../services/auth.js';
 
-const router = Router();
 
-router.post('/register',passport.authenticate('register',{failureRedirect:'/api/sessions/registerFail'}) , async(req,res)=>{
-    res.send({status:"success", message:"Registered"})
-})
+export default class SessionsRouter extends BaseRouter{
+  init(){
+    console.log('entro al init')
+    this.post('/register',passportCall('register'), (req,res) => {
+      console.log('estamos en register')
+      res.sendSuccess()
+    })
 
-router.get('/registerFail', (req,res) =>{
+    this.post('/login',passportCall('login'), (req,res) => {
+      //El login recibe SIEMPRE en req.user
+      const token = generateToken(req.user);
+      res.cookie('authToken',token,{
+        maxAge:1000*3600*24,
+        httpOnly:true
+      })
+      res.sendSuccess('Logeado')
+    })
+  }
+}
+
+
+
+/*router.get('/registerFail', (req,res) =>{
   console.log(req.session.messages);
   res.status(400).send({status:"error", error:req.session.messages});
 })
@@ -54,8 +72,8 @@ router.post('/logout', (req, res) => {
       // Redirigo al Login
       res.redirect('/login');
     });
-  });
+  });*/
 
-  export default router;
+
 
   

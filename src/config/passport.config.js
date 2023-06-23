@@ -1,58 +1,73 @@
 import passport from "passport";
 import local from "passport-local";
+import {Strategy, ExtractJwt} from 'passport-jwt';
+import { usersServices } from '../dao/mongo/managers/index.js'
+
+
 import GithubStrategy from "passport-github2";
-import userModel from "../dao/mongo/models/user.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword } from "../services/auth.js";
+import { cookieExtractor } from "../utils.js";
+
 
 const LocalStrategy = local.Strategy; //Es la estrategia
+const JWTStrategy = Strategy;
 
-const initlizePassport = () => {
-    //username y password son obligatorios extraerlos por eso te lo pide. Pongo el valor en true passReqToCallback: true para que me deje extraer la otra info del user y le digo que el email va a ser el username field usernameField:'email' 
-    passport.use('register',new LocalStrategy({passReqToCallback: true, usernameField:'email'}, async(req,email,password,done) => {
-        try{
+const initlizePassportStrategies = () => {
+//username y password son obligatorios extraerlos por eso te lo pide. Pongo el valor en true passReqToCallback: true para que me deje extraer la otra info del user y le digo que el email va a ser el username field usernameField:'email' 
+passport.use('register',new LocalStrategy({passReqToCallback: true, usernameField:'email'}, async(req,email,password,done) => {
+  console.log('before try')      
+  try{
+          console.log('after try')
         //Aca extraigo todo lo que quiero que no sea username y password
-        const { first_name, last_name } = req.body;
+        const { first_name, last_name, age, role } = req.body;
         //Corroboro que completen todos los campos de registro
-      if(!first_name || !last_name || !email || !password){
+      if(!first_name || !last_name || !age || !email || !password){
           return done(null,false, { message: 'Por favor completar todos los campos' });
         } 
         //Busco si ya existe el usuario
-        const exists = await userModel.findOne({email});
+        const exists = await usersServices.getUserBy({email});
         if(exists) done(null,false,{message:'El usuario ya existe'})
         //Si no existe el usuario en la db. Encripto la contrasenia
         const hashedPassword = await createHash(password);
 
 
         //Construyo el usuario que voy a registrar
-        const user = {
+        const newUser = {
           first_name,
-          last_name,  
+          last_name,
+          age, 
+          role,
           email,
           password:hashedPassword
         }
-          const result = await userModel.create(user);
+          const result = await usersServices.createUsers(newUser);
+          console.log(result)
           //Si todo salio ok
           done(null,result);
         }catch(error){
-            done(error)
+            done(error) 
         }
-    }))
+}))
 
-    //le digo que el email va a ser el field username
+//le digo que el email va a ser el field username
 passport.use('login', new LocalStrategy({usernameField:'email'},async(email, password,done)=>{
     //PASSPORT SOLO DEBE DEVOLVER EL USUARIO FINAL. NO ES RESPONSABLE DE LA SESION
     let user;
+    try{
     if(email === "adminCoder@coder.com" && password==="adminCod3r123" ){
       //Aca inicializo el admin
       const user = {
         id:0,
-        name: `Admin`,
+        first_name: `Admin`,
+        last_name:`Admin`,
+        age:0,
+        cart:0,
         role: 'admin',
         email: '...'
       }
       return done(null, user);
     }
-    user = await userModel.findOne({email}); //Solo busco por email
+    user = await usersServices.getUserBy ({email}); //Solo busco por email
     if (!user) return done(null,false,{message: "Credenciales incorrectas" });
     
 
@@ -65,11 +80,18 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
     //Si el usuario existe y la contrasenia es correcta entonces devuelvo la sesion en passport
     user = {
         id:user._id,
-        name: `${user.first_name} ${user.last_name}`,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        age:user.age,
+        cart: user.cart, //aca me tiene que traer el id del cart
         email: user.email,
         role: user.role
     };
     return done(null,user);
+
+  }catch(error){
+    return done(error);
+  }
 }));
 
 passport.use('github', new GithubStrategy({
@@ -81,16 +103,20 @@ passport.use('github', new GithubStrategy({
       console.log(profile);
       //Tomo los datos que me sirven
       const{name,email} = profile._json;
-      const user = await userModel.findOne({email});
+      const user = await usersServices.getUserBy ({email});
       if(!user){
         //Si el usuario no existe lo creo yo
         const newUser = {
           first_name: name,
+          last_name,
           email,
+          role,
+          age,
+          cart,
           password:''
         }
         //Creo el nuevo usuario
-        const result = await userModel.create(newUser);
+        const result = await usersServices.createUsers(newUser);
         done(null,result)
       }
       //Si el usuario ya existia
@@ -101,21 +127,18 @@ passport.use('github', new GithubStrategy({
     }
 }))
 
-//Lo transforma en un unico id para su tablita
-passport.serializeUser(function(user,done){
-    return done(null,user.id)
-});
-//Con esto rellena el user que trae 
-passport.deserializeUser(async function(id,done){
-    if(id===0){
-        return done(null,{
-            role:'admin',
-            name:'ADMIN'
-        })
-    }
-    const user = await userModel.findOne({_id:id});
-    return done(null,user);
-});
+passport.use('jwt', new JWTStrategy({
+  jwtFromRequest:ExtractJwt.fromExtractors([cookieExtractor]),
+  //Cuando creo un Token  esta firmado entonces le tengo que pasar el secret para decifrar
+  secretOrKey: 'jwtSecret'
+},async(payload,done) => {
+  try{
+    return done(null,payload);
+  }catch(error){
+    return done(error);
+  }
+}))
 
-}
-export default initlizePassport;
+
+};
+export default initlizePassportStrategies;
