@@ -6,12 +6,12 @@ import { generateToken, passportCall } from '../services/auth.js';
 export default class SessionsRouter extends BaseRouter{
   init(){
     console.log('entro al init')
-    this.post('/register',passportCall('register'), (req,res) => {
+    this.post('/register',['NO_AUTH'], passportCall('register',{strategyType:'locals'}),(req,res) => {
       console.log('estamos en register')
       res.sendSuccess()
     })
 
-    this.post('/login',passportCall('login'), (req,res) => {
+    this.post('/login',['ADMIN'],passportCall('login',{strategyType:'locals'}), (req,res) => {
       //El login recibe SIEMPRE en req.user
       const token = generateToken(req.user);
       res.cookie('authToken',token,{
