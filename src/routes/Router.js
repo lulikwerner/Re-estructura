@@ -41,6 +41,8 @@ export default class BaseRouter{
             if(policies[0]==='PUBLIC') return next();
         //Viene con el usuario parseado desde JWT
         const user = req.user;
+        // Si el usuario quiere acceder a la ruta de logout, permitirlo sin realizar las verificaciones de políticas
+        if (req.path === '/logout') return next();
         //Si mis politicas dice NO-AUTH y tengo un usuario le tiro error de unauthorized
         if(policies[0]==='NO_AUTH'&&user) return res.status(401).send({status:'error', error:'Unauthorized'});//No le puedo hacer con generateCustomResponses porque nuestras politicas se registan antes de las respuestas 
         //Si mis politicas dice NO-AUTH y no encuentro un usuario si lo deberia dejar pasar

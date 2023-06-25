@@ -1,15 +1,27 @@
-export const privacy = (privacyType) =>{
-    return(req,res,next) => {
-        const {user} = req.session;
-        switch(privacyType){
-            case "PRIVATE": 
-            //Si el usuario existe continua sino lo redirige a logearse
-            if(user) next();
-            else res.redirect('/login');
-            break;
-            case "NO_AUTHENTICATED":
-                if(!user) next();
-                else res.redirect('/products')
+export const privacy = (privacyType) => {
+  return (req, res, next) => {
+    // Extract the user from the 'auth' cookie
+    const user = req.cookies.authToken;
+
+    switch (privacyType) {
+      case 'PRIVATE':
+        // If the user exists, continue to the next middleware
+        if (user) {
+          next();
+        } else {
+          // Redirect to login if the user doesn't exist
+          res.redirect('/login');
         }
-    };
+        break;
+      case 'NO_AUTH':
+        // If the user doesn't exist, continue to the next middleware
+        if (!user) {
+          next();
+        } else {
+          // Redirect to products if the user exists
+          res.redirect('/products');
+        }
+        break;
+    }
+  };
 };

@@ -1,9 +1,8 @@
 import { Router } from "express";
-import ProductManager from "../dao/mongo/managers/productManager.js";
+import { productsM } from '../dao/mongo/managers/index.js'
 import mongoose from "mongoose";
 
 const router = Router();
-const productsM = new ProductManager();
 
 /*router.get('/', async (req, res) => {
 const { limit, page, sort, category } = req.query;
@@ -11,7 +10,7 @@ const { limit, page, sort, category } = req.query;
    // const result  = await productModel.paginate({},{limit:10,lean:true})
    //console.log(result)
    // res.status(200).send({ status: 'success', payload: result});    
-
+try{
 
         const products = await productsM.getProducts();
         if (!limit) {
@@ -28,12 +27,13 @@ const { limit, page, sort, category } = req.query;
         res.status(200).send({ status: 'success', payload: limitedProducts });
         
             }      
-    } catch (error) {
+    }catch(error) {
         console.log(error);
     }
+
 });*/
 
-
+//Crea el producto
 router.post('/', async(req,res) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
     try {
@@ -66,6 +66,7 @@ router.post('/', async(req,res) => {
     }
 })
 
+//Busca el producto
 router.get('/:pid', async (req, res) => {
     const { pid } = req.params;
     const pidNumber = parseInt(pid);
@@ -88,7 +89,7 @@ router.get('/:pid', async (req, res) => {
     }
 });
 
-
+//Actualiza el producto
 router.put('/:pid', async(req,res) => {
     const { pid } = req.params;
     const productUpdate = req.body;
@@ -116,6 +117,7 @@ router.put('/:pid', async(req,res) => {
     }
 })
 
+//Borra el producto
 router.delete('/:pid', async(req,res) => {
     const { pid } = req.params
     try {

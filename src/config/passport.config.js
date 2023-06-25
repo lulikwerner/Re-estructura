@@ -13,11 +13,10 @@ const LocalStrategy = local.Strategy; //Es la estrategia
 const JWTStrategy = Strategy;
 
 const initlizePassportStrategies = () => {
+  console.log('entro al initialized')
 //username y password son obligatorios extraerlos por eso te lo pide. Pongo el valor en true passReqToCallback: true para que me deje extraer la otra info del user y le digo que el email va a ser el username field usernameField:'email' 
-passport.use('register',new LocalStrategy({passReqToCallback: true, usernameField:'email'}, async(req,email,password,done) => {
-  console.log('before try')      
+passport.use('register',new LocalStrategy({passReqToCallback: true, usernameField:'email'}, async(req,email,password,done) => {     
   try{
-          console.log('after try')
         //Aca extraigo todo lo que quiero que no sea username y password
         const { first_name, last_name, age, role } = req.body;
         //Corroboro que completen todos los campos de registro
@@ -30,7 +29,6 @@ passport.use('register',new LocalStrategy({passReqToCallback: true, usernameFiel
         //Si no existe el usuario en la db. Encripto la contrasenia
         const hashedPassword = await createHash(password);
 
-
         //Construyo el usuario que voy a registrar
         const newUser = {
           first_name,
@@ -41,8 +39,8 @@ passport.use('register',new LocalStrategy({passReqToCallback: true, usernameFiel
           password:hashedPassword
         }
           const result = await usersServices.createUsers(newUser);
-          console.log(result)
-          //Si todo salio ok
+          console.log('el resultado es',result)
+          //Si todo salio ok,
           done(null,result);
         }catch(error){
             done(error) 
@@ -79,7 +77,7 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
 
     //Si el usuario existe y la contrasenia es correcta entonces devuelvo la sesion en passport
     user = {
-        id:user._id,
+        id:user._id,  
         first_name: user.first_name,
         last_name: user.last_name,
         age:user.age,
@@ -94,13 +92,14 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
   }
 }));
 
+
 passport.use('github', new GithubStrategy({
   clientID:"Iv1.1dd1410ac14946b5",
   clientSecret:"795760751219fa0e7038b9f9bbaa1e1f5d768235",
   callbackURL:"http://localhost:8080/api/sessions/githubcallback"
 }, async(accessToken, refreshToken, profile, done )=>{
     try{
-      console.log(profile);
+      console.log('el perfil',profile);
       //Tomo los datos que me sirven
       const{name,email} = profile._json;
       const user = await usersServices.getUserBy ({email});
@@ -108,11 +107,8 @@ passport.use('github', new GithubStrategy({
         //Si el usuario no existe lo creo yo
         const newUser = {
           first_name: name,
-          last_name,
           email,
-          role,
-          age,
-          cart,
+          age:23,
           password:''
         }
         //Creo el nuevo usuario
@@ -128,16 +124,25 @@ passport.use('github', new GithubStrategy({
 }))
 
 passport.use('jwt', new JWTStrategy({
-  jwtFromRequest:ExtractJwt.fromExtractors([cookieExtractor]),
-  //Cuando creo un Token  esta firmado entonces le tengo que pasar el secret para decifrar
+  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
   secretOrKey: 'jwtSecret'
-},async(payload,done) => {
-  try{
-    return done(null,payload);
-  }catch(error){
+}, async (payload, done) => {
+  try {
+    const userId = payload.id || payload._id;
+    console.log('eluserquetengo',userId)
+    const user = await usersServices.getUserBy({ _id: userId });
+    if (user) {
+      console.log('User found:', user); // Add console.log statement to check user object
+      return done(null, user);
+    } else {
+      console.log('User notfound'); // Add console.log statement for user not found
+      return done(null, false);
+    }
+  } catch (error) {
+    console.error('Error fetching user:', error); // Add console.error statement for error handling
     return done(error);
   }
-}))
+}));
 
 
 };

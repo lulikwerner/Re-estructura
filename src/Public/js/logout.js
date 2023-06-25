@@ -1,6 +1,6 @@
 const logOutButton = document.getElementById('logOutButton');
 
-logOutButton.addEventListener('click', () => {
+logOutButton.addEventListener('click', async () => {
   Swal.fire({
     title: 'Desea cerrar su sesion?',
     icon: 'question',
@@ -11,16 +11,22 @@ logOutButton.addEventListener('click', () => {
     cancelButtonText: 'No'
   }).then(response => {
     if (response.isConfirmed) {
+      console.log('la respuesta', response);
       fetch('/api/sessions/logout', {
-        method: 'POST'
+        method: 'POST',
+   
       })
         .then(response => {
           if (response.ok) {
             window.location.replace('/login');
+            console.log('entro a la destruccion');
           } else {
-            Swal.fire({
-              title: 'No ha podido deslogearse',
-              icon: 'error'
+            response.text().then(errorMsg => {
+              console.error('Error:', errorMsg);
+              Swal.fire({
+                title: 'No ha podido deslogearse',
+                icon: 'error'
+              });
             });
           }
         })

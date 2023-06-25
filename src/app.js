@@ -42,10 +42,15 @@ const startServer = async () => {
   });
   const io = new Server(server);
 
+
+
   app.engine("handlebars", handlebars.engine());
   app.set("views", `${__dirname}/views`);
   app.set("view engine", "handlebars");
 
+
+  app.use(passport.initialize());
+  initlizePassportStrategies();
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -67,8 +72,6 @@ const startServer = async () => {
   };
   app.use(ioMiddleware);
 
-  app.use(passport.initialize());
-  initlizePassportStrategies();
 
 
 

@@ -1,23 +1,17 @@
-import CartManager from "../dao/mongo/managers/cartManager.js";
-import ProductManager from "../dao/mongo/managers/productManager.js";
+import { productsM } from '../dao/mongo/managers/index.js'
 
-
-const cartManager = new CartManager();
-const productManager = new ProductManager
 
 export default function  productSocket(io) {
     io.on('connection', async (socket) => {
-      
-        
         console.log('Socket Product connected');
     
-        const data = await productManager.getProducts();
+        const data = await productsM.getProducts();
         socket.emit('products', data);
     
         socket.on('newProduct', async newProductData => {
           console.log('Received new product:',newProductData);
           const { title, description, code, price, status, stock, category, thumbnails } = newProductData;
-          const product = await productManager.createProduct({
+          const product = await productsM.createProduct({
             title,
             description,
             code,
@@ -32,7 +26,7 @@ export default function  productSocket(io) {
     
         socket.on('deleteProduct', async data => {
           await productManager.deleteProduct(data);
-          const product = await productManager.getProducts();
+          const product = await productsM.getProducts();
           socket.emit('products', product);
         });
       });

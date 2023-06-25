@@ -8,14 +8,10 @@ const schema = new mongoose.Schema({
     email:String,
     password:String,
     age:Number,
-    cart: [],
-       /*[ {
-          cart: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Carts' // Use the actual model name here
-          }
-        }
-      ],*/
+    cart: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Carts'
+    },
     role:{
             type:String,
             default:"user"

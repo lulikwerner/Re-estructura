@@ -1,9 +1,7 @@
-import ProductManager from "./managers/productManager.js";
-
-const productManager = new ProductManager();
+import { productsM } from './src/dao/mongo/managers/index.js'
 
 const context = async () => {
-    const test = await productManager.getProducts();
+    const test = await productsM.getProducts();
     //console.log(test)
 
    

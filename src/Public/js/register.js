@@ -24,9 +24,10 @@ form.addEventListener('submit', async(event)=>{
             showConfirmButton: false,
             timer:2000,
             title:`Se ha registrado exitosamente`,
-            icon:"succes"
-        })
-        window.location.replace('/login');
+            icon:"success"
+        }).then(() => {
+            window.location.replace('/login');
+          });
     }else{
         Swal.fire({
             toast:true,

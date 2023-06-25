@@ -1,12 +1,10 @@
 import { Router } from 'express';
-import CartManager from "../dao/mongo/managers/cartManager.js";
-import ProductManager from "../dao/mongo/managers/productManager.js"
+import { cartsM  } from '../dao/mongo/managers/index.js'
 import mongoose from "mongoose"
 
 
 const router = Router();
-const cartsM = new CartManager();
-const productM = new ProductManager()
+
 
 //Agrega producto al carrito
 router.post('/', async (req, res) => {

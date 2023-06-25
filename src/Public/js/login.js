@@ -18,6 +18,7 @@ form.addEventListener('submit', async(event)=>{
     
     const responseData = JSON.parse(responseText);
     if(responseData.status === "success"){
+        console.log(responseData);
         Swal.fire({
             position: 'top-end',
             icon: 'success',

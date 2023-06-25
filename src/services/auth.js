@@ -18,7 +18,6 @@ export const passportCall = (strategy, options = {}) => {//En el option mando si
         console.log(`La ruta ${req.url} No tiene definida un tipo de estrategia`)
         return res.sendServerError
       }
-
       // Si no viene el user me quejo. Si en info me manda un mensaje muestro ese mensaje, sino lo que tira de error convertirlo a mensaje
       if (!user){
         switch(options.strategyType){
@@ -29,15 +28,16 @@ export const passportCall = (strategy, options = {}) => {//En el option mando si
                 return next();
                 //Si no encuentro un user en locals significa un problema de login o registro. Entonces si quejate
             case 'locals':
+              console.log('el tema es locals')
                 return res.sendUnauthorized(info.message ? info.message : info.toString());
         }
       } 
       req.user = user;
+      console.log(user)
       next();
     })(req, res, next);
   };
 }
-
 
 export const generateToken = (user) => {
     return jwt.sign(user,'jwtSecret',{expiresIn:'1d'});//Este es el secreto que paso despues en passport para decifrar tl token
