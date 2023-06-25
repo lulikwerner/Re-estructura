@@ -14,6 +14,7 @@ const JWTStrategy = Strategy;
 
 const initlizePassportStrategies = () => {
   console.log('entro al initialized')
+
 //username y password son obligatorios extraerlos por eso te lo pide. Pongo el valor en true passReqToCallback: true para que me deje extraer la otra info del user y le digo que el email va a ser el username field usernameField:'email' 
 passport.use('register',new LocalStrategy({passReqToCallback: true, usernameField:'email'}, async(req,email,password,done) => {     
   try{
@@ -63,7 +64,9 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
         role: 'admin',
         email: '...'
       }
+      console.log('user admin', user)
       return done(null, user);
+      
     }
     user = await usersServices.getUserBy ({email}); //Solo busco por email
     if (!user) return done(null,false,{message: "Credenciales incorrectas" });
@@ -92,7 +95,6 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
   }
 }));
 
-
 passport.use('github', new GithubStrategy({
   clientID:"Iv1.1dd1410ac14946b5",
   clientSecret:"795760751219fa0e7038b9f9bbaa1e1f5d768235",
@@ -117,7 +119,6 @@ passport.use('github', new GithubStrategy({
       }
       //Si el usuario ya existia
       done(null,user);
-
     }catch(error){
       done(error);
     }
@@ -132,14 +133,27 @@ passport.use('jwt', new JWTStrategy({
     console.log('eluserquetengo',userId)
     const user = await usersServices.getUserBy({ _id: userId });
     if (user) {
-      console.log('User found:', user); // Add console.log statement to check user object
+      console.log('User found:', user); 
       return done(null, user);
-    } else {
-      console.log('User notfound'); // Add console.log statement for user not found
+    } 
+     if(payload.id===0 || payload._id===0){
+      console.log('Admin user detected'); 
+      const adminUser = {
+        id: 0,
+        first_name: 'Admin',
+        last_name: 'Admin',
+        age: 0,
+        cart: 0,
+        role: 'admin',
+        email: '...'
+      };
+      return done(null, adminUser);
+    }else {
+      console.log('User notfound'); 
       return done(null, false);
     }
   } catch (error) {
-    console.error('Error fetching user:', error); // Add console.error statement for error handling
+    console.error('Error fetching user:', error); 
     return done(error);
   }
 }));

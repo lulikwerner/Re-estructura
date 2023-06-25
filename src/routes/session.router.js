@@ -23,7 +23,6 @@ export default class SessionsRouter extends BaseRouter{
       res.sendSuccessWithPayload({ user: req.user });
     });
     
-    //Revisar
     this.post('/logout', ['PRIVATE'], (req, res, next) => {
       // Clear the auth token cookie
       res.clearCookie('authToken');
@@ -31,31 +30,29 @@ export default class SessionsRouter extends BaseRouter{
       res.redirect('/login');
     });
     
-
-//revisar    
-this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), (req, res) => {
-  res.send({ status: "success", message: "Logged in with GitHub" });
-});
-
-this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), (req, res) => {
-  const user = req.user;
-  console.log('el usuario goit', user);
-  try {
-    const token = generateToken(req.user);
-    console.log('token', token);
-    res.cookie('authToken', token, {
-      maxAge: 1000 * 3600 * 24,
-      httpOnly: true
+    this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), (req, res) => {
+      res.send({ status: "success", message: "Logged in with GitHub" });
     });
-    console.log('eltokenquenevio',user)
-    // Redirect the user to the /products page
-    res.redirect('/products');
 
-  } catch (error) {
-    console.error('Error creating token:', error);
-    res.status(500).send({ status: "error", error });
-  }
-});
+    this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), (req, res) => {
+      const user = req.user;
+      console.log('el usuario goit', user);
+      try {
+        const token = generateToken(req.user);
+        console.log('token', token);
+        res.cookie('authToken', token, {
+          maxAge: 1000 * 3600 * 24,
+          httpOnly: true
+        });
+        console.log('eltokenquenevio',user)
+        // Redirect the user to the /products page
+        res.redirect('/products');
+
+      } catch (error) {
+        console.error('Error creating token:', error);
+        res.status(500).send({ status: "error", error });
+      }
+    });
 
   }
 }

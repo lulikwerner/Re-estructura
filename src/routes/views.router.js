@@ -8,7 +8,7 @@ import passport from 'passport'
 const router = Router();
 
 //Formulario para cargar productos nuevos y muestra los productos y los puedo eliminar 
-router.get('/realTimeProducts', privacy('PRIVATE'), async (req, res) => {
+router.get('/realTimeProducts',privacy('ADMIN'), async (req, res) => {
   const products = await productsM.getProducts();
   res.render('realTimeProducts', { producth: products });
 });

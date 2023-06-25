@@ -4,7 +4,7 @@ const AddProductToCart = () => {
   addProductButtons.forEach(btn => { 
     btn.addEventListener('click', async () => {
       // Check if user is logged in
-      if (user) {
+      if (user) { 
         const pid = btn.getAttribute('data-id');
         console.log('Product ID:', pid);
 

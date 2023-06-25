@@ -1,9 +1,20 @@
 export const privacy = (privacyType) => {
   return (req, res, next) => {
-    // Extract the user from the 'auth' cookie
+    // Extract the user from the 'authToken' cookie
     const user = req.cookies.authToken;
 
+
+
     switch (privacyType) {
+      case 'ADMIN':
+          // If the user exists, continue to the next middleware
+          if (user) {
+            next();
+          } else {
+            // Redirect to login if the user doesn't exist
+            res.redirect('/login');
+          }
+          break;
       case 'PRIVATE':
         // If the user exists, continue to the next middleware
         if (user) {

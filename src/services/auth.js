@@ -24,7 +24,6 @@ export const passportCall = (strategy, options = {}) => {//En el option mando si
             //Si no encuentro un user en jwt significa que no estoy logeado asi que le digo que continue
             case 'jwt':
                 req.error = info.message?info.message:info.toString;
-                //Tengo que agregar para redirigir al login 
                 return next();
                 //Si no encuentro un user en locals significa un problema de login o registro. Entonces si quejate
             case 'locals':
