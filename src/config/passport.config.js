@@ -130,7 +130,6 @@ passport.use('jwt', new JWTStrategy({
 }, async (payload, done) => {
   try {
     const userId = payload.id || payload._id;
-    console.log('eluserquetengo',userId)
     const user = await usersServices.getUserBy({ _id: userId });
     if (user) {
       console.log('User found:', user); 

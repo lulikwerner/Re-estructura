@@ -1,35 +1,56 @@
-import { productsM, cartsM , usersServices} from '../dao/mongo/managers/index.js'
+import { productsM, cartsM, usersServices } from '../dao/mongo/managers/index.js';
+import { cookieExtractor } from '../utils.js';
+import jwt from 'jsonwebtoken';
 
 
 export default function socketCarts(io) {
-    io.on("connection", async (socket) => {
-        console.log('Cart conexion');
-        
-        socket.on('addedProduct', async data => {
-          const productId = data; 
-          console.log('Product ID:', productId);
-      
-          const productToAdd = await productsM.getProductBy({ _id: productId });
-          console.log('Product to add:', productToAdd);
-          const productsArray = Object.values(productToAdd);// Convierte el objeto en un array
-       
-          if (socket.request.user) {
-            const userId = socket.request.user._id;
-            console.log('User ID:', userId);
-            const user = await usersServices.getUserBy({ _id: userId }); 
+  io.on("connection", async (socket) => {
+    console.log('Cart conexion');
+    
+    socket.on('addedProduct', async (data) => {
+      const productId = data; 
+      console.log('Product ID:', productId);
+    
 
-            //Si el usuario esta logeado y tiene un cart ID entonces empujo el producto al carrito
-          if(user && user.cart.length !== 0){
-            const carrito = await cartsM.updateCart(productsArray);
-            console.log('Cart updated:', carrito);
-          }else{
-            //Si el usuario esta logeado y no tiene un cart ID entonces creo el carrito
-            const carritoNuevo = await cartsM .createCart(productsArray);
-            console.log('Cart created:', carritoNuevo);
+      const productToAdd = await productsM.getProductBy({ _id: productId });
+      console.log('Product to add:', productToAdd);
+      const productsArray = Object.values(productToAdd); // Convert the object to an array
+      console.log('el produ a agregar',productsArray)
+      const token = cookieExtractor(socket.request);
+
+      if (token) {
+        try {
+          const payload = jwt.verify(token, 'jwtSecret');
+          const userId = payload.id;
+          const cartUser=payload.cart;
+          console.log('el cart que viene con el usuario',payload.cart)
+          console.log('User ID:', userId);
+          const user = await usersServices.getUserBy({ _id: userId });
+          // Check if the user has a cart
+          if (user && user.cart) {
+            const cart = await cartsM.getCartBy(cartUser);  
+            console.log('mi cart',cart)
+      
+            if (cart) {
+            
+              // Push the product to the existing cart
+              const updatedCart = await cartsM.updateCart([productToAdd], cart);
+              console.log('Cart updated:', updatedCart);
+            }
+          } else {
+            // Create a new cart and associate it with the user
+            const newCart = await cartsM.createCart(productsArray);
+            console.log('New Cart created:', newCart);
+            // Update the user's cart field with the new cart ID
+            await usersServices.updateUsers ({ _id: userId }, { cart: newCart._id });
+            console.log('User cart updated');
           }
-        } else {
-            console.log('The user is not logged in')
+        } catch (error) {
+          console.log('Error decoding token:', error);
         }
-      });
-    })
-  }
+      } else {
+        console.log('The user is not logged in');
+      }
+    });
+  });
+}

@@ -4,6 +4,7 @@ import { productsM, cartsM } from '../dao/mongo/managers/index.js'
 import productModel from "../dao/mongo/models/products.js";
 import categoriesAndStatus from "../dao/mongo/managers/productManager.js"
 import {  passportCall } from '../services/auth.js';
+import BaseRouter from '../routes/Router.js'
 import passport from 'passport'
 const router = Router();
 
@@ -26,7 +27,7 @@ router.get('/products', passportCall('jwt', { strategyType: 'jwt' }), async (req
       if (limit < 0 || isNaN(limit)) {
         return res.status(400).send({ status: 'error', message: 'Please enter a valid value for limit.' });
       }
-      const limitedProducts = products.slice(0, limit);
+      const limitedProducts = products.slice(0, limit); 
       return res.render('home', { producth: limitedProducts, user: user });
     }
 

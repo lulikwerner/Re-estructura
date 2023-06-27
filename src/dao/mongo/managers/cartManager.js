@@ -37,21 +37,24 @@
       
      //Actualiza los productos delc art con el POST
       updateCart = async (products, cid) => {
+        console.log('los prosss',products)
     try {
         //Busco el carrito
         const cart = await cartModel.findById(cid);
-        for (const { pid, qty } of products) {
+       
+        const [{ _id: productId }] = products; {
+          console.log('es el pid a actualziar',productId)
     //Busco el producto
-        const product = await productModel.findById(pid);
+        const product = await productModel.findById(productId);
         console.log('Found product:', product);
         //Si el producto existe busco si esta en el cart
         if (product) { 
           const existingProduct = cart.products.find(p => p.product.equals(product._id));
           //Si esta en el cart le sumo las cantidades
           if (existingProduct) {
-            existingProduct.quantity += qty;
+            existingProduct.quantity += 1;
           } else {
-            const newProduct = { product: product._id, quantity: qty };
+            const newProduct = { product: product._id, quantity: 1};
             cart.products.push(newProduct);
             console.log('Added product:', newProduct);
           }
