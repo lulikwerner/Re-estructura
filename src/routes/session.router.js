@@ -1,6 +1,8 @@
 import passport from 'passport';
+import {privacy} from "../middlewares/auth.js"
 import BaseRouter from "./Router.js";
 import { generateToken, passportCall } from '../services/auth.js';
+
 
 
 export default class SessionsRouter extends BaseRouter{
@@ -12,7 +14,7 @@ export default class SessionsRouter extends BaseRouter{
       res.sendSuccess()
     })
 
-    this.post('/login',['NO_AUTH'], passportCall('login', { strategyType: 'locals' }), (req, res) => {
+    this.post('/login', ['NO_AUTH'],passportCall('login', { strategyType: 'locals' }), (req, res) => {
       // El login recibe SIEMPRE en req.user
       const token = generateToken(req.user);
       res.cookie('authToken', token, {
@@ -53,6 +55,16 @@ export default class SessionsRouter extends BaseRouter{
         res.status(500).send({ status: "error", error });
       }
     });
+
+    this.get('/current', ['PRIVATE'], passportCall('jwt', { strategyType: "locals" }), (req, res) => {
+      try {
+          return res.sendSuccess(req.user);
+
+      } catch (error) {
+          return res.sendInternalError(error);
+      }
+  });
+
 
   }
 }

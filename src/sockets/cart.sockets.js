@@ -30,12 +30,15 @@ export default function socketCarts(io) {
           if (user && user.cart) {
             const cart = await cartsM.getCartBy(cartUser);  
             console.log('mi cart',cart)
-      
-            if (cart) {
-            
+            const stock = productToAdd.stock-1;
+            console.log('nuevito stock',stock)
+            if (cart&&stock>0) {
               // Push the product to the existing cart
               const updatedCart = await cartsM.updateCart([productToAdd], cart);
               console.log('Cart updated:', updatedCart);
+              
+              const newProductStop = await productsM.updateProduct(productId,{$set:stock});
+             console.log('mi nuevo',newProductStop)
             }
           } else {
             // Create a new cart and associate it with the user

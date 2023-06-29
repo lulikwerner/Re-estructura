@@ -8,12 +8,10 @@ import { Server } from "socket.io";
 import { __dirname } from "./utils.js";
 import passport from "passport";
 
-
-import productRouter from "./routes/productsM.router.js";
-import cartRouter from "./routes/cartsM.router.js";
-import viewsRouter from "./routes/views.router.js";
+import ProductRouter from "./routes/productsM.router.js";
+import CartRouter from "./routes/cartsM.router.js";
+import ViewsRouter from "./routes/views.router.js";
 import SessionRouter from "./routes/session.router.js"
-
 
 import registerChatHandler from "./listeners/chatHandler.js";
 import cartSocket from "./sockets/cart.sockets.js";
@@ -51,6 +49,7 @@ const startServer = async () => {
 
   app.use(passport.initialize());
   initlizePassportStrategies();
+
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -73,18 +72,18 @@ const startServer = async () => {
   app.use(ioMiddleware);
 
 
-
-
-  //Son las rutas que uso
-  app.use("/api/products", productRouter);
-  app.use("/", viewsRouter);
-  app.use("/api/carts", cartRouter);
+  const viewsRouter = new ViewsRouter()
   const sessionRouter = new SessionRouter();
+  const cartRouter = new CartRouter();
+  const productRouter = new ProductRouter();
+  //Son las rutas que uso
+  app.use("/api/products", productRouter.getRouter());
+  app.use('/', viewsRouter.getRouter());
+  app.use("/api/carts", cartRouter.getRouter());
   app.use("/api/sessions", sessionRouter.getRouter());
   //El chat 
   io.on("connection", async (socket) => {
     registerChatHandler(io, socket);
-
     console.log("Socket connected");
   });
 

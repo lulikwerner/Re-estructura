@@ -1,9 +1,13 @@
 import { Router } from "express";
 import { productsM } from '../dao/mongo/managers/index.js'
-import mongoose from "mongoose";
+import { passportCall } from '../services/auth.js';
+import BaseRouter from "./Router.js";
+import mongoose from "mongoose"
 
-const router = Router();
 
+export default class ProductsRouter extends BaseRouter {
+
+  init() {
 /*router.get('/', async (req, res) => {
 const { limit, page, sort, category } = req.query;
 
@@ -34,12 +38,12 @@ try{
 });*/
 
 //Crea el producto
-router.post('/', async(req,res) => {
+this.post('/',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}), async(req,res) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
     try {
         //Si no me envian alguno de estos campos a excepcion de thumbnails(que no es obligatorio) arrojo error
         if (!title || !description || !code || !price || !status || !stock || !category) {
-            return res.status(400).send({ status: "error", message: "One or more fields are incomplete" });
+            return res.sendBadRequest ("One or more fields are incomplete" );
         }
         const product = {
             title,
@@ -67,13 +71,13 @@ router.post('/', async(req,res) => {
 })
 
 //Busca el producto
-router.get('/:pid', async (req, res) => {
+this.get('/:pid',['PUBLIC'], passportCall('jwt', {strategyType: 'jwt'}), async (req, res) => {
     const { pid } = req.params;
     const pidNumber = parseInt(pid);
     try {
       // Check if pid is a valid positive number
         if (pidNumber < 0 || isNaN(pidNumber)) {
-        return res.status(400).send({ status: 'error', message: 'Please enter a valid id' });
+        return res.sendBadRequest ('Please enter a valid id');
         }
     
         const product = await productsM.getProductBy({_id: pid});
@@ -85,22 +89,22 @@ router.get('/:pid', async (req, res) => {
         res.send({ status: 'success', payload: product });
     } catch (error) {
         console.log(error);
-        res.status(500).send({ status: 'error', message: 'Internal server error' });
+        res.sendInternalError('Internal server error' );
     }
 });
 
 //Actualiza el producto
-router.put('/:pid', async(req,res) => {
+this.put('/:pid',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}), async(req,res) => {
     const { pid } = req.params;
     const productUpdate = req.body;
     try {
         //Si no envian parametro de pid
         if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
-        return res.status(400).send({ status: 'error', message: 'Please enter a product ID' });
+        return res.sendBadRequest ('Please enter a product ID' );
         }
        //Si no se envia nada en el body a modificar
         if (Object.keys(productUpdate).length === 0) {
-        return res.status(400).send({ status: 'error', message: 'No updates provided. Product not modified' });
+        return res.sendBadRequest ('No updates provided. Product not modified' );
          }
         //Chequeo que el pid existe en mi array de productos 
         const result = await productsM.getProductBy({_id: pid})
@@ -118,15 +122,15 @@ router.put('/:pid', async(req,res) => {
 })
 
 //Borra el producto
-router.delete('/:pid', async(req,res) => {
+this.delete('/:pid',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}), async(req,res) => {
     const { pid } = req.params
     try {
         if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
-            return res.status(400).send({ status: 'error', message: 'Please enter a product ID' });
+            return res.sendBadRequest ('Please enter a product ID' );
           }
         const resultDelete = await productsM.deleteProduct({_id: pid})
         //Busco el id del producto a eliminar si no lo encuentro devuelvo error sino devuelvo producto eliminado
-        if (!resultDelete) return res.status(400).send({ status: 'error', message: 'Product not found' })
+        if (!resultDelete) return res.sendBadRequest ('Product not found' )
         return res.status(200).send({ status: 'success', message: { resultDelete } });
     }
     catch (error) {
@@ -134,4 +138,5 @@ router.delete('/:pid', async(req,res) => {
     }
 })
 
-export default router;
+}
+}

@@ -9,7 +9,11 @@ const schema = new mongoose.Schema({
         product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'products' // Use the actual model name here
-        }
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
       }
     ],
     default: []

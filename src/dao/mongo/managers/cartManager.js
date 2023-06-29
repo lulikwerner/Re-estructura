@@ -4,11 +4,27 @@
 
   export default  class CartManager {
       //Obtiene todos los carts
-      getCarts = async() => {
-    const populatedCart = await cartModel.find().populate('products.product').lean();;
-    //console.log(JSON.stringify(populatedCart, null, '\t'));
-    return populatedCart;  
+      getCartBy = async (params) => {
+        const populatedCart = await cartModel
+          .findById(params)
+          .populate('products.product') 
+          .lean();
+      
+        // Calculate the quantity for each product in the cart
+        const cartWithQuantity = populatedCart.products.map((productEntry) => {
+          const quantity = productEntry.quantity || 1; // Use a default quantity of 1 if the quantity field is not present
+          const product = productEntry.product;
+          return {
+            product,
+            quantity,
+          };
+        });
+      
+        populatedCart.products = cartWithQuantity;
+        // console.log(JSON.stringify(populatedCart, null, '\t'));
+        return populatedCart;
       };
+      
       //Obtiene un Cart por ID
       getCartBy = async (params) => {
           const populatedCart = await cartModel.findById(params).populate('products.product').lean();
@@ -51,6 +67,7 @@
         if (product) { 
           const existingProduct = cart.products.find(p => p.product.equals(product._id));
           //Si esta en el cart le sumo las cantidades
+          console.log('elstock',product.stock)
           if (existingProduct) {
             existingProduct.quantity += 1;
           } else {
