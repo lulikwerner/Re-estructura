@@ -98,9 +98,9 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
 }));
 
 passport.use('github', new GithubStrategy({
-  clientID:"Iv1.1dd1410ac14946b5",
-  clientSecret:"795760751219fa0e7038b9f9bbaa1e1f5d768235",
-  callbackURL:"http://localhost:8080/api/sessions/githubcallback"
+  clientID:config.gitHub.ClientId,
+  clientSecret:config.gitHub.Secret,
+  callbackURL:config.gitHub.callbackURL
 }, async(accessToken, refreshToken, profile, done )=>{
     try{
       console.log('el perfil',profile);

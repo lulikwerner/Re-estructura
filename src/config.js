@@ -13,11 +13,13 @@ export default{
     },
     tokenKey:{
         key:process.env.TOKEN_SECRET_KEY
+    },
+    mongoSecret:{
+        secret:process.env.MONGO_SECRET
+    },
+    gitHub:{
+        ClientId: process.env.CLIENT_ID,
+        Secret:process.env.CLIENT_SECRET,
+        callbackURL:process.env.CLIENT_URL
     }
-    /*privateKey: process.env.PRIVATE_KEY,
-    gitHubClientId: process.env.GITHUB_CLIENT_ID,
-    gitHubClientSecret: process.env.GITHUB_CLIENT_SECRET,
-    url: process.env.URL_HOST,
-    callbackURL: process.env.GITHUB_CALLBACK_URL*/
-
 }

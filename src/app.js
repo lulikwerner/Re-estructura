@@ -61,7 +61,7 @@ const startServer = async () => {
       mongoUrl: "mongodb+srv://lulikwerner:123@clustercitofeliz.ro8b1xi.mongodb.net/ecommerce?retryWrites=true&w=majority",
       ttl:3600
     }),
-    secret:"CoderS3cr3t",
+    secret:config.mongoSecret.secret,
     resave:false,
     saveUninitialized:false 
   }))
