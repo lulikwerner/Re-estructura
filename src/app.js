@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { Server } from "socket.io";
 import { __dirname } from "./utils.js";
 import passport from "passport";
+import config from'./config.js';
 
 import ProductRouter from "./routes/productsM.router.js";
 import CartRouter from "./routes/cartsM.router.js";
@@ -19,7 +20,7 @@ import productSocket from "./sockets/product.sockets.js";
 import initlizePassportStrategies from './config/passport.config.js'
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = config.app.PORT
 
 const startServer = async () => {
   //Conecta a mi mongoose db

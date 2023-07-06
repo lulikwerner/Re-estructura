@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
+import config from'../config.js';
 
 export const createHash = async (password) => {
   const salts = await bcrypt.genSalt(10);
@@ -39,5 +40,5 @@ export const passportCall = (strategy, options = {}) => {//En el option mando si
 }
 
 export const generateToken = (user) => {
-    return jwt.sign(user,'jwtSecret',{expiresIn:'1d'});//Este es el secreto que paso despues en passport para decifrar tl token
+    return jwt.sign(user,config.tokenKey.key,{expiresIn:'1d'});//Este es el secreto que paso despues en passport para decifrar tl token
 }

@@ -7,6 +7,7 @@ import { usersServices } from '../dao/mongo/managers/index.js'
 import GithubStrategy from "passport-github2";
 import { createHash, isValidPassword } from "../services/auth.js";
 import { cookieExtractor } from "../utils.js";
+import config from '../config.js';
 
 
 const LocalStrategy = local.Strategy; //Es la estrategia
@@ -51,9 +52,10 @@ passport.use('register',new LocalStrategy({passReqToCallback: true, usernameFiel
 //le digo que el email va a ser el field username
 passport.use('login', new LocalStrategy({usernameField:'email'},async(email, password,done)=>{
     //PASSPORT SOLO DEBE DEVOLVER EL USUARIO FINAL. NO ES RESPONSABLE DE LA SESION
+    console.log('en el login')
     let user;
     try{
-    if(email === "adminCoder@coder.com" && password==="adminCod3r123" ){
+    if(email === config.adminPas.adminEmail  && password=== config.adminPas.adminPassword   ){
       //Aca inicializo el admin
       const user = {
         id:0,
@@ -126,7 +128,7 @@ passport.use('github', new GithubStrategy({
 
 passport.use('jwt', new JWTStrategy({
   jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-  secretOrKey: 'jwtSecret'
+  secretOrKey: config.tokenKey.key
 }, async (payload, done) => {
   try {
     const userId = payload.id || payload._id;
