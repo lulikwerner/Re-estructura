@@ -4,13 +4,14 @@
 <ul>
   {{#each carth.products}}
     <li>
-      <h4>Title: {{this.product.title}}</h4>
-      <h2>Title: {{this.product._id}}</h2>
+      <h4>Id: {{this.product._id}}</h4>
+      <h2>Title: {{this.product.title}}</h2>
       <p>Description: {{this.product.description}}</p>
       <h4>Code: {{this.product.code}}</h4>
       <p>Price: {{this.product.price}}</p>
       <p>Status: {{this.product.status}}</p>
       <p>Image: {{this.product.thumbnail}}</p>
+      <p>Cantidad: {{this.quantity}}</p>
     </li>
   {{/each}}
 </ul>

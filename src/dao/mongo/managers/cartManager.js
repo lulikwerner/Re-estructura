@@ -26,7 +26,7 @@
       };
       
       //Obtiene un Cart por ID
-      getCartBy = async (params) => {
+      getCartById = async (params) => {
           const populatedCart = await cartModel.findById(params).populate('products.product').lean();
           //console.log(JSON.stringify(populatedCart, null, '\t'));
           return populatedCart
@@ -51,7 +51,7 @@
         }
       };
       
-     //Actualiza los productos delc art con el POST
+     //Actualiza los productos del cart con el POST
       updateCart = async (products, cid) => {
         console.log('los prosss',products)
     try {
@@ -86,10 +86,10 @@
     }
       };
 
-      //Actualiza 
-      updateProductsInCart = async (cartId, products) => {
+      //Actualiza aca toque cartID
+      updateProductsInCart = async (cid, products) => {
         try {
-          const cart = await cartModel.findById(cartId).populate('products.product');
+          const cart = await cartModel.findById(cid).populate('products.product');
       
           if (!cart) {
             return null; // Cart not found
@@ -155,6 +155,7 @@
           throw error;
         }
       };
+
        //Actualiza la cantidad en un cart
       updateQtyCart = async (cid, pid, qty) => {
       try {

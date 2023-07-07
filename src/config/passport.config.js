@@ -7,6 +7,7 @@ import { usersServices } from '../dao/mongo/managers/index.js'
 import GithubStrategy from "passport-github2";
 import { createHash, isValidPassword } from "../services/auth.js";
 import { cookieExtractor } from "../utils.js";
+import config from '../config.js'
 
 
 const LocalStrategy = local.Strategy; //Es la estrategia

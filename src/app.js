@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { Server } from "socket.io";
 import { __dirname } from "./utils.js";
 import passport from "passport";
+import config from './config.js'
 
 import ProductRouter from "./routes/productsM.router.js";
 import CartRouter from "./routes/cartsM.router.js";
