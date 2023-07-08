@@ -9,6 +9,7 @@ export default class CartsRouter extends BaseRouter {
 
 //Busca un cart
 //http://localhost:8080/api/carts/:cid
+//Funciona ok pero tengo que limitar que solo el usuario pueda ver unicamente su carrito
 this.get('/:cid',['PRIVATE'],passportCall('jwt', { strategyType: 'jwt' }),cartsController.getCartById);
 
 //Crea carrito y agrega producto al carrito
@@ -17,6 +18,7 @@ this.post('/',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsContro
 
 //Modifica la cantidad de un producto
 //http://localhost:8080/api/carts/:cid/product/:pid
+//Funciona ok
 this.post('/:cid/product/:pid',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.postProductInCart);
   
 //Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.

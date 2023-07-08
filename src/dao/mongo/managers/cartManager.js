@@ -52,25 +52,33 @@
       };
       
      //Actualiza los productos del cart con el POST
-      updateCart = async (products, cid) => {
-        console.log('los prosss',products)
+     updateQtyCart = async (products, cid, quantity) => {
     try {
         //Busco el carrito
         const cart = await cartModel.findById(cid);
-       
-        const [{ _id: productId }] = products; {
-          console.log('es el pid a actualziar',productId)
-    //Busco el producto
+        if(!cart){
+          throw new Error(`The ID cart: ${cid} not found`);
+        }
+        const [product] = [products]; 
+        const { _id: productId } = product; {
+        //Busco el producto
         const product = await productModel.findById(productId);
-        console.log('Found product:', product);
-        //Si el producto existe busco si esta en el cart
+        //Si el producto existe:
         if (product) { 
           const existingProduct = cart.products.find(p => p.product.equals(product._id));
-          //Si esta en el cart le sumo las cantidades
-          console.log('elstock',product.stock)
-          if (existingProduct) {
-            existingProduct.quantity += 1;
-          } else {
+          const NewQty =existingProduct.quantity += quantity
+          console.log('es la vieja', existingProduct.quantity)
+          console.log('es la nueva', NewQty)
+          //Si la nueva cantidad  es mayor al stock del producto. Arrojo error
+          if(NewQty>product.stock){
+          throw new Error(`There is not enought stock`);
+         }
+        //Si existe en el cart y la cantidad total no excede al stock
+          if (existingProduct &&  existingProduct.quantity<product.stock) {
+            return NewQty;
+          } 
+          //Si no existe en el cart lo agrego
+          if(!existingProduct) {
             const newProduct = { product: product._id, quantity: 1};
             cart.products.push(newProduct);
             console.log('Added product:', newProduct);
@@ -157,7 +165,7 @@
       };
 
        //Actualiza la cantidad en un cart
-      updateQtyCart = async (cid, pid, qty) => {
+      updateCart = async (cid, pid, qty) => {
       try {
         const cart = await cartModel.findById(cid).populate('products.product');
         const productIndex = cart.products.findIndex((p) => p.product._id.equals(pid));

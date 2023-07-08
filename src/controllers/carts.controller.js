@@ -1,4 +1,4 @@
-import { cartService } from '../services/index.js'
+import { cartService, productService } from '../services/index.js'
 
 
 
@@ -61,39 +61,38 @@ const postProductInCart = async (req, res) => {
     console.log('qty',quantity)
  
     const {  title, description, code, price, stock, category, thumbnails} = req.body;
+    
     //const products = [{ qty, title, description, code, price, stock, category, thumbnails}];
-   
     
     try {
-      if (isNaN(Number(quantity))) return res.sendBadRequest('The quantity is not valid' )
+      //Evaluo que la cantidad enviada sea un numero
+      if (isNaN(Number(quantity))) return res.sendBadRequest('The quantity has to be a number');
+      //Evaluo que la cantidad sea mayor a 1
       if (quantity < 1) return res.sendBadRequest('The quantity must be greater than 1' );
-    
-      const checkIdProduct = await productService.getProductByIdService(pid);
-        //Si no se encuentra el carrito
-        if (!cart) { console.log('Cart not found');
-            return;}
-      // Validate the product ID value
-      console.log('cid',cid)
-      console.log('pidNumber:', pid);
-
+      //Busco el Producto
+      const checkIdProduct = await productService.getProductByService({ _id: pid });
+        //Si no se encuentra el producto
+        if (!checkIdProduct) { return res.sendBadRequest('Product not found')};
+     //Busco el carrito
+      const checkIdCart = await cartService.getCartByIdService({ _id: cid });
+      //Si no se encuentra el carrito
+      if(!checkIdCart){  return res.sendBadRequest('Cart not found')};
       //Tiene que enviar algun dato aunque sea para modificar
-      if (!title && !description && !code && !price && !status && !stock && !category) {
+      if (!title && !description && !code && !price && !stock && !category && !quantity) {
         return res.sendBadRequest('Please send a new value to update');
     }
       // Si paso el parametro qty para modificar
-      if (isNaN(stock) || stock < 0) {
-        console.log('Invalid stock');
-        console.log('stock:', stock);
- 
+      if (isNaN(quantity) || quantity < 0) {
         return res.sendBadRequest('Quantity should be a valid value' );
       }
+  
       // Hago un update del cart , enviando el products y el cid
-      const up=await cartService.updateCartService (products, cid);
-      console.log('Product added successfully',up);
-      return  res.sendSuccess('Product added successfully' );
+      const up=await cartService.updateQtyCartService (checkIdProduct,cid, quantity);
+      console.log('Product quantity added successfully',up);
+      return  res.sendSuccess('Product quantity added successfully' );
     } catch (error) {
       console.log('Error:', error);
-      return res.sendBadRequest('Product could not be added' );
+      return res.sendBadRequest('Product quantity could not be added' );
     }
 };
 

@@ -13,8 +13,8 @@ export default class CartService {
         return this.dao.createCart(cart);
     }
 
-    updateCartService = (products, cid) => {
-        return this.dao.updateCart(products, cid);
+    updateCartService = (products, cid, quantity) => {
+        return this.dao.updateCart(products, cid, quantity);
     }
 
     updateProductsInCartService = (cid, products) => {
@@ -22,7 +22,7 @@ export default class CartService {
     }
 
     updateQtyCartService = (cid, pid, qty) => {
-        return this.dao.updateQtyCart(cid, pid, qty);
+        return this.dao.updateQtyCart(cid, pid,qty);
     }
     
     deleteCartService = (cid) => {
