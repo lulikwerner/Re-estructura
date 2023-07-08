@@ -21,7 +21,7 @@ this.post('/',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsContro
 //Funciona ok
 this.post('/:cid/product/:pid',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.postProductInCart);
   
-//Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+//Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba. USER O ADMIN?
 //http://localhost:8080/api/carts/:cid
 this.put('/:cid', ['USER'],passportCall('jwt', { strategyType: 'jwt' }),cartsController.updateCart);
 

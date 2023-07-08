@@ -103,67 +103,35 @@
       updateProductsInCart = async (cid, products) => {
         try {
           const cart = await cartModel.findById(cid).populate('products.product');
-      
+           // Cart not found
           if (!cart) {
-            return null; // Cart not found
+            return null;
           }
-      
-          let updatedCart = null; // Initialize updatedCart
       
           products.forEach((product) => {
-            const productId = product.pid;
-            console.log(productId);
+            const productId = products[0].id
             const cartProduct = cart.products.find((cartProduct) => cartProduct.product.id === productId);
+            console.log('soy el product',products)
+            // Product exists in the cart, update the fields
+        
             if (cartProduct) {
-              // Product exists in the cart, update the fields
-              const { title, description, code, price, stock, category, thumbnails } = product;
+              const updateFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
+        
+              updateFields.forEach((field) => {
+                if (product[field] !== undefined) {
+                  cartProduct.product[field] = product[field];
+                  console.log(`Updated ${field}:`, product[field]);
+                }
+              });
       
-              if (title) {
-                cartProduct.product.title = title;
-              }
-              if (description) {
-                cartProduct.product.description = description;
-              }
-              if (code) {
-                cartProduct.product.code = code;
-              }
-              if (price) {
-                cartProduct.product.price = price;
-              }
-              if (stock) {
-                cartProduct.product.stock = stock;
-              }
-              if (category) {
-                cartProduct.product.category = category;
-              }
-              if (thumbnails) {
-                cartProduct.product.thumbnails = thumbnails;
-              }
+              // Save the updated product
+              cartProduct.product.save();
             }
           });
-          try {
-            updatedCart = await cart.save(); // Intenta guardar el carrito actualizado
-            console.log(JSON.stringify(updatedCart, null, '\t'));
-            if (updatedCart.isNew) {
-              console.log('El carrito fue guardado correctamente y es nuevo');
-            } else {
-              console.log('El carrito fue guardado correctamente y se actualizó');
-            }
-            return updatedCart;
-          } catch (error) {
-            console.error('Error al guardar el carrito:', error);
-            // Maneja el error de acuerdo a tus necesidades (por ejemplo, registra un mensaje de error, devuelve una respuesta de error, etc.)
-          }
-          /*Copy code
-          const cartIndex = carts.findIndex(c => c.cid === parseInt(cid));
-
-          if (cartIndex === -1) {
-          throw new Error(`We cannot make an update to the cart with id ${cid} because it does not exist`);
-          }
-
-          const cartToUpdate = { ...carts[cartIndex], ...updatedCart };
-          carts[cartIndex] = cartToUpdate;*/
-          return updatedCart;
+          await cart.save();
+          
+          //console.log(JSON.stringify(cart, null, '\t'));
+            return cart;// Save the updated cart
         } catch (error) {
           throw error;
         }

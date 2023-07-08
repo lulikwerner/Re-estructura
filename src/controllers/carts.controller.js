@@ -173,17 +173,10 @@ const updateCart = async (req, res) => {
       const productIds = products.map((product) => product.pid);
       // Mano a llamar a updateProductsInCart 
       const updatedCart = await cartService.updateProductsInCartService (cid, products);
-      console.log(JSON.stringify(updatedCart, null, '\t'));
-      const verificar = await cartService.getCartByIdService(cid)
-      //Conso.log para verificar que se efectivamente se hicieron los cambios
-      console.log(JSON.stringify(verificar, null, '\t'));
-      //Si se hizo el update del carrito mando successfully sino
-      if (updatedCart) {
+    
+      await updatedCart.save();
+  console.log(JSON.stringify(updatedCart, null, '\t'));
         res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
-        //console.log(JSON.stringify(updatedCart, null, '\t'));
-      } else {
-        res.status(404).json({ message: 'Cart could not be modify' });
-      }
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Internal server error', error: err });
