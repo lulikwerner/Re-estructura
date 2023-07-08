@@ -59,9 +59,7 @@ const postProductInCart = async (req, res) => {
     console.log(pid)
     console.log('cid',cid)
     console.log('qty',quantity)
- 
     const {  title, description, code, price, stock, category, thumbnails} = req.body;
-    
     //const products = [{ qty, title, description, code, price, stock, category, thumbnails}];
     
     try {
@@ -85,14 +83,13 @@ const postProductInCart = async (req, res) => {
       if (isNaN(quantity) || quantity < 0) {
         return res.sendBadRequest('Quantity should be a valid value' );
       }
-  
       // Hago un update del cart , enviando el products y el cid
-      const up=await cartService.updateQtyCartService (checkIdProduct,cid, quantity);
+      const up=await cartService.updateQtyCartService (cid,checkIdProduct, quantity);
       console.log('Product quantity added successfully',up);
       return  res.sendSuccess('Product quantity added successfully' );
+ 
     } catch (error) {
-      console.log('Error:', error);
-      return res.sendBadRequest('Product quantity could not be added' );
+      return res.status(400).json({ error: error.message });
     }
 };
 
@@ -195,9 +192,11 @@ const updateCart = async (req, res) => {
 
 const updateQtyProductInCart = async (req, res) => {
     const { cid, pid } = req.params;
-    const { qty } = req.body;
+    const { quantity } = req.body;
+    console.log('qty',quantity)
+    console.log('pid',pid)
     try {
-      if (!cid || !mongoose.Types.ObjectId.isValid(cid)) {
+      if (!cid ) {
         return res.sendBadRequest('Please enter a cart ID' );
       }
       const cart = await cartService.getCartByIdService({ _id: cid });
@@ -207,25 +206,25 @@ const updateQtyProductInCart = async (req, res) => {
       if (cart.products.length === 0) {
         return res.sendBadRequest('The cart is empty' );
       }
-      if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
+      if (!pid) {
         return res.sendBadRequest( 'Please enter a valid product ID' );
       }
-      if (qty === undefined || qty === '') {
+      if (quantity === undefined || quantity=== '') {
         return res.sendBadRequest('Please send a new value to update' );
       }
-      if (isNaN(qty) || qty < 0) {
+      if (isNaN(quantity) || quantity < 0) {
         return res.sendBadRequest('Quantity should be a valid value' );
       }
       const productToUpdate = cart.products.find(product => product.product._id.toString() === pid);
       if (!productToUpdate) {
         return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
       }
-      productToUpdate.qty = Number(qty);
-      const cartUpd = await cartService.updateQtyCartService(cid, pid, qty);
+      productToUpdate.quantity = Number(quantity);
+      const cartUpd = await cartService.updateCartService(cid, pid, quantity);
       await cartUpd.save();
       console.log(JSON.stringify(cartUpd, null, '\t'));
       return res.sendSuccess('Product updated successfully');
-    } catch (error) {
+    } catch (error) { 
       console.log('Error:', error);
       return res.sendBadRequest('Product could not be updated' );
     }

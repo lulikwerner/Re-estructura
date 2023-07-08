@@ -16,17 +16,19 @@ this.get('/:cid',['PRIVATE'],passportCall('jwt', { strategyType: 'jwt' }),cartsC
 //http://localhost:8080/api/carts/    
 this.post('/',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.addProductToCart);
 
-//Modifica la cantidad de un producto
+//Agrega un producto con su cantidad al carrito
 //http://localhost:8080/api/carts/:cid/product/:pid
 //Funciona ok
 this.post('/:cid/product/:pid',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.postProductInCart);
   
 //Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+//http://localhost:8080/api/carts/:cid
 this.put('/:cid', ['USER'],passportCall('jwt', { strategyType: 'jwt' }),cartsController.updateCart);
 
-//deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
+//Actualiza SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body. Si paso 3 por body voy a tener entonces 3 en qty
 //http://localhost:8080/api/carts/:cid/product/:pid
-this.put('/:cid/products/:pid', ['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.updateQtyProductInCart);
+//Funciona ok 
+this.put('/:cid/product/:pid', ['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.updateQtyProductInCart);
 
 //Elimina del carrito seleccionado el producto seleccionado
 //http://localhost:8080/api/carts/:cid/products/:pid

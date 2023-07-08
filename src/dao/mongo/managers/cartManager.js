@@ -9,6 +9,7 @@
           .findById(params)
           .populate('products.product') 
           .lean();
+       
       
         // Calculate the quantity for each product in the cart
         const cartWithQuantity = populatedCart.products.map((productEntry) => {
@@ -52,30 +53,35 @@
       };
       
      //Actualiza los productos del cart con el POST
-     updateQtyCart = async (products, cid, quantity) => {
+     updateQtyCart = async ( cid, products, quantity) => {
+      console.log('products',products)
+      console.log('qty',quantity)
     try {
         //Busco el carrito
         const cart = await cartModel.findById(cid);
+        console.log('el cart',cart)
         if(!cart){
           throw new Error(`The ID cart: ${cid} not found`);
         }
-        const [product] = [products]; 
-        const { _id: productId } = product; {
+        const [product] = [products];   
+       const { _id: productId } = product; {
+      
         //Busco el producto
         const product = await productModel.findById(productId);
         //Si el producto existe:
         if (product) { 
           const existingProduct = cart.products.find(p => p.product.equals(product._id));
-          const NewQty =existingProduct.quantity += quantity
-          console.log('es la vieja', existingProduct.quantity)
-          console.log('es la nueva', NewQty)
+          const NewQty = existingProduct.quantity += quantity
           //Si la nueva cantidad  es mayor al stock del producto. Arrojo error
-          if(NewQty>product.stock){
-          throw new Error(`There is not enought stock`);
-         }
+          if (NewQty > product.stock) {
+            throw {
+              message: 'There is not enough stock',
+              statusCode: 400, 
+            };
+          }  
         //Si existe en el cart y la cantidad total no excede al stock
-          if (existingProduct &&  existingProduct.quantity<product.stock) {
-            return NewQty;
+          if (existingProduct && existingProduct.quantity<product.stock) {
+            existingProduct.quantity = NewQty;
           } 
           //Si no existe en el cart lo agrego
           if(!existingProduct) {
@@ -86,7 +92,6 @@
         }
       }
       await cart.save();
-      console.log('Updated cart:', cart);
       return cart;
     } catch (error) {
       console.log('Error:', error);
@@ -168,11 +173,19 @@
       updateCart = async (cid, pid, qty) => {
       try {
         const cart = await cartModel.findById(cid).populate('products.product');
+        console.log('cartt',cart)
         const productIndex = cart.products.findIndex((p) => p.product._id.equals(pid));
         if (productIndex !== -1) {
-          cart.products[productIndex].product.stock = qty;
-          const updatedProduct = await cart.products[productIndex].product.save();
-          return updatedProduct;
+           //Si la nueva cantidad  es mayor al stock del producto. Arrojo error
+           if (qty > cart.products[productIndex].product.stock) {
+            throw {
+              message: 'There is not enough stock',
+              statusCode: 400, 
+            };
+          }  
+          cart.products[productIndex].quantity = qty;
+          await cart.save(); 
+          return cart.products[productIndex].product;
         } else {
           throw new Error('Product not found in cart');
         }
