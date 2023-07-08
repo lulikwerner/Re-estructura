@@ -109,29 +109,28 @@
           }
       
           products.forEach((product) => {
-            const productId = products[0].id
+            const productId = product.id;
             const cartProduct = cart.products.find((cartProduct) => cartProduct.product.id === productId);
-            console.log('soy el product',products)
-            // Product exists in the cart, update the fields
-        
+            
             if (cartProduct) {
               const updateFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
-        
+            
               updateFields.forEach((field) => {
                 if (product[field] !== undefined) {
                   cartProduct.product[field] = product[field];
                   console.log(`Updated ${field}:`, product[field]);
                 }
               });
-      
+          
               // Save the updated product
               cartProduct.product.save();
             }
           });
+          
           await cart.save();
           
-          //console.log(JSON.stringify(cart, null, '\t'));
-            return cart;// Save the updated cart
+          return cart;
+          
         } catch (error) {
           throw error;
         }
