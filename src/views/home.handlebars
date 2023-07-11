@@ -1,9 +1,10 @@
 
 {{#if user}}
+{{user}}
     <div>
         <h1>Hola {{user.first_name}}</h1>
         <p>Tu rol es de {{user.role}}</p>
-     
+     {{log user}}
     </div>
     <button id="logOutButton" type="submit" class="btn logOutButtonStyle m-3" >Log Out</button>
 {{/if}}
@@ -45,7 +46,7 @@
 
 <button id="addProductButton" type="submit" class="btn addButtonStyle m-3" data-id="{{this._id}}">Agregar al carrito</button>
 
-    </div>
+
     {{/each}}
     {{#if hasPrevPage}}
     <a href="/products?page={{prevPage}}"><button>Anterior</button></a>

@@ -41,6 +41,7 @@ const getCartById =  async (req, res) => {
         const cart = await cartService.getCartByIdService(cid);
         console.log(cid)
         console.log('el cartt', cart)
+        
       // If the cart is not found, send an error response
         if (!cart) {
         return res.sendBadRequest('Cart not found' );

@@ -15,7 +15,8 @@ export default{
         key:process.env.TOKEN_SECRET_KEY
     },
     mongoSecret:{
-        secret:process.env.MONGO_SECRET
+        secret:process.env.MONGO_SECRET,
+        MongoURL: process.env.MONGO_URL
     },
     gitHub:{
         ClientId: process.env.CLIENT_ID,

@@ -5,7 +5,7 @@ import productModel from '../dao/mongo/models/products.js';
 const  realTimeProducts = async (req, res) => {
     const products = await productService.getProductsService();
     res.render('realTimeProducts', { producth: products });
-  };
+};
 
 const getProducts = async (req, res) => {
     const { limit, page = 1, sort, category } = req.query;
@@ -53,32 +53,33 @@ const getProducts = async (req, res) => {
       console.error(error);
       return res.sendInternalError ('An internal server error occurred.' );
     }
-  };
-  const chat = async(req,res)=>{
+};
+  
+const chat = async(req,res)=>{
     res.render('chat');
-  };
+};
 
-  const productsInCart = async(req,res)=>{
+const productsInCart = async(req,res)=>{
     const { cid } = req.params;
     const carts = await cartService.getCartByIdService(cid);
     console.log(JSON.stringify(carts, null, '\t'));
     res.render('cart',{carth:carts} );
-  };
+};
 
-  const register = async(req,res)=>{
+const register = async(req,res)=>{
     res.render('register');
-  };
+};
 
-  const login = async(req,res)=>{
+const login = async(req,res)=>{
     res.render('login');
-  };
+};
   
-  const profile = (req,res) => {
+const profile = (req,res) => {
     const user = req.user;
     res.render('profile', {user} )
-  };
+};
 
-  export default {
+export default {
     realTimeProducts,
     getProducts,
     chat,
@@ -86,4 +87,4 @@ const getProducts = async (req, res) => {
     register,
     login,
     profile
-  }
+}

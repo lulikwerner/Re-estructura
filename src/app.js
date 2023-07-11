@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import { __dirname } from "./utils.js";
 import passport from "passport";
 import config from './config.js'
+import dotenv from 'dotenv';
 
 import ProductRouter from "./routes/productsM.router.js";
 import CartRouter from "./routes/cartsM.router.js";
@@ -20,13 +21,13 @@ import productSocket from "./sockets/product.sockets.js";
 import initlizePassportStrategies from './config/passport.config.js'
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = config.app.PORT;
 
 const startServer = async () => {
   //Conecta a mi mongoose db
-  try {
+try {
     await mongoose.connect(
-      "mongodb+srv://lulikwerner:123@clustercitofeliz.ro8b1xi.mongodb.net/ecommerce?retryWrites=true&w=majority"
+      config.mongoSecret.MongoURL
     );
     console.log("Connected to MongoDB");
   } catch (error) {
@@ -58,7 +59,7 @@ const startServer = async () => {
 
   app.use(session({
     store:new MongoStore({
-      mongoUrl: "mongodb+srv://lulikwerner:123@clustercitofeliz.ro8b1xi.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      mongoUrl: config.mongoSecret.MongoURL,
       ttl:3600
     }),
     secret:config.mongoSecret.secret,

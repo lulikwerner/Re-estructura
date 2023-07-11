@@ -16,7 +16,7 @@ this.get('/realTimeProducts' ,["ADMIN"], passportCall('jwt', { strategyType: 'jw
 this.get('/products', ["PUBLIC"],passportCall('jwt', { strategyType: 'jwt' }), viewsController.getProducts);
 
 //Abre el chat
-this.get('/chat',["PUBLIC"],viewsController.chat);
+this.get('/chat',["USER"],viewsController.chat);
 
 //Muestro los productos que tiene el carrito
 this.get('/cart/:cid',["USER","ADMIN"],passportCall('jwt', { strategyType: 'jwt' }), viewsController.productsInCart);

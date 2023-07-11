@@ -107,7 +107,6 @@
           if (!cart) {
             return null;
           }
-      
           products.forEach((product) => {
             const productId = product.id;
             const cartProduct = cart.products.find((cartProduct) => cartProduct.product.id === productId);

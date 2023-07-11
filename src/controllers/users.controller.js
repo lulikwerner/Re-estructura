@@ -29,7 +29,7 @@ const register = (req,res) => {
 
   const loginGitHubCallback = (req, res) => {
     const user = req.user;
-    console.log('el usuario goit', user);
+    console.log('el usuario git', user);
     try {
       const token = generateToken(req.user);
       console.log('token', token);
