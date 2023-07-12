@@ -1,4 +1,4 @@
-import { productService, cartService } from '../services/index.js';
+import { productService, cartService } from '../services/repositories.js';
 import productModel from '../dao/mongo/models/products.js';
 
 

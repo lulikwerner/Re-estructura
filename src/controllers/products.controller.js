@@ -1,4 +1,4 @@
-import { productService } from '../services/index.js'
+import { productService } from '../services/repositories.js'
 import mongoose from 'mongoose';
 
 const postProducts =  async(req,res) => {

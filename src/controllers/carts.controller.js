@@ -1,4 +1,4 @@
-import { cartService, productService } from '../services/index.js'
+import { cartService, productService } from '../services/repositories.js'
 
 
 
