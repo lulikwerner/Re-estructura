@@ -36,15 +36,19 @@ try{
 });*/
 
 //Crea el producto
+//http://localhost:8080/api/products
 this.post('/',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}), productsController.postProducts);
 
 //Busca el producto
+//http://localhost:8080/api/products/:pid
 this.get('/:pid',['PUBLIC'], passportCall('jwt', {strategyType: 'jwt'}), productsController.getProductsById);
 
 //Actualiza el producto
+//http://localhost:8080/api/products/:pid
 this.put('/:pid',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}),productsController.putProducts); 
 
 //Borra el producto
+//http://localhost:8080/api/products/:pid
 this.delete('/:pid',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}),productsController.deleteProducts); 
 
 }

@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 import config from '../config.js'
 
-//Define que Dao tomar a partir de persistence
+//Define que DAO tomar a partir de persistence
 const persistence = 'MONGO';
-
-
 
 //Depende de mi persistence que va a tomar si FilesSystem o Mongo
 async function createCartDAO(persistenceType) {
@@ -23,9 +21,9 @@ async function createCartDAO(persistenceType) {
             throw new Error(`Invalid persistence type: ${persistenceType}`);
     }
     return cartsDAO;
-  }
+}
   //Depende de mi persistence que va a tomar si FilesSystem o Mongo
-  async function createProductDAO(persistenceType) {
+async function createProductDAO(persistenceType) {
         let productsDAO;
         switch(persistence){
             case 'FILESYSTEM': 
@@ -39,7 +37,7 @@ async function createCartDAO(persistenceType) {
                 break;
         }
         return productsDAO;
-    }
+}
 
 
 //Exporto para poder usarlo en repositories.js

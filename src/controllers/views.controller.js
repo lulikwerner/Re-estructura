@@ -1,6 +1,7 @@
 import { productService, cartService } from '../services/repositories.js';
 import productModel from '../dao/mongo/models/products.js';
-
+import TokenDTO from '../dto/user/TokenDto.js';
+import AdminDTO from '../dto/user/AdminDto.js';
 
 const  realTimeProducts = async (req, res) => {
     const products = await productService.getProductsService();
@@ -74,10 +75,18 @@ const login = async(req,res)=>{
     res.render('login');
 };
   
-const profile = (req,res) => {
-    const user = req.user;
-    res.render('profile', {user} )
+const profile = (req, res) => {
+  try {
+    const user = new TokenDTO(req.user) || new AdminDTO(req.user);
+    res.render('profile', { user: user });
+  } catch (error) {
+    return res.status(500).json({
+      status: 'error',
+      error: error.message
+    });
+  }
 };
+
 
 export default {
     realTimeProducts,

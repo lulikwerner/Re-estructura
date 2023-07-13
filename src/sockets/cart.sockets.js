@@ -1,6 +1,7 @@
 import { productsM, cartsM, usersServices } from '../dao/mongo/managers/index.js';
 import { cookieExtractor } from '../utils.js';
 import jwt from 'jsonwebtoken';
+import config from '../config.js';
 
 
 export default function socketCarts(io) {
@@ -20,7 +21,7 @@ export default function socketCarts(io) {
 
       if (token) {
         try {
-          const payload = jwt.verify(token, 'jwtSecret');
+          const payload = jwt.verify(token, config.tokenKey.key);
           const userId = payload.id;
           const cartUser=payload.cart;
           console.log('el cart que viene con el usuario',payload.cart)

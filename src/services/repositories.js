@@ -7,7 +7,7 @@ import UserManager from '../dao/mongo/managers/usersManager.js';
 import UserRepository from './repositories/user.service.js';
 
 //Como uso el Factory para Carts y Products los traigo asi
-export const cartService = new CartRepository(CartDAO);
+export const cartService = new CartRepository(CartDAO); 
 export const productService = new ProductRepository(ProductDAO);
 //Como directamente importo el manager de users lo tengo que instanciar
 export const userService = new UserRepository (new UserManager());

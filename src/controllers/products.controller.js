@@ -1,3 +1,4 @@
+import createProductDTO from '../dto/product/createProductDTO.js';
 import { productService } from '../services/repositories.js'
 import mongoose from 'mongoose';
 
@@ -8,7 +9,9 @@ const postProducts =  async(req,res) => {
         if (!title || !description || !code || !price || !status || !stock || !category) {
             return res.sendBadRequest ("One or more fields are incomplete" );
         }
-        const product = {
+        const product = new createProductDTO(req.body)
+        //Antes del DTO
+        /*const product = {
             title,
             description,
             code,
@@ -17,7 +20,7 @@ const postProducts =  async(req,res) => {
             stock,
             category,
             thumbnail: thumbnails !== undefined ? thumbnails : 'No image'
-        }
+        }*/
         console.log('este es del post',product)
         //Agrego el producto con la informacion enviada
         const addedProduct = await productService.createProductService (product);

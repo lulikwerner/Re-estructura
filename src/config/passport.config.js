@@ -1,13 +1,16 @@
 import passport from "passport";
 import local from "passport-local";
 import {Strategy, ExtractJwt} from 'passport-jwt';
-import { usersServices } from '../dao/mongo/managers/index.js'
+import { usersServices } from '../dao/mongo/managers/index.js';
+
 
 
 import GithubStrategy from "passport-github2";
 import { createHash, isValidPassword } from "../services/auth.js";
 import { cookieExtractor } from "../utils.js";
 import config from '../config.js';
+import TokenDTO from '../dto/user/TokenDto.js';
+import AdminDTO from '../dto/user/AdminDto.js'
 
 
 const LocalStrategy = local.Strategy; //Es la estrategia
@@ -57,31 +60,22 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
     try{
     if(email === config.adminPas.adminEmail  && password=== config.adminPas.adminPassword   ){
       //Aca inicializo el admin
-      const user = {
-        id:0,
-        first_name: `Admin`,
-        last_name:`Admin`,
-        age:0,
-        cart:0,
-        role: 'admin',
-        email: '...'
-      }
+      user =  new AdminDTO(user)
       console.log('user admin', user)
       return done(null, user);
       
     }
     user = await usersServices.getUserBy ({email}); //Solo busco por email
     if (!user) return done(null,false,{message: "Credenciales incorrectas" });
-    
-
     // Si el usuario existe valido el pw
     const isPasswordValid   = await isValidPassword(password,user.password);
     console.log(password)
     console.log(user.password)
     if(!isPasswordValid ) return done(null,false,{message:"contrasenia incorrecta"});
-
     //Si el usuario existe y la contrasenia es correcta entonces devuelvo la sesion en passport
-    user = {
+    user = new TokenDTO(user)
+    //Cuando no usaba el dto
+    /*user = {
         id:user._id,  
         first_name: user.first_name,
         last_name: user.last_name,
@@ -89,7 +83,7 @@ passport.use('login', new LocalStrategy({usernameField:'email'},async(email, pas
         cart: user.cart, //aca me tiene que traer el id del cart
         email: user.email,
         role: user.role
-    };
+    };*/
     return done(null,user);
 
   }catch(error){
@@ -109,12 +103,14 @@ passport.use('github', new GithubStrategy({
       const user = await usersServices.getUserBy ({email});
       if(!user){
         //Si el usuario no existe lo creo yo
-        const newUser = {
+        user = new TokenDTO(user)
+        //Antes del dto
+        /*const newUser = {
           first_name: name,
           email,
           age:23,
           password:''
-        }
+        }*/
         //Creo el nuevo usuario
         const result = await usersServices.createUsers(newUser);
         done(null,result)
@@ -130,6 +126,7 @@ passport.use('jwt', new JWTStrategy({
   jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
   secretOrKey: config.tokenKey.key
 }, async (payload, done) => {
+  //Busco por id el user y lo retorno
   try {
     const userId = payload.id || payload._id;
     const user = await usersServices.getUserBy({ _id: userId });
@@ -137,28 +134,21 @@ passport.use('jwt', new JWTStrategy({
       console.log('User found:', user); 
       return done(null, user);
     } 
+    //Si el id es 0 entonces es admin y devuelvo el admin
      if(payload.id===0 || payload._id===0){
       console.log('Admin user detected'); 
-      const adminUser = {
-        id: 0,
-        first_name: 'Admin',
-        last_name: 'Admin',
-        age: 0,
-        cart: 0,
-        role: 'admin',
-        email: '...'
-      };
+      const adminUser = new AdminDTO(user)
       return done(null, adminUser);
     }else {
-      console.log('User notfound'); 
+      console.log('User not found'); 
       return done(null, false);
     }
   } catch (error) {
     console.error('Error fetching user:', error); 
     return done(error);
   }
-}));
-
-
+}
+)
+);
 };
 export default initlizePassportStrategies;
