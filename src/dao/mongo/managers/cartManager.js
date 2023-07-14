@@ -54,34 +54,37 @@
       
      //Actualiza los productos del cart con el POST
      updateQtyCart = async ( cid, products, quantity) => {
-      console.log('products',products)
-      console.log('qty',quantity)
     try {
         //Busco el carrito
         const cart = await cartModel.findById(cid);
         console.log('el cart',cart)
+        //Si no existe el carrito
         if(!cart){
           throw new Error(`The ID cart: ${cid} not found`);
         }
         const [product] = [products];   
        const { _id: productId } = product; {
-      
+    
         //Busco el producto
         const product = await productModel.findById(productId);
         //Si el producto existe:
         if (product) { 
-          const existingProduct = cart.products.find(p => p.product.equals(product._id));
-          const NewQty = existingProduct.quantity += quantity
-          //Si la nueva cantidad  es mayor al stock del producto. Arrojo error
+          /*const NewQty = product.quantity += quantity
+          console.log(product.quantity)
+            console.log(quantity)
+          console.log('lacantidad',NewQty )
+          //Si la cantidad que estoy agregando es mayor al stock del producto. Arrojo error
           if (NewQty > product.stock) {
             throw {
               message: 'There is not enough stock',
               statusCode: 400, 
             };
-          }  
+          }  */
+          const existingProduct = cart.products.find(p => p.product.equals(product._id));
+          console.log('elexistingproduct',existingProduct)
         //Si existe en el cart y la cantidad total no excede al stock
           if (existingProduct && existingProduct.quantity<product.stock) {
-            existingProduct.quantity = NewQty;
+            existingProduct.quantity +=  quantity;
           } 
           //Si no existe en el cart lo agrego
           if(!existingProduct) {
@@ -101,6 +104,7 @@
 
       //Actualiza aca toque cartID
       updateProductsInCart = async (cid, products) => {
+        console.log('estos son',products)
         try {
           const cart = await cartModel.findById(cid).populate('products.product');
            // Cart not found
@@ -108,9 +112,12 @@
             return null;
           }
           products.forEach((product) => {
-            const productId = product.id;
-            const cartProduct = cart.products.find((cartProduct) => cartProduct.product.id === productId);
-            
+            const productId = product._id.toString();
+          console.log('Product ID:', productId);
+          console.log('elcart',cart)
+   
+          const cartProduct = cart.products.find((cartProduct) => cartProduct.product._id.toString() === productId);
+            console.log('estaono',cartProduct)
             if (cartProduct) {
               const updateFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
             
@@ -123,6 +130,7 @@
           
               // Save the updated product
               cartProduct.product.save();
+              console.log('enelmanager',cartProduct )
             }
           });
           

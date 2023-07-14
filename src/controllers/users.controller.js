@@ -37,7 +37,7 @@ const register = (req,res) => {
         maxAge: 1000 * 3600 * 24,
         httpOnly: true
       });
-      console.log('eltokenquenevio',user)
+      console.log('eltokenquenuevo',user)
       // Redirect the user to the /products page
       res.redirect('/products');
 
@@ -55,6 +55,7 @@ const register = (req,res) => {
         return res.sendInternalError(error);
     }
 };
+
 
   export default{
     register,

@@ -123,7 +123,7 @@ passport.use('github', new GithubStrategy({
 }))
 
 passport.use('jwt', new JWTStrategy({
-  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+  jwtFromRequest: cookieExtractor,
   secretOrKey: config.tokenKey.key
 }, async (payload, done) => {
   //Busco por id el user y lo retorno

@@ -1,6 +1,6 @@
 import { cartService, productService, userService } from '../services/repositories.js'
-
-
+import ticketModel from '../dao/mongo/models/tickets.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const addProductToCart = async (req, res) => {
     const products = req.body;
@@ -223,16 +223,72 @@ const updateQtyProductInCart = async (req, res) => {
     }
 };
 
-const checkoutCart = (req,res) => {
-  const { cid} = req.params;
-  console.log(cid)
-  try{
+const checkoutCart = async  (req,res) => {
 
-  }catch(error){
-    console.log('Error:', error);
-    return res.sendBadRequest('Purchase could not be completed');
+  console.log('llegamos hasta aca ')
+  const { cid } = req.params;
+
+  console.log(cid)
+  //Primero busco si existe el cart
+  try{
+    const cartExist = await cartService.getCartByIdService(cid)
+    console.log(JSON.stringify(cartExist , null, '\t'));
+  if(cartExist){
+    //Ahora calculo el total de cada producto  por separado
+    const subtotalProduct = [];
+    Object.values(cartExist.products).forEach((product) => {
+      const subtotal = product.product.price * product.quantity
+      let prod = {
+        name:product.product.title,
+        price: product.product.price,
+        quantity: product.quantity,
+        subtotal
+      }
+      subtotalProduct.push(prod)
+    });
+    console.log(subtotalProduct)
+    
+    //Ahora Obtengo el total del cart
+    let totalProduct = 0;
+    subtotalProduct.forEach((subtotal) => {
+      totalProduct += subtotal.subtotal;
+    })
+    console.log('Total:', totalProduct);
+
+     // Creo el ticket
+     const ticket = new ticketModel({
+      code: uuidv4(),
+      amount: totalProduct,
+      purchaser: 'luli@MediaList.com'
+    });
+
+  // Lo guardo en la BD
+    await ticket.save();
+//Devuelvo el ticket
+console.log(ticket)
+    return res.sendSuccess(ticket);
+   
+  } else {
+    return res.sendBadRequest('Cart does not exist');
   }
-}
+    
+
+
+    }catch(error){
+      console.log('Error:', error);
+      return res.sendBadRequest('Purchase could not be completed');
+    }
+  };
+  
+
+
+
+
+
+
+
+ 
+
 
 
 export default {

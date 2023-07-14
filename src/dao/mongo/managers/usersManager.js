@@ -23,5 +23,6 @@ export default class UsersManager {
     deleteUsers = (id) => {
         return userModel.findByIdAndDelete(id);
     };
+
 }
 
