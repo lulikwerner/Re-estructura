@@ -28,7 +28,7 @@ export default function socketCarts(io) {
           console.log('User ID:', userId);
           const user = await usersServices.getUserBy({ _id: userId });
           // Check if the user has a cart
-          if (user && user.cart) {
+          if (user && user.payload.cart) {
             const cart = await cartsM.getCartById(cartUser);  
             console.log('mi cart',cart)
             const stock = productToAdd.stock-1;

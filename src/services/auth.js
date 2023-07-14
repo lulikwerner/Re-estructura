@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import config from '../config.js';
+//import userModel from '../dao/mongo/models/tickets.js';
 
 export const createHash = async (password) => {
   const salts = await bcrypt.genSalt(10);
@@ -44,3 +45,22 @@ export const generateToken = (user) => {
     throw error;
   }
 };
+
+
+/*export const generateTicket = async (cid) => {
+  try {
+    const code = generateUniqueCode();
+
+    const ticket = new userModel({
+      code: code,
+      purchaser: cid,
+      amount: 0, 
+    });
+
+    await ticket.save();
+    
+  } catch (error) {
+    console.error('Ticket generation error:', error);
+    throw error;
+  }
+}*/

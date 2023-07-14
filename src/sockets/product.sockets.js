@@ -25,7 +25,7 @@ export default function  productSocket(io) {
         });
     
         socket.on('deleteProduct', async data => {
-          await productManager.deleteProduct(data);
+          await productsM.deleteProduct(data);
           const product = await productsM.getProducts();
           socket.emit('products', product);
         });

@@ -12,7 +12,7 @@ form.addEventListener('submit', async(event)=>{
             "Content-Type":"application/json"
         }
     });
-    
+
     const responseText = await response.text();
     console.log(responseText); // Log the response text
     

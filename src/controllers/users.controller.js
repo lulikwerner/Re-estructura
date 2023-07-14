@@ -1,5 +1,4 @@
 import { generateToken } from '../services/auth.js';
-import TokenDTO from '../dto/user/TokenDto.js';
 
 const register = (req,res) => {
     console.log('estamos en register')
@@ -50,20 +49,12 @@ const register = (req,res) => {
   
   const current = (req, res) => {
     try {
-      const user = new TokenDTO(req.user) || new AdminDTO(req.user);
-      return res.status(200).json({
-        status: 'success',
-        data: {
-          user: user
-        }
-      });
+        return res.sendSuccess(req.user);
+
     } catch (error) {
-      return res.status(500).json({
-        status: 'error',
-        error: error
-      });
+        return res.sendInternalError(error);
     }
-  };
+};
 
   export default{
     register,

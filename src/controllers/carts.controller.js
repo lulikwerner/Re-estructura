@@ -1,4 +1,4 @@
-import { cartService, productService } from '../services/repositories.js'
+import { cartService, productService, userService } from '../services/repositories.js'
 
 
 
@@ -61,8 +61,6 @@ const postProductInCart = async (req, res) => {
     console.log('cid',cid)
     console.log('qty',quantity)
     const {  title, description, code, price, stock, category, thumbnails} = req.body;
-    //const products = [{ qty, title, description, code, price, stock, category, thumbnails}];
-    
     try {
       //Evaluo que la cantidad enviada sea un numero
       if (isNaN(Number(quantity))) return res.sendBadRequest('The quantity has to be a number');
@@ -74,6 +72,7 @@ const postProductInCart = async (req, res) => {
         if (!checkIdProduct) { return res.sendBadRequest('Product not found')};
      //Busco el carrito
       const checkIdCart = await cartService.getCartByIdService({ _id: cid });
+   
       //Si no se encuentra el carrito
       if(!checkIdCart){  return res.sendBadRequest('Cart not found')};
       //Tiene que enviar algun dato aunque sea para modificar
@@ -224,6 +223,18 @@ const updateQtyProductInCart = async (req, res) => {
     }
 };
 
+const checkoutCart = (req,res) => {
+  const { cid} = req.params;
+  console.log(cid)
+  try{
+
+  }catch(error){
+    console.log('Error:', error);
+    return res.sendBadRequest('Purchase could not be completed');
+  }
+}
+
+
 export default {
     addProductToCart,
     getCartById,
@@ -231,5 +242,6 @@ export default {
     deleteProductInCart,
     deleteCart,
     updateCart ,
-    updateQtyProductInCart 
+    updateQtyProductInCart,
+    checkoutCart,
 }

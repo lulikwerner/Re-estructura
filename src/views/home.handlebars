@@ -1,12 +1,11 @@
 
 {{#if user}}
-{{user}}
     <div>
         <h1>Hola {{user.first_name}}</h1>
         <p>Tu rol es de {{user.role}}</p>
-     {{log user}}
     </div>
-    <button id="logOutButton" type="submit" class="btn logOutButtonStyle m-3" >Log Out</button>
+    <button id="logOutButton" type="submit" class="btn logOutButtonStyle m-3" >Logout</button>
+    <button id="CartButton" type="submit" class="btn logOutButtonStyle m-3" >Go to Cart</button>
 {{/if}}
 
 <h2>PRODUCTOS</h2>

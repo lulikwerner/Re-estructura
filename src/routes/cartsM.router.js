@@ -10,7 +10,7 @@ export default class CartsRouter extends BaseRouter {
 //Busca un cart
 //http://localhost:8080/api/carts/:cid
 //Funciona ok pero tengo que limitar que solo el usuario pueda ver unicamente su carrito
-this.get('/:cid',['PRIVATE'],passportCall('jwt', { strategyType: 'jwt' }),cartsController.getCartById);
+this.get('/:cid',['USER'],passportCall('jwt', { strategyType: 'jwt' }),cartsController.getCartById);
 
 //Crea carrito y agrega producto al carrito
 //http://localhost:8080/api/carts/    
@@ -35,6 +35,10 @@ this.delete('/:cid/products/:pid',['USER'],passportCall('jwt', { strategyType: '
 //Elimina la productos del carrito. Lo vacia
 //http://localhost:8080/api/carts/:cid
 this.delete('/:cid',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.deleteCart);
+
+//Finaliza el proceso de compra
+//http://localhost:8080/api/carts/:cid/purchase
+this.post('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.checkoutCart);
   }
 }
 
