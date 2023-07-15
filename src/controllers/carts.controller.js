@@ -1,6 +1,7 @@
 import { cartService, productService, userService } from '../services/repositories.js'
 import ticketModel from '../dao/mongo/models/tickets.js';
 import { v4 as uuidv4 } from 'uuid';
+import createProductDTO from '../dto/product/createProductDTO.js'
 
 const addProductToCart = async (req, res) => {
     const products = req.body;
@@ -137,7 +138,6 @@ const deleteProductInCart = async (req, res) => {
 
 const deleteCart = async (req,res) =>{
     const { cid } = req.params;
-    console.log('entre')
     try {
   
       // Si no se envia ningun id de carrito
@@ -224,48 +224,60 @@ const updateQtyProductInCart = async (req, res) => {
 };
 
 const checkoutCart = async  (req,res) => {
-
-  console.log('llegamos hasta aca ')
   const { cid } = req.params;
-
-  console.log(cid)
   //Primero busco si existe el cart
   try{
     const cartExist = await cartService.getCartByIdService(cid)
     console.log(JSON.stringify(cartExist , null, '\t'));
   if(cartExist){
-    //Ahora calculo el total de cada producto  por separado
-    const subtotalProduct = [];
+    console.log('elcart',cartExist)
+    //Checkeo si hay stock suficiente para comprar o lo guardo en un nuevo array
+    const InCart=[]
+    const Outstock=[]
     Object.values(cartExist.products).forEach((product) => {
-      const subtotal = product.product.price * product.quantity
-      let prod = {
-        name:product.product.title,
-        price: product.product.price,
-        quantity: product.quantity,
-        subtotal
+      if(product.quantity<=product.product.stock){
+        const subtotal = product.product.price * product.quantity
+        let prod = {
+          name:product.product.title,
+          price: product.product.price,
+          quantity: product.quantity,
+          subtotal
+        }
+        InCart.push(prod)
+        console.log('empujar al ARREGLO InCart',InCart)
       }
-      subtotalProduct.push(prod)
-    });
-    console.log(subtotalProduct)
-    
+      else{
+        let prod =  new createProductDTO(product.product)
+     
+        Outstock.push(prod)
+        console.log('Empujar al arreglo Outstock',Outstock)
+
+      }
+      })
+
     //Ahora Obtengo el total del cart
     let totalProduct = 0;
-    subtotalProduct.forEach((subtotal) => {
+    InCart.forEach((subtotal) => {
       totalProduct += subtotal.subtotal;
     })
     console.log('Total:', totalProduct);
-
      // Creo el ticket
      const ticket = new ticketModel({
       code: uuidv4(),
       amount: totalProduct,
-      purchaser: 'luli@MediaList.com'
+      purchaser: req.user.email
     });
 
   // Lo guardo en la BD
     await ticket.save();
 //Devuelvo el ticket
 console.log(ticket)
+
+
+   // Actualizo el cart con los productos que no tenian suficiente stock
+   
+
+
     return res.sendSuccess(ticket);
    
   } else {

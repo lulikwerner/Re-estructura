@@ -53,7 +53,7 @@
       };
       
      //Actualiza los productos del cart con el POST
-     updateQtyCart = async ( cid, products, quantity) => {
+      updateQtyCart = async ( cid, products, quantity) => {
     try {
         //Busco el carrito
         const cart = await cartModel.findById(cid);
@@ -83,7 +83,7 @@
           const existingProduct = cart.products.find(p => p.product.equals(product._id));
           console.log('elexistingproduct',existingProduct)
         //Si existe en el cart y la cantidad total no excede al stock
-          if (existingProduct && existingProduct.quantity<product.stock) {
+          if (existingProduct) {
             existingProduct.quantity +=  quantity;
           } 
           //Si no existe en el cart lo agrego

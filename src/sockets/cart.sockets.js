@@ -8,7 +8,6 @@ export default function socketCarts(io) {
   io.on("connection", async (socket) => {
     console.log('Cart conexion');
     const headers = socket.handshake.headers;
-
     socket.on('addedProduct', async (data) => {
       const productId = data; 
       console.log('Product ID:', productId);
