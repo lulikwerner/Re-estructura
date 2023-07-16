@@ -8,7 +8,6 @@ export default class productDTO {
         this.status = product.status || 'active',
         this.stock = product.stock || 0,
         this.category = product.category || 'Sin categoria asignada',
-        this.thumbnails = product.thumbnails|| 'No image',
-        this.quantity = this.quantity
+        this.thumbnails = product.thumbnails|| 'No image'
     }
 }

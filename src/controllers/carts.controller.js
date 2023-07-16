@@ -1,7 +1,7 @@
 import { cartService, productService, userService } from '../services/repositories.js'
 import ticketModel from '../dao/mongo/models/tickets.js';
 import { v4 as uuidv4 } from 'uuid';
-import productDTO from '../dto/product/productDTO.js'
+
 
 const addProductToCart = async (req, res) => {
     const products = req.body;
@@ -231,12 +231,15 @@ const checkoutCart = async  (req,res) => {
     console.log(JSON.stringify(cartExist , null, '\t'));
   if(cartExist){
     console.log('elcart',cartExist)
-    //Checkeo si hay stock suficiente para comprar o lo guardo en un nuevo array
+    //Checkeo si hay stock suficiente para comprar y lo guardo en un nuevo array
     const InCart=[]
     const Outstock=[]
     Object.values(cartExist.products).forEach((product) => {
       if(product.quantity<=product.product.stock){
         const subtotal = product.product.price * product.quantity
+        const newStockValue = product.product.stock - product.quantity;
+        //Hago update del stock en mi DB
+        const updatedProduct =  productService.updateProductService(product.product._id, { $set: { stock: newStockValue } });
         let prod = {
           _id:product.product._id,
           name:product.product.title,
@@ -248,17 +251,14 @@ const checkoutCart = async  (req,res) => {
         console.log('empujar al ARREGLO InCart',InCart)
       }
       else{
-       
-       let outstockProduct = {
+      let outstockProduct = {
         _id:product.product._id,
         name:product.product.title,
         price: product.product.price,
         quantity: product.quantity,
-        
       } //const outstockProduct  = new productDTO(product.product)
-      console.log('lacantidad',outstockProduct.quantity)
-        Outstock.push(outstockProduct )
-        console.log('Empujar al arreglo Outstock',Outstock)
+      Outstock.push(outstockProduct )
+      console.log('Empujar al arreglo Outstock',Outstock)
       }
       })
     //Ahora Obtengo el total del cart
@@ -267,28 +267,18 @@ const checkoutCart = async  (req,res) => {
       totalProduct += subtotal.subtotal;
     })
     console.log('Total:', totalProduct);
-     // Creo el ticket
+   // Creo el ticket
      const ticket = new ticketModel({
       code: uuidv4(),
       amount: totalProduct,
       purchaser: req.user.email
     });
-    await ticket.save();   // Lo guardo en la BD
+    await ticket.save();// Lo guardo en la BD
     console.log(ticket)
+    //Busco el carrito y le hago el update
+    const createdCart = await cartService.findOneandUpdateServices( cartExist._id , Outstock);
 
-const createdCart = await cartService.findOneandUpdateServices( cartExist._id , Outstock);
-console.log('updatedcart',createdCart)
-
-     //// Save the updated cart to the database
-
-    return res.sendSuccess(ticket);
-
- 
-
-
-
-   
-   
+   return res.sendSuccess(ticket);
   } else {
     return res.sendBadRequest('Cart does not exist');
   }
