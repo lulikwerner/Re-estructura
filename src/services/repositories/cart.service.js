@@ -36,6 +36,7 @@ export default class CartRepository {
     emptyCartService = (cid) => {
         return this.dao.emptyCart(cid);
     }
-
-
+    findOneandUpdateServices = (cid,cart) =>{
+    return this.dao.updateOneProductInCart(cid,cart)
+}
 }

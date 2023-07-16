@@ -1,7 +1,7 @@
 import { cartService, productService, userService } from '../services/repositories.js'
 import ticketModel from '../dao/mongo/models/tickets.js';
 import { v4 as uuidv4 } from 'uuid';
-import createProductDTO from '../dto/product/createProductDTO.js'
+import productDTO from '../dto/product/productDTO.js'
 
 const addProductToCart = async (req, res) => {
     const products = req.body;
@@ -238,6 +238,7 @@ const checkoutCart = async  (req,res) => {
       if(product.quantity<=product.product.stock){
         const subtotal = product.product.price * product.quantity
         let prod = {
+          _id:product.product._id,
           name:product.product.title,
           price: product.product.price,
           quantity: product.quantity,
@@ -247,14 +248,19 @@ const checkoutCart = async  (req,res) => {
         console.log('empujar al ARREGLO InCart',InCart)
       }
       else{
-        let prod =  new createProductDTO(product.product)
-     
-        Outstock.push(prod)
+       
+       let outstockProduct = {
+        _id:product.product._id,
+        name:product.product.title,
+        price: product.product.price,
+        quantity: product.quantity,
+        
+      } //const outstockProduct  = new productDTO(product.product)
+      console.log('lacantidad',outstockProduct.quantity)
+        Outstock.push(outstockProduct )
         console.log('Empujar al arreglo Outstock',Outstock)
-
       }
       })
-
     //Ahora Obtengo el total del cart
     let totalProduct = 0;
     InCart.forEach((subtotal) => {
@@ -267,25 +273,25 @@ const checkoutCart = async  (req,res) => {
       amount: totalProduct,
       purchaser: req.user.email
     });
+    await ticket.save();   // Lo guardo en la BD
+    console.log(ticket)
 
-  // Lo guardo en la BD
-    await ticket.save();
-//Devuelvo el ticket
-console.log(ticket)
+const createdCart = await cartService.findOneandUpdateServices( cartExist._id , Outstock);
+console.log('updatedcart',createdCart)
 
-
-   // Actualizo el cart con los productos que no tenian suficiente stock
-   
-
+     //// Save the updated cart to the database
 
     return res.sendSuccess(ticket);
+
+ 
+
+
+
+   
    
   } else {
     return res.sendBadRequest('Cart does not exist');
   }
-    
-
-
     }catch(error){
       console.log('Error:', error);
       return res.sendBadRequest('Purchase could not be completed');

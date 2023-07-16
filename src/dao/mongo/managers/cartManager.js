@@ -204,6 +204,19 @@
       return error;
     }
       }
+      updateOneProductInCart = async (cid, cart) => {
+        const updatedCart = await cartModel.findByIdAndUpdate(
+          cid,
+          { 
+            products: cart.map(product => ({ product, quantity: product.quantity })), //recorro el cart y traigo el producto y su cantidad
+          },
+          { new: true }
+        ).populate('products.product').lean();
+      
+        console.log(JSON.stringify(updatedCart, null, '\t'));
+        return updatedCart;
+      };
+      
 
   
   

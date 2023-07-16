@@ -19,29 +19,40 @@ export default function socketCarts(io) {
       console.log('el produ a agregar',productsArray)
 
       const cookie = headers['cookie'];
-       const token = cookieExtractor({ headers: { cookie } });
+      const token = cookieExtractor({ headers: { cookie } });
 
 
       if (token) {
-        console.log('entro')
+        console.log('entro al request')
         console.log(token)
         try {
           const payload = jwt.verify(token, config.tokenKey.key);
           console.log('Decoded payload:', payload);
           const userId = payload.id;
           const cartUser=payload.cart;
-         // console.log('el cart que viene con el usuario',payload.cart)
+         //console.log('el cart que viene con el usuario',payload.cart)
           const user = await usersServices.getUserBy({ _id: userId });
 
           //Busco el cart
           const cart = await cartsM.getCartById(cartUser);
            console.log(JSON.stringify(cart, null, '\t'));
+           if (cart){
+
           //Si el producto esta en el cart llamo al  updateQtyCart
           const foundProduct = cart.products.find((product) => product.product._id.toString() === productId);
  
             const updatedCart = await cartsM. updateQtyCart(cartUser, productToAdd, 1);
             console.log('carrito updated',updatedCart )
-         
+           }
+           else {
+            console.log('notien')
+            // Create a new cart and associate it with the user
+            const newCart = await cartsM.createCart(productsArray);
+            console.log('New Cart created:', newCart);
+            // Update the user's cart field with the new cart ID
+            await usersServices.updateUsers ({ _id: userId }, { cart: newCart._id });
+            console.log('User cart updated');
+          }
       
           // Check if the user has a cart
          /* if (user && cartUser) {
