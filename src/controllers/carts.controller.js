@@ -288,15 +288,15 @@ const checkoutCart = async  (req,res) => {
     }
   };
   
+/*const checkoutDisplay = async (req,res) => {
+  const { cid } = req.params;
 
+  // Make the necessary API request to fetch the purchase information based on cid
+  // ...
 
-
-
-
-
-
- 
-
+  // Render the purchase.handlebars template and pass the purchase data as a context object
+  res.render('purchase')
+} */
 
 
 export default {
@@ -308,4 +308,5 @@ export default {
     updateCart ,
     updateQtyProductInCart,
     checkoutCart,
+   // checkoutDisplay 
 }

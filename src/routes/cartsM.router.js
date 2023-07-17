@@ -39,6 +39,10 @@ this.delete('/:cid',['USER'],passportCall('jwt', { strategyType: 'jwt' }), carts
 //Finaliza el proceso de compra
 //http://localhost:8080/api/carts/:cid/purchase
 this.post('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.checkoutCart);
+
+//Muestra el ticket de compra 
+//http://localhost:8080/api/carts/:cid/purchase
+//this.get('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.checkoutDisplay);
   }
 }
 

@@ -39,7 +39,6 @@ console.log(categoriesData)
     updateProduct= async (id, update) => {
       try {
         const updatedProduct = await productModel.findByIdAndUpdate(id, update, { new: true });
-        console.log('Updated Product:', updatedProduct);
         return updatedProduct;
       } catch (error) {
         console.log('Error updating product:', error);
@@ -47,7 +46,6 @@ console.log(categoriesData)
       }
     };
     
-
     deleteProduct = (id) => {
         return productModel.findByIdAndDelete(id);
     };

@@ -24,3 +24,11 @@ checkoutButton.addEventListener('click', async () => {
 
 // Call the function after the DOM is loaded
 //document.addEventListener('DOMContentLoaded', AddProductToCart);
+
+  //window.location.href = `/api/carts/${cid}/purchase`;
+  // Make the API request using the cid
+
+
+  
+
+

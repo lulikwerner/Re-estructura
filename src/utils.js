@@ -9,12 +9,11 @@ export const cookieExtractor = (req) => {
   if (req && req.cookies) {
     console.log('entro aca');
     token = req.cookies['authToken'];
-    console.log('Token from cookies:', token);
   }
   
   // Handle socket.io connection
   if (!token && req && req.headers && req.headers.cookie) {
-    console.log('algo en el extract no funciona');
+    console.log('Extraemos con el extractor');
     const cookie = req.headers.cookie;
     const cookieRegex = /authToken=([^;]+)/;  // Update the cookieRegex to match 'authToken'
     const match = cookie.match(cookieRegex);

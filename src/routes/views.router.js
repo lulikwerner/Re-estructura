@@ -13,7 +13,7 @@ export default class ViewsRouter extends BaseRouter {
 this.get('/realTimeProducts' ,["ADMIN"], passportCall('jwt', { strategyType: 'jwt' }),viewsController.realTimeProducts);
 
 //Muestra los productos, filtro y orden
-this.get('/products', ["PUBLIC"],passportCall('jwt', { strategyType: 'jwt' }), viewsController.getProducts);
+this.get('/products', ["USER","PUBLIC"],passportCall('jwt', { strategyType: 'jwt' }), viewsController.getProducts);
 
 //Abre el chat
 this.get('/chat',["USER"],viewsController.chat);
@@ -26,5 +26,6 @@ this.get('/register',['NO_AUTH'], passportCall('register',{strategyType:'jwt'}),
 this.get('/login', ['NO_AUTH'],passportCall('login', { strategyType: 'jwt' }), viewsController.login);
 
 this.get('/profile', ["USER","ADMIN"], passportCall('jwt', { strategyType: 'jwt' }), viewsController.profile);
+
 
 }}
