@@ -24,6 +24,7 @@ const register = (req,res) => {
   };
 
   const loginGithub = (req, res) => {
+    //console.log('holagit')
     res.send({ status: "success", message: "Logged in with GitHub" });
   };
 
@@ -46,6 +47,8 @@ const register = (req,res) => {
       res.sendInternalError (error);
     }
   };
+
+  
   
   const current = (req, res) => {
     try {

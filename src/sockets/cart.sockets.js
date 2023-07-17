@@ -28,16 +28,15 @@ export default function socketCarts(io) {
         try {
           const payload = jwt.verify(token, config.tokenKey.key);
           console.log('Decoded payload:', payload);
-          const userId = payload.id;
+          //El payload.id es como viene cuando es un usuario de DB y el payload._id es cuando me logeo desde github
+          const userId = payload.id||payload._id;
           const cartUser=payload.cart;
          //console.log('el cart que viene con el usuario',payload.cart)
           const user = await usersServices.getUserBy({ _id: userId });
-
           //Busco el cart
           const cart = await cartsM.getCartById(cartUser);
            console.log(JSON.stringify(cart, null, '\t'));
            if (cart){
-
           //Si el producto esta en el cart llamo al  updateQtyCart
           const foundProduct = cart.products.find((product) => product.product._id.toString() === productId);
  
@@ -45,7 +44,6 @@ export default function socketCarts(io) {
             console.log('carrito updated',updatedCart )
            }
            else {
-            console.log('notien')
             // Create a new cart and associate it with the user
             const newCart = await cartsM.createCart(productsArray);
             console.log('New Cart created:', newCart);

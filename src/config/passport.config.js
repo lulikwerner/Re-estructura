@@ -103,14 +103,14 @@ passport.use('github', new GithubStrategy({
       const user = await usersServices.getUserBy ({email});
       if(!user){
         //Si el usuario no existe lo creo yo
-        user = new TokenDTO(user)
+
         //Antes del dto
-        /*const newUser = {
+        const newUser = {
           first_name: name,
           email,
           age:23,
-          password:''
-        }*/
+          password:'',
+        }
         //Creo el nuevo usuario
         const result = await usersServices.createUsers(newUser);
         done(null,result)

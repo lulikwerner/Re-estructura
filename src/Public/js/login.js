@@ -19,9 +19,8 @@ form.addEventListener('submit', async(event)=>{
     console.log('soyrespose',responseText); // Log the response text
     const responseData = JSON.parse(responseText);
     const role = responseData.payload.user.role;
-    console.log(role)
+    console.log('el rol',role)
     if(responseData.status === "success"){
-        console.log(responseData);
         Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -29,12 +28,12 @@ form.addEventListener('submit', async(event)=>{
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
-            if(responseData.payload.user.role==='admin'){
-                window.location.replace('/realTimeProducts');
-        }else{
-            window.location.replace('/products');
-            
+            if(responseData.payload.user.role==='user'){
+                window.location.replace('/products');
+        } else {
+            window.location.replace('/realTimeProducts');
         }
+        
           });
     }else{
         Swal.fire({

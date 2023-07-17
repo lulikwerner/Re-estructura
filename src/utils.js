@@ -13,7 +13,7 @@ export const cookieExtractor = (req) => {
   
   // Handle socket.io connection
   if (!token && req && req.headers && req.headers.cookie) {
-    console.log('Extraemos con el extractor');
+    console.log('Extraemos con el header');
     const cookie = req.headers.cookie;
     const cookieRegex = /authToken=([^;]+)/;  // Update the cookieRegex to match 'authToken'
     const match = cookie.match(cookieRegex);

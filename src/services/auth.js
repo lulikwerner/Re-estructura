@@ -38,6 +38,7 @@ export const passportCall = (strategy, options = {}) => {
 };
 
 export const generateToken = (user) => {
+  console.log('probemosuser')
   try {
     return jwt.sign(JSON.parse(JSON.stringify(user)), config.tokenKey.key, { expiresIn: '1d' });
   } catch (error) {
