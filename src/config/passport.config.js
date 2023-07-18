@@ -28,11 +28,13 @@ passport.use('register',new LocalStrategy({passReqToCallback: true, usernameFiel
       if(!first_name || !last_name || !age || !email || !password){
           return done(null,false, { message: 'Por favor completar todos los campos' });
         } 
+        if(isNaN(age) || age<0){done(null,false,{message:'Ingrese una edad valida'})}
         //Busco si ya existe el usuario
         const exists = await usersServices.getUserBy({email});
-        if(exists) done(null,false,{message:'El usuario ya existe'})
+        if(exists) {done(null,false,{message:'El usuario ya existe'})}
         //Si no existe el usuario en la db. Encripto la contrasenia
-        const hashedPassword = await createHash(password);
+        else{
+          const hashedPassword = await createHash(password);
 
         //Construyo el usuario que voy a registrar
         const newUser = {
@@ -46,7 +48,7 @@ passport.use('register',new LocalStrategy({passReqToCallback: true, usernameFiel
           const result = await usersServices.createUsers(newUser);
           console.log('el resultado es',result)
           //Si todo salio ok,
-          done(null,result);
+          done(null,result);}
         }catch(error){
             done(error) 
         }
@@ -103,8 +105,6 @@ passport.use('github', new GithubStrategy({
       const user = await usersServices.getUserBy ({email});
       if(!user){
         //Si el usuario no existe lo creo yo
-
-        //Antes del dto
         const newUser = {
           first_name: name,
           email,

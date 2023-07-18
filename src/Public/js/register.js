@@ -5,7 +5,7 @@ form.addEventListener('submit', async(event)=>{
     const data = new FormData(form);
     const  obj ={};
     data.forEach((value,key)=>(obj[key] = value));
-    console.log(obj);
+    console.log('el objeto',obj); 
     const response = await fetch('/api/sessions/register', {
         method:'POST',
         body:JSON.stringify(obj),
@@ -15,7 +15,8 @@ form.addEventListener('submit', async(event)=>{
 
     })
     const responseData = await response.json();
-    console.log(responseData);
+    console.log(responseData.error);
+
     if(responseData.status ==="success"){
         console.log("Registration success");
         Swal.fire({
@@ -34,7 +35,7 @@ form.addEventListener('submit', async(event)=>{
             position:'top-end',
             showConfirmButton: false,
             timer:2000,
-            title:`Por favor complete todos los campos`,
+            title:responseData.error ,
             icon:"error"
         }) 
     }

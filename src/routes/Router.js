@@ -12,20 +12,20 @@ export default class BaseRouter {
 
   getRouter = () => this.router;
 
-  get(path, policies, ...callbacks) {
-    this.router.get(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies),  this.generateCustomResponses, this.applyCallbacks(callbacks));
+  get(path, policies,role, ...callbacks) {
+    this.router.get(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies),  this.generateCustomResponses,this.verifyCart(role), this.applyCallbacks(callbacks));
   }
 
-  post(path, policies, ...callbacks) {
+  post(path, policies,...callbacks) {
     this.router.post(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
   }
 
-  put(path, policies, ...callbacks) {
-    this.router.put(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+  put(path, policies,role, ...callbacks) {
+    this.router.put(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.verifyCart(role),this.applyCallbacks(callbacks));
   }
 
-  delete(path, policies, ...callbacks) {
-    this.router.delete(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+  delete(path, policies,role, ...callbacks) {
+    this.router.delete(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.verifyCart(role),this.applyCallbacks(callbacks));
   }
 
   generateCustomResponses = (req, res, next) => {
@@ -76,6 +76,7 @@ export default class BaseRouter {
     return (req, res, next) => {
       const user = req.user;
       const userRole = user && user.role; // Check if user exists before accessing the role property
+      console.log('userRole',userRole)
       const { cid } = req.params;
       const cartInUser = user?.cart?.toString(); // Check if user exists before accessing the cart property
       if (userRole === 'admin' && !cartInUser) return next();

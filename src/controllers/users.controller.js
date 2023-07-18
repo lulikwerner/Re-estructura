@@ -1,4 +1,6 @@
+import { usersServices } from '../dao/mongo/managers/index.js';
 import { generateToken } from '../services/auth.js';
+
 
 const register = (req,res) => {
     console.log('estamos en register')
@@ -7,6 +9,7 @@ const register = (req,res) => {
 
   const login = (req, res) => {
     // El login recibe SIEMPRE en req.user
+    console.log(req.user)
     const token = generateToken(req.user);
     res.cookie('authToken', token, {
       maxAge: 1000 * 3600 * 24,
@@ -29,7 +32,6 @@ const register = (req,res) => {
   };
 
   const loginGitHubCallback = (req, res) => {
-    const user = req.user;
     console.log('el usuario git', user);
     try {
       const token = generateToken(req.user);
@@ -48,8 +50,6 @@ const register = (req,res) => {
     }
   };
 
-  
-  
   const current = (req, res) => {
     try {
         return res.sendSuccess(req.user);

@@ -19,8 +19,6 @@ export default class SessionsRouter extends BaseRouter{
 
     this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), usersController.loginGithub);
 
-  
-
     this.get('/current', ['PRIVATE'], passportCall('jwt', { strategyType: "locals" }), usersController.current);
 
 
