@@ -15,8 +15,11 @@
     </li>
   {{/each}}
 </ul>
+{{#if carth.products.length}}
 <button id="checkoutButton" type="submit" class="btn checkoutButtonStyle m-3" data-cid="{{carth._id}}" >Checkout</button>
-
+{{else}}
+  <h3>El carrito esta vacio</h3>
+{{/if}}
 <div class="row mt-4" id="cart"></div>
 
 

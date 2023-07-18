@@ -1,4 +1,36 @@
-import { productsM } from './src/dao/mongo/managers/index.js'
+import { CartDAO as createCartDAO, ProductDAO as createProductDAO } from '../Entrega-Opt/src/dao/factory.js';
+import { Command } from 'commander';
+
+const program = new Command();
+program
+.option('-mg, --mongo', 'Use MongoDB for persistence')
+.option('-fs, --filesystem', 'Use FileSystem for persistence')
+
+program.parse();
+console.log('Options:',program.opt())
+const { mongo, filesystem } = program.opts();
+
+// Check if more than one option is provided or if none is provided
+if ((mongo && filesystem) || (!mongo && !filesystem)) {
+  console.error('Please choose only one persistence option (MONGO or FILESYSTEM).');
+  process.exit(1);
+}
+
+const persistenceType = mongo ? 'MONGO' : 'FILESYSTEM';
+
+(async () => {
+  try {
+    // Create DAOs based on the chosen persistence
+    const CartDAO = await createCartDAO(persistenceType);
+    const ProductDAO = await createProductDAO(persistenceType);
+
+    // Your application logic here using CartDAO and ProductDAO
+  } catch (error) {
+    console.error('Error:', error);
+  }
+})();
+
+/*import { productsM } from './src/dao/mongo/managers/index.js'
 
 const context = async () => {
     const test = await productsM.getProducts();
@@ -21,4 +53,4 @@ const context = async () => {
 
 }
 
-context();
+context();*/

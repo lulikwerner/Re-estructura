@@ -225,6 +225,7 @@ const updateQtyProductInCart = async (req, res) => {
 
 const checkoutCart = async  (req,res) => {
   const { cid } = req.params;
+  console.log('enelcheckout')
   //Primero busco si existe el cart
   try{
     const cartExist = await cartService.getCartByIdService(cid)
@@ -248,7 +249,7 @@ const checkoutCart = async  (req,res) => {
           subtotal
         }
         InCart.push(prod)
-        console.log('empujar al ARREGLO InCart',InCart)
+        //console.log('empujar al ARREGLO InCart',InCart)
       }
       else{
       let outstockProduct = {
@@ -267,6 +268,7 @@ const checkoutCart = async  (req,res) => {
       totalProduct += subtotal.subtotal;
     })
     console.log('Total:', totalProduct);
+    if(InCart.length!=0){
    // Creo el ticket
      const ticket = new ticketModel({
       code: uuidv4(),
@@ -275,28 +277,48 @@ const checkoutCart = async  (req,res) => {
     });
     await ticket.save();// Lo guardo en la BD
     console.log(ticket)
+  
     //Busco el carrito y le hago el update
     const createdCart = await cartService.findOneandUpdateServices( cartExist._id , Outstock);
+   const checkoutData = {
+      ticket: ticket,
+      InCart: InCart,
+      Outstock:Outstock,
+      totalProduct: totalProduct
+    };
+    return res.status(200).json(checkoutData);
+  }
+  const checkoutDataWT = {
 
-   return res.sendSuccess(ticket);
+    InCart: InCart,
+    Outstock:Outstock,
+    totalProduct: totalProduct
+  };
+
+   return res.status(200).json(checkoutDataWT);
+  
+    
+
+
   } else {
     return res.sendBadRequest('Cart does not exist');
   }
+
     }catch(error){
       console.log('Error:', error);
       return res.sendBadRequest('Purchase could not be completed');
     }
   };
   
-/*const checkoutDisplay = async (req,res) => {
-  const { cid } = req.params;
-
-  // Make the necessary API request to fetch the purchase information based on cid
-  // ...
-
-  // Render the purchase.handlebars template and pass the purchase data as a context object
-  res.render('purchase')
-} */
+  const checkoutDisplay = async (req, res) => {
+    const { cid } = req.params;
+    console.log('estamos en checkout display');
+    console.log(cid);
+    const checkoutData = JSON.parse(req.query.checkoutData);
+    console.log(checkoutData)
+    // Render the purchase template and pass the checkoutData as a local variable
+    return res.render('purchase', {checkoutData});
+  };
 
 
 export default {
@@ -308,5 +330,9 @@ export default {
     updateCart ,
     updateQtyProductInCart,
     checkoutCart,
-   // checkoutDisplay 
+    checkoutDisplay 
 }
+
+
+
+

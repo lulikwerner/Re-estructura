@@ -1,11 +1,26 @@
-
 <div>
-<h1>Orden de compra</h1>
-<h2>Gracias por su compra {{ticket.purchase}}</h2>
-<h2>El numero de orden de compra {{ticket.code}}</h2>
-<h2>El total de la orden: ${{ticket.amopunt}}</h2>
+    {{#if checkoutData.ticket}}
+  <h1>Orden de compra {{ checkoutData.ticket.first_name }}</h1>
+  <h2>Gracias por su compra {{ checkoutData.ticket.purchaser }}</h2>
+  <h2>El numero de orden de compra {{ checkoutData.ticket.code }}</h2>
+  <h2>El total de la orden: ${{ checkoutData.ticket.amount }}</h2>
+  {{/if}}
 
+{{#if checkoutData.Outstock }}
+  <h3>Los productos que no se pudieron comprar porque no hay suficiente stock son</h3>
+  <h2>Outstock:</h2>
+  <ul>
+    {{#each checkoutData.Outstock}}
+      <li>
+        <p>Nombre: {{ this.name }}</p>
+        <p>Precio: {{ this.price }}</p>
+        <p>Cantidad: {{ this.quantity }}</p>
+      </li>
+    {{/each}}
+  </ul>
+  {{/if}}
 </div>
+
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/checkout.js" type="module"></script>

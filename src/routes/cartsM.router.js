@@ -42,7 +42,7 @@ this.post('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' })
 
 //Muestra el ticket de compra 
 //http://localhost:8080/api/carts/:cid/purchase
-//this.get('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.checkoutDisplay);
+this.get('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.checkoutDisplay);
   }
 }
 
