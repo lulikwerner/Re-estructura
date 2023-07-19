@@ -5,7 +5,7 @@ import config from '../config.js'
 const persistence = 'MONGO';
 
 //Depende de mi persistence que va a tomar si FilesSystem o Mongo
-async function createCartDAO(persistenceType) {
+export async function CartDAO(persistenceType) {
     let cartsDAO;
     switch (persistenceType) {
       case 'FILESYSTEM':
@@ -23,7 +23,7 @@ async function createCartDAO(persistenceType) {
     return cartsDAO;
 }
   //Depende de mi persistence que va a tomar si FilesSystem o Mongo
-async function createProductDAO(persistenceType) {
+export async function ProductDAO(persistenceType) {
         let productsDAO;
         switch(persistenceType){
             case 'FILESYSTEM': 
@@ -38,7 +38,7 @@ async function createProductDAO(persistenceType) {
         }
         return productsDAO;
 }
-async function createCheckoutDAO(persistenceType) {
+export async function CheckoutDAO(persistenceType) {
   let ticketDAO;
   switch(persistenceType){
       case 'FILESYSTEM': 
@@ -56,20 +56,25 @@ async function createCheckoutDAO(persistenceType) {
 
 
 //Exporto para poder usarlo en repositories.js
-export const CartDAO = await createCartDAO(persistence);
-export const ProductDAO = await createProductDAO(persistence);
-export const CheckoutDAO = await createCheckoutDAO(persistence);
+export const createCartDAO = await CartDAO(persistence);
+export const createProductDAO = await ProductDAO(persistence);
+export const createCheckoutDAO = await CheckoutDAO(persistence);
 
-/*import mongoose from 'mongoose';
-import config from '../config.js';
+
+/*
+
+//Usando los commands
+import mongoose from "mongoose";
+import config from '../config.js'
+
 
 //Depende de mi persistence que va a tomar si FilesSystem o Mongo
-async function CartDAO(persistenceType) {
+export async function createCartDAO(persistenceType) {
     let cartsDAO;
     switch (persistenceType) {
       case 'FILESYSTEM':
         const {default: FileSystemDAO} = await import ('./fileSystem/Managers/cartManager.js')
-        cartsDAO = new FileSystemDAO();
+        cartsDAO = new MemoryDAO();
         break;
       case 'MONGO':
         mongoose.connect(config.mongoSecret.MongoURL);
@@ -81,23 +86,34 @@ async function CartDAO(persistenceType) {
     }
     return cartsDAO;
 }
-
-async function ProductDAO(persistenceType) {
-    let productsDAO;
-    switch(persistenceType){
-        case 'FILESYSTEM': 
-            const {default: FileSystemDAO} = await import ('./fileSystem/Managers/productManager.js')
-            productsDAO = new FileSystemDAO();
-            break;
-        case 'MONGO':
-            mongoose.connect(config.mongoSecret.MongoURL);
-            const {default: MongoDAO} = await import ('./mongo/managers/productManager.js')
-            productsDAO = new MongoDAO();
-            break;
-        default:
-            throw new Error(`Invalid persistence type: ${persistenceType}`);
-    }
-    return productsDAO;
+  //Depende de mi persistence que va a tomar si FilesSystem o Mongo
+export async function createProductDAO(persistenceType) {
+        let productsDAO;
+        switch(persistenceType){
+            case 'FILESYSTEM': 
+                const {default: FileSystemDAO} = await import ('./fileSystem/Managers/productManager.js')
+                productsDAO = new MemoryDAO();
+                break;
+            case 'MONGO':
+                mongoose.connect(config.mongoSecret.MongoURL);
+                const {default: MongoDAO} = await import ('./mongo/managers/productManager.js')
+                productsDAO = new MongoDAO();
+                break;
+        }
+        return productsDAO;
 }
-
-export { CartDAO, ProductDAO };*/
+export async function createCheckoutDAO(persistenceType) {
+  let ticketDAO;
+  switch(persistenceType){
+      case 'FILESYSTEM': 
+          const {default: FileSystemDAO} = await import ('./mongo/managers/checkoutManager.js')
+          ticketDAO = new MemoryDAO();
+          break;
+      case 'MONGO':
+          mongoose.connect(config.mongoSecret.MongoURL);
+          const {default: MongoDAO} = await import ('./mongo/managers/checkoutManager.js')
+          ticketDAO = new MongoDAO();
+          break;
+  }
+  return ticketDAO;
+}*/

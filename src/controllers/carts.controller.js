@@ -313,12 +313,11 @@ const checkoutDisplay = async (req, res) => {
   try {
     const ticketData = await checkoutTicketModel
       .findOne({ cid: cid })
-      .sort({ _id: -1 }) // Sort in descending order based on the _id field (latest first)
+      .sort({ _id: -1 }) // Me va a traer el ultimo ticket que encuentra para hacer display
       .populate('ticket')
       .lean()
       .exec();
-       console.log(JSON.stringify(ticketData , null, '\t'));
-    // Render the 'purchase' template and pass the data as a local variable
+       //console.log(JSON.stringify(ticketData , null, '\t'));
     return res.render('purchase', { checkoutTicket: ticketData });
   } catch (error) {
     console.log('Error:', error);

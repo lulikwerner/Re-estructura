@@ -16,8 +16,8 @@ export default class BaseRouter {
     this.router.get(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies),  this.generateCustomResponses,this.verifyCart(role), this.applyCallbacks(callbacks));
   }
 
-  post(path, policies,...callbacks) {
-    this.router.post(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
+  post(path, policies,/*role.*/...callbacks) {
+    this.router.post(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, /*this.verifyCart(role),*/this.applyCallbacks(callbacks));
   }
 
   put(path, policies,role, ...callbacks) {
@@ -75,13 +75,15 @@ export default class BaseRouter {
   verifyCart = role => {
     return (req, res, next) => {
       const user = req.user;
-      const userRole = user && user.role; // Check if user exists before accessing the role property
+      const userRole= user && user.role; 
       console.log('userRole',userRole)
       const { cid } = req.params;
-      const cartInUser = user?.cart?.toString(); // Check if user exists before accessing the cart property
+      const cartInUser = user?.cart?.toString(); // Chequea que el usuario exista
+      if (userRole !== role) return next();
       if (userRole === 'admin' && !cartInUser) return next();
       console.log('elcartdelciente', cartInUser);
       //Si no tengo un rol definido aun
+      if (typeof role === 'undefined') return next();
       if (typeof userRole === 'undefined') return next();
       //Si tengo un rol pero no tengo un cid nviado aun
       if(userRole ==='user' && typeof cid === 'undefined') return next();

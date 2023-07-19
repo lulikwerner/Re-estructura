@@ -19,10 +19,13 @@ import cartSocket from "./sockets/cart.sockets.js";
 import productSocket from "./sockets/product.sockets.js";
 import initlizePassportStrategies from './config/passport.config.js'
 
+
 const app = express();
 const PORT = config.app.PORT;
 
 const startServer = async () => {
+
+
   //Conecta a mi mongoose db
 /*try {
     await mongoose.connect(
