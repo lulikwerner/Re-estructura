@@ -26,7 +26,7 @@ console.log('noresp')
     console.log(checkoutData);
 
     // Use the data to display or perform any other actions
-   window.location.href = `/api/carts/${cid}/purchase`;
+  window.location.href = `/api/carts/${cid}/purchase`;
   } else {
     // Handle the case where the response is not successful (e.g., error handling)
     console.error('Error:', response.status, response.statusText);

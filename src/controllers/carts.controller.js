@@ -289,20 +289,20 @@ const checkoutCart = async (req, res) => {
           purchaser: req.user.email,
         });
         await ticket.save();
+      }
     //Genero el CheckoutTicket model donde va a incluir el ticket generado los porductos que se compraron(InCart) y los que quedaorn fuera de la compra(OutCart)
     const checkOutTicket = new checkoutTicketModel({
       cid:cid,
       ticket:ticket,
-      InCart: InCart,
-      Outstock: Outstock,
+      InCart: ticket,
+      Outstock: ticket,
     });
     await checkOutTicket.save();
-    //console.log('elchecoutticket',checkOutTicket)
+    console.log('check',checkOutTicket )
+
         return res.status(200).json(checkOutTicket);
       }
-    } else {
-      return res.sendBadRequest('Cart does not exist');
-    }
+    
   } catch (error) {
     console.log('Error:', error);
     return res.sendBadRequest('Purchase could not be completed');
@@ -319,9 +319,7 @@ const checkoutDisplay = async (req, res) => {
       .populate('ticket')
       .lean()
       .exec();
-  console.log(JSON.stringify(ticketData, null, '\t'));
-
-console.log(JSON.stringify(ticketData, null, '\t'));
+       console.log(JSON.stringify(ticketData , null, '\t'));
     // Render the 'purchase' template and pass the data as a local variable
     return res.render('purchase', { checkoutTicket: ticketData });
   } catch (error) {

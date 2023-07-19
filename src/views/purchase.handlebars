@@ -4,6 +4,8 @@
     <h3>Gracias por su compra {{checkoutTicket.ticket.purchaser}}</h3>
     <h3>El numero de orden de compra {{checkoutTicket.ticket.code}}</h3>
     <h3>El total de la orden: ${{checkoutTicket.ticket.amount}}</h3>
+    {{else}}
+     <h3>No hay stock suficiente para realizar la compra</h3>
   {{/if}}
 
   {{#if checkoutTicket.Outstock}}
@@ -19,7 +21,6 @@
       {{/each}}
     </ul>
   {{/if}}
-</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/checkout.js" type="module"></script>
