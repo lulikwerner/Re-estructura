@@ -243,10 +243,6 @@ const checkoutCart = async (req, res) => {
           const subtotal = product.product.price * product.quantity;
           console.log('sub',subtotal)
           const newStockValue = product.product.stock - product.quantity;
-          console.log('enlogica')
-          console.log(product.product.stock)
-          console.log(product.quantity)
-          console.log('newStockValue',newStockValue)
           // Hago update del stock en mi DB
           const updatedProduct = productService.updateProductService(product.product._id, {
             $set: { stock: newStockValue },
@@ -272,13 +268,7 @@ const checkoutCart = async (req, res) => {
           Outstock.push(outstockProduct);
           console.log('Empujar al arreglo Outstock', Outstock);
         }
-
       });
-
-      //const deleteCart = await cartService.emptyCartService(cid)
-     
-      console.log('antes el cart',cartExist);
-      
       //A los productos InCart los voy filtrando llamando a la funcion deleteProductInCartService y los voy sacando del cart
       for (const product of InCart) {
         await cartService.deleteProductInCartService(cid,product._id);
@@ -319,19 +309,27 @@ const checkoutCart = async (req, res) => {
   }
 };
 
-const checkoutDisplay  = async (req, res) => {
+const checkoutDisplay = async (req, res) => {
   const { cid } = req.params;
+  console.log('endisp');
   try {
-    // Busco el cart en el che
-    const ticketData = await checkoutService.getCheckoutByIdService(cid);
-   // console.log(JSON.stringify(ticketData, null, '\t'));
+    const ticketData = await checkoutTicketModel
+      .findOne({ cid: cid })
+      .sort({ _id: -1 }) // Sort in descending order based on the _id field (latest first)
+      .populate('ticket')
+      .lean()
+      .exec();
+  console.log(JSON.stringify(ticketData, null, '\t'));
+
+console.log(JSON.stringify(ticketData, null, '\t'));
     // Render the 'purchase' template and pass the data as a local variable
-    return res.render('purchase', { checkoutData: ticketData });
+    return res.render('purchase', { checkoutTicket: ticketData });
   } catch (error) {
     console.log('Error:', error);
     return res.sendBadRequest('Purchase could not be completed');
   }
 };
+
 
     
    
