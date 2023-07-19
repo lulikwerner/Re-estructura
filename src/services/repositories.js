@@ -1,7 +1,8 @@
 
-import { CartDAO, ProductDAO } from '../dao/factory.js';
+import { CartDAO, ProductDAO, CheckoutDAO } from '../dao/factory.js';
 import CartRepository from './repositories/cart.service.js'
 import ProductRepository from './repositories/product.service.js';
+import CheckoutRepository from './repositories/checkout.service.js';
 
 import UserManager from '../dao/mongo/managers/usersManager.js';
 import UserRepository from './repositories/user.service.js';
@@ -9,6 +10,7 @@ import UserRepository from './repositories/user.service.js';
 //Como uso el Factory para Carts y Products los traigo asi
 export const cartService = new CartRepository(CartDAO); 
 export const productService = new ProductRepository(ProductDAO);
+export const checkoutService = new CheckoutRepository (CheckoutDAO);
 //Como directamente importo el manager de users lo tengo que instanciar
 export const userService = new UserRepository (new UserManager());
 

@@ -1,5 +1,6 @@
-import { cartService, productService, userService } from '../services/repositories.js'
+import { cartService, productService, checkoutService } from '../services/repositories.js'
 import ticketModel from '../dao/mongo/models/tickets.js';
+import checkoutTicketModel from '../dao/mongo/models/checkout.js';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -40,15 +41,14 @@ const getCartById =  async (req, res) => {
   
     try {
         const cart = await cartService.getCartByIdService(cid);
-        console.log(cid)
-        console.log('el cartt', cart)
-        
-      // If the cart is not found, send an error response
+        console.log(cart)
+      
+      // Si no encuentra el cart
         if (!cart) {
         return res.sendBadRequest('Cart not found' );
         }   
-      // If the cart is found, send the product information
-      res.render('cart',{carth:cart} );
+      // Si el cart se encuentra renderizo la info
+      res.render('cart', { carth: cart });
     } catch (error) {
         console.log(error);
         res.sendInternalError('Internal server error');
@@ -223,103 +223,118 @@ const updateQtyProductInCart = async (req, res) => {
     }
 };
 
-const checkoutCart = async  (req,res) => {
+const checkoutCart = async (req, res) => {
   const { cid } = req.params;
-  console.log('enelcheckout')
-  //Primero busco si existe el cart
-  try{
-    const cartExist = await cartService.getCartByIdService(cid)
-    console.log(JSON.stringify(cartExist , null, '\t'));
-  if(cartExist){
-    console.log('elcart',cartExist)
-    //Checkeo si hay stock suficiente para comprar y lo guardo en un nuevo array
-    const InCart=[]
-    const Outstock=[]
-    Object.values(cartExist.products).forEach((product) => {
-      if(product.quantity<=product.product.stock){
-        const subtotal = product.product.price * product.quantity
-        const newStockValue = product.product.stock - product.quantity;
-        //Hago update del stock en mi DB
-        const updatedProduct =  productService.updateProductService(product.product._id, { $set: { stock: newStockValue } });
-        let prod = {
-          _id:product.product._id,
-          name:product.product.title,
-          price: product.product.price,
-          quantity: product.quantity,
-          subtotal
+  console.log('enelcheckout');
+  try {
+     // Primero busco si existe el cart
+    const cartExist = await cartService.getCartByIdService(cid);
+    //console.log(JSON.stringify(cartExist, null, '\t'));
+   //Si el cart existe 
+    if (cartExist) {
+      const InCart = [];
+      const Outstock = [];
+        console.log(JSON.stringify(cartExist, null, '\t'));
+      //console.log('losticketsincart', cartExist.tickets)
+      console.log('losincart', cartExist.products)
+   // Checkeo si hay stock suficiente para comprar y lo guardo en un nuevo array
+      Object.values(cartExist.products).forEach((product) => {
+        if (product.quantity <= product.product.stock) {
+          const subtotal = product.product.price * product.quantity;
+          console.log('sub',subtotal)
+          const newStockValue = product.product.stock - product.quantity;
+          console.log('enlogica')
+          console.log(product.product.stock)
+          console.log(product.quantity)
+          console.log('newStockValue',newStockValue)
+          // Hago update del stock en mi DB
+          const updatedProduct = productService.updateProductService(product.product._id, {
+            $set: { stock: newStockValue },
+          });
+          console.log('elupdatedProduct',updatedProduct)
+          let prod = {
+            _id: product.product._id,
+            name: product.product.title,
+            price: product.product.price,
+            quantity: product.quantity,
+            subtotal,
+          };
+          InCart.push(prod);
+         console.log('Empujar al arreglo Incart', InCart);
+         //Si no hay suficiente stock lo empujo ala rreglo Outstock
+        } else {
+          let outstockProduct = {
+            _id: product.product._id,
+            name: product.product.title,
+            price: product.product.price,
+            quantity: product.quantity,
+          };
+          Outstock.push(outstockProduct);
+          console.log('Empujar al arreglo Outstock', Outstock);
         }
-        InCart.push(prod)
-        //console.log('empujar al ARREGLO InCart',InCart)
-      }
-      else{
-      let outstockProduct = {
-        _id:product.product._id,
-        name:product.product.title,
-        price: product.product.price,
-        quantity: product.quantity,
-      } //const outstockProduct  = new productDTO(product.product)
-      Outstock.push(outstockProduct )
-      console.log('Empujar al arreglo Outstock',Outstock)
-      }
-      })
-    //Ahora Obtengo el total del cart
-    let totalProduct = 0;
-    InCart.forEach((subtotal) => {
-      totalProduct += subtotal.subtotal;
-    })
-    console.log('Total:', totalProduct);
-    if(InCart.length!=0){
-   // Creo el ticket
-     const ticket = new ticketModel({
-      code: uuidv4(),
-      amount: totalProduct,
-      purchaser: req.user.email
-    });
-    await ticket.save();// Lo guardo en la BD
-    console.log(ticket)
-  
-    //Busco el carrito y le hago el update
-    const createdCart = await cartService.findOneandUpdateServices( cartExist._id , Outstock);
-   const checkoutData = {
-      ticket: ticket,
-      InCart: InCart,
-      Outstock:Outstock,
-      totalProduct: totalProduct
-    };
-    return res.status(200).json(checkoutData);
-  }
-  const checkoutDataWT = {
 
-    InCart: InCart,
-    Outstock:Outstock,
-    totalProduct: totalProduct
-  };
+      });
 
-   return res.status(200).json(checkoutDataWT);
-  
-    
-
-
-  } else {
-    return res.sendBadRequest('Cart does not exist');
-  }
-
-    }catch(error){
-      console.log('Error:', error);
-      return res.sendBadRequest('Purchase could not be completed');
+      //const deleteCart = await cartService.emptyCartService(cid)
+     
+      console.log('antes el cart',cartExist);
+      
+      //A los productos InCart los voy filtrando llamando a la funcion deleteProductInCartService y los voy sacando del cart
+      for (const product of InCart) {
+        await cartService.deleteProductInCartService(cid,product._id);
     }
-  };
-  
-  const checkoutDisplay = async (req, res) => {
-    const { cid } = req.params;
-    console.log('estamos en checkout display');
-    console.log(cid);
-    const checkoutData = JSON.parse(req.query.checkoutData);
-    console.log(checkoutData)
-    // Render the purchase template and pass the checkoutData as a local variable
-    return res.render('purchase', {checkoutData});
-  };
+      // Ahora Obtengo el total del cart
+      let totalProduct = 0;
+      InCart.forEach((subtotal) => {
+        totalProduct += subtotal.subtotal;
+      });
+      //console.log('Total:', totalProduct);
+      let ticket = null;
+      //Si en el arreglo Incart hay productos genero el ticket de compra con esos mismos
+      if (InCart.length != 0) {
+        // Create the ticket
+        ticket = new ticketModel({
+          code: uuidv4(),
+          amount: totalProduct,
+          purchaser: req.user.email,
+        });
+        await ticket.save();
+    //Genero el CheckoutTicket model donde va a incluir el ticket generado los porductos que se compraron(InCart) y los que quedaorn fuera de la compra(OutCart)
+    const checkOutTicket = new checkoutTicketModel({
+      cid:cid,
+      ticket:ticket,
+      InCart: InCart,
+      Outstock: Outstock,
+    });
+    await checkOutTicket.save();
+    //console.log('elchecoutticket',checkOutTicket)
+        return res.status(200).json(checkOutTicket);
+      }
+    } else {
+      return res.sendBadRequest('Cart does not exist');
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    return res.sendBadRequest('Purchase could not be completed');
+  }
+};
 
+const checkoutDisplay  = async (req, res) => {
+  const { cid } = req.params;
+  try {
+    // Busco el cart en el che
+    const ticketData = await checkoutService.getCheckoutByIdService(cid);
+   // console.log(JSON.stringify(ticketData, null, '\t'));
+    // Render the 'purchase' template and pass the data as a local variable
+    return res.render('purchase', { checkoutData: ticketData });
+  } catch (error) {
+    console.log('Error:', error);
+    return res.sendBadRequest('Purchase could not be completed');
+  }
+};
+
+    
+   
 
 export default {
     addProductToCart,

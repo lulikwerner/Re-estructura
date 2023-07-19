@@ -38,11 +38,27 @@ async function createProductDAO(persistenceType) {
         }
         return productsDAO;
 }
+async function createCheckoutDAO(persistenceType) {
+  let ticketDAO;
+  switch(persistenceType){
+      case 'FILESYSTEM': 
+          const {default: FileSystemDAO} = await import ('./mongo/managers/checkoutManager.js')
+          ticketDAO = new MemoryDAO();
+          break;
+      case 'MONGO':
+          mongoose.connect(config.mongoSecret.MongoURL);
+          const {default: MongoDAO} = await import ('./mongo/managers/checkoutManager.js')
+          ticketDAO = new MongoDAO();
+          break;
+  }
+  return ticketDAO;
+}
 
 
 //Exporto para poder usarlo en repositories.js
 export const CartDAO = await createCartDAO(persistence);
 export const ProductDAO = await createProductDAO(persistence);
+export const CheckoutDAO = await createCheckoutDAO(persistence);
 
 /*import mongoose from 'mongoose';
 import config from '../config.js';

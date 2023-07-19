@@ -1,6 +1,8 @@
 <h1>Cart</h1>
+
 <div class="row mt-4" id="cartContent"></div>
 <h3>Cart ID: {{carth._id}}</h3>
+
 <ul>
   {{#each carth.products}}
     <li>
@@ -21,6 +23,10 @@
   <h3>El carrito esta vacio</h3>
 {{/if}}
 <div class="row mt-4" id="cart"></div>
+
+
+
+
 
 
 <script src="/socket.io/socket.io.js"></script>

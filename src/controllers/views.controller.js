@@ -61,10 +61,10 @@ const chat = async(req,res)=>{
 };
 
 const productsInCart = async(req,res)=>{
+  console.log('incart')
     const { cid } = req.params;
     const carts = await cartService.getCartByIdService(cid);
-    console.log(JSON.stringify(carts, null, '\t'));
-    res.render('cart',{carth:carts} );
+    res.render('cart', { carth: carts});
 };
 
 const register = async(req,res)=>{

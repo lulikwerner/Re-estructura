@@ -44,8 +44,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-
-
 router.post('/:cid/product/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
@@ -72,10 +70,6 @@ router.post('/:cid/product/:pid', async (req, res) => {
         return res.status(400).send({ status: 'failed', message: 'Product could not be added' });
     }
 });
-
-
-
-
 
 
 

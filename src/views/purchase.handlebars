@@ -1,14 +1,14 @@
 <div>
     {{#if checkoutData.ticket}}
-  <h1>Orden de compra {{ checkoutData.ticket.first_name }}</h1>
-  <h2>Gracias por su compra {{ checkoutData.ticket.purchaser }}</h2>
-  <h2>El numero de orden de compra {{ checkoutData.ticket.code }}</h2>
-  <h2>El total de la orden: ${{ checkoutData.ticket.amount }}</h2>
+  <h1>Orden de compra </h1>
+  <h3>Gracias por su compra {{checkoutData.ticket.purchaser }}</h3>
+  <h3>El numero de orden de compra {{ checkoutData.ticket.code }}</h3>
+  <h3>El total de la orden: ${{ checkoutData.ticket.amount }}</h3>
   {{/if}}
 
 {{#if checkoutData.Outstock }}
-  <h3>Los productos que no se pudieron comprar porque no hay suficiente stock son</h3>
-  <h2>Outstock:</h2>
+  <h2>Los productos que no se pudieron comprar porque no hay suficiente stock son</h2>
+  <h3>Sin Stock:</h3>
   <ul>
     {{#each checkoutData.Outstock}}
       <li>
