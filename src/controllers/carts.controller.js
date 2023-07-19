@@ -225,7 +225,6 @@ const updateQtyProductInCart = async (req, res) => {
 
 const checkoutCart = async (req, res) => {
   const { cid } = req.params;
-  console.log('enelcheckout');
   try {
      // Primero busco si existe el cart
     const cartExist = await cartService.getCartByIdService(cid);
@@ -247,7 +246,6 @@ const checkoutCart = async (req, res) => {
           const updatedProduct = productService.updateProductService(product.product._id, {
             $set: { stock: newStockValue },
           });
-          console.log('elupdatedProduct',updatedProduct)
           let prod = {
             _id: product.product._id,
             name: product.product.title,
@@ -294,8 +292,8 @@ const checkoutCart = async (req, res) => {
     const checkOutTicket = new checkoutTicketModel({
       cid:cid,
       ticket:ticket,
-      InCart: ticket,
-      Outstock: ticket,
+      InCart: InCart,
+      Outstock: Outstock,
     });
     await checkOutTicket.save();
     console.log('check',checkOutTicket )

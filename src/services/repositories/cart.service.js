@@ -30,7 +30,6 @@ export default class CartRepository {
     }
 
     deleteProductInCartService = (cid, products) => {
-        console.log('step1')
         return this.dao.deleteProductInCart(cid, products);
     }
 
