@@ -23,7 +23,7 @@ import initlizePassportStrategies from './config/passport.config.js'
 const app = express();
 const PORT = config.app.PORT;
 
-const startServer = async () => {
+const startServer = async (persistenceType) => {
 
 
   //Conecta a mi mongoose db
@@ -43,7 +43,6 @@ const startServer = async () => {
     console.log(`Listening on ${PORT}`);
   });
   const io = new Server(server);
-
 
 
   app.engine("handlebars", handlebars.engine());
@@ -96,4 +95,4 @@ const startServer = async () => {
   cartSocket(io);
 };
 
-startServer();
+export default startServer;

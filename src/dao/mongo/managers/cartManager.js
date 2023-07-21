@@ -194,8 +194,6 @@ export default class CartManager {
     }
   }
 
-
-
   //Vacia el carrito
   emptyCart = async (cid) => {
     try {

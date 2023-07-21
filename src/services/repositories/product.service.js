@@ -1,7 +1,9 @@
 export default class ProductRepository {
+
     constructor(dao){
         this.dao = dao;
     }
+  
     categoriesAndStatusService = () => {
         return this.dao.categoriesAndStatus();
     }

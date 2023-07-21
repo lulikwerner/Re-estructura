@@ -1,6 +1,7 @@
 import createProductDTO from '../dto/product/createProductDTO.js';
 import { productService } from '../services/repositories.js'
 import mongoose from 'mongoose';
+import { generateProducts } from '../mocks/products.mock.js';
 
 const postProducts =  async(req,res) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
@@ -97,10 +98,19 @@ const deleteProducts = async(req,res) => {
     }
 };
 
+const mock = (req,res)=>{
+    const products =[];
+    for(let i=0;i<100;i++){
+        products.push(generateProducts())
+    }
+    res.send({status:'success', payload: products})
+}
+
 export default {
     getProductsById,
     postProducts,
     putProducts,
-    deleteProducts
+    deleteProducts,
+    mock
 }
 

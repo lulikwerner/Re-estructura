@@ -1,34 +1,40 @@
-import { CartDAO as createCartDAO, ProductDAO as createProductDAO, CheckoutDAO as createCheckoutDAO} from '../Re-estructura/src/dao/factory.js';
+import { createCartDAO, createProductDAO, createCheckoutDAO } from '../Re-estructura/src/dao/factory.js';
 import { Command } from 'commander';
+import startServer from './src/app.js';
 
 const program = new Command();
 program
-.option('-mg, --mongo', 'Use MongoDB for persistence')
-.option('-fs, --filesystem', 'Use FileSystem for persistence')
+  .option('-mg, --MONGO', 'Use MongoDB for persistence')
+  .option('-fs, --FILESYSTEM', 'Use FileSystem for persistence');
 
 program.parse();
-console.log('Options:',program.opts())
-const { mongo, filesystem } = program.opts();
+console.log('Options:', program.opts());
+const { MONGO, FILESYSTEM } = program.opts();
 
-if ((mongo && filesystem) || (!mongo && !filesystem)) {
+if ((MONGO && FILESYSTEM) || (!MONGO && !FILESYSTEM)) {
   console.error('Please choose only one persistence option (MONGO or FILESYSTEM).');
   process.exit(1);
 }
 
-const persistenceType = mongo ? 'MONGO' : 'FILESYSTEM';
+const persistenceType = MONGO ? 'MONGO' : 'FILESYSTEM';
+console.log('Persistence:', persistenceType);
 
- export async function startApplication(persistenceType) {
+
+
+// Define and export the startApplication function
+async function startApplication(persistenceType) {
+  console.log('entro al start')
   try {
-    const cartDAO = await createCartDAO(persistenceType);
+    const cartDAOInstance = await createCartDAO(persistenceType);
     const productDAO = await createProductDAO(persistenceType);
     const checkoutDAO = await createCheckoutDAO(persistenceType);
-
+    startServer(persistenceType);
   } catch (error) {
     console.error('Error:', error);
   }
 }
+// Call the startApplication function with persistenceType
 startApplication(persistenceType);
-
 
 /*import { productsM } from './src/dao/mongo/managers/index.js'
 

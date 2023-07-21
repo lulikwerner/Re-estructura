@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+/*import mongoose from "mongoose";
 import config from '../config.js'
 
 //Define que DAO tomar a partir de persistence
@@ -60,26 +60,35 @@ export const createCartDAO = await CartDAO(persistence);
 export const createProductDAO = await ProductDAO(persistence);
 export const createCheckoutDAO = await CheckoutDAO(persistence);
 
+*/
 
-/*
 
 //Usando los commands
 import mongoose from "mongoose";
 import config from '../config.js'
-
+import { cartService } from "../services/repositories.js";
 
 //Depende de mi persistence que va a tomar si FilesSystem o Mongo
 export async function createCartDAO(persistenceType) {
+  console.log('encart')
+  console.log(persistenceType)
     let cartsDAO;
     switch (persistenceType) {
       case 'FILESYSTEM':
         const {default: FileSystemDAO} = await import ('./fileSystem/Managers/cartManager.js')
         cartsDAO = new MemoryDAO();
-        break;
+        break;  
       case 'MONGO':
         mongoose.connect(config.mongoSecret.MongoURL);
-        const {default: MongoDAO} = await import ('./mongo/managers/cartManager.js')
-        cartsDAO = new MongoDAO();
+        console.log("Connected to MongoDB");
+        const { default: CartService} = await import('../services/repositories/cart.service.js');
+        //cartsDAO = new CartRepository();
+        cartsDAO = cartService; 
+
+   
+       // const {default: MongoDAO} = await import ('../services/repositories.js')
+        //cartsDAO = new MongoDAO();
+        //cartService = new CartRepository(createCartDAO); 
         break;
         default:
             throw new Error(`Invalid persistence type: ${persistenceType}`);
@@ -95,9 +104,9 @@ export async function createProductDAO(persistenceType) {
                 productsDAO = new MemoryDAO();
                 break;
             case 'MONGO':
-                mongoose.connect(config.mongoSecret.MongoURL);
-                const {default: MongoDAO} = await import ('./mongo/managers/productManager.js')
-                productsDAO = new MongoDAO();
+              mongoose.connect(config.mongoSecret.MongoURL);
+                const {default: MongoDAO} = await import ('../services/repositories.js')
+                //productsDAO = new MongoDAO();
                 break;
         }
         return productsDAO;
@@ -110,10 +119,10 @@ export async function createCheckoutDAO(persistenceType) {
           ticketDAO = new MemoryDAO();
           break;
       case 'MONGO':
-          mongoose.connect(config.mongoSecret.MongoURL);
+        mongoose.connect(config.mongoSecret.MongoURL);
           const {default: MongoDAO} = await import ('./mongo/managers/checkoutManager.js')
           ticketDAO = new MongoDAO();
           break;
   }
   return ticketDAO;
-}*/
+}

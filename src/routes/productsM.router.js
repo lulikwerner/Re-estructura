@@ -1,7 +1,7 @@
 import { passportCall } from '../services/auth.js';
 import BaseRouter from "./Router.js";
 import productsController from "../controllers/products.controller.js";
-import { generateProducts } from '../mocks/products.mock.js';
+
 
 export default class ProductsRouter extends BaseRouter {
 
@@ -36,13 +36,7 @@ try{
 });*/
 
 //Va a devolver 100 productos de prueba
-this.get('/mock',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}),(req,res)=>{
-    const products =[];
-    for(let i=0;i<100;i++){
-        products.push(generateProducts())
-    }
-    res.send({status:'success', payload: products})
-})
+this.get('/mock',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}),productsController.mock);
 
 //Crea el producto
 //http://localhost:8080/api/products
