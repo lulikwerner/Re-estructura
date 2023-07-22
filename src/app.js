@@ -18,6 +18,7 @@ import registerChatHandler from "./listeners/chatHandler.js";
 import cartSocket from "./sockets/cart.sockets.js";
 import productSocket from "./sockets/product.sockets.js";
 import initlizePassportStrategies from './config/passport.config.js'
+import errorHandler from './middlewares/error.js'
 
 
 const app = express();
@@ -84,6 +85,9 @@ const startServer = async (persistenceType) => {
   app.use('/', viewsRouter.getRouter());
   app.use("/api/carts", cartRouter.getRouter());
   app.use("/api/sessions", sessionRouter.getRouter());
+  
+//El ErrorHandler va despues de mis rutas
+  app.use(errorHandler)
   //El chat 
   io.on("connection", async (socket) => {
     registerChatHandler(io, socket);

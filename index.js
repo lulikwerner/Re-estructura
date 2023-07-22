@@ -23,7 +23,6 @@ console.log('Persistence:', persistenceType);
 
 // Define and export the startApplication function
 async function startApplication(persistenceType) {
-  console.log('entro al start')
   try {
     const cartDAOInstance = await createCartDAO(persistenceType);
     const productDAO = await createProductDAO(persistenceType);

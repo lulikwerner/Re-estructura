@@ -48,7 +48,7 @@ socket.on('productsAdd', (data) => {
                 </div>`;
   
 
-    btnDelete(); // Call btnEliminar function here
+    btnDelete(); // Llamo a la funcion btnEliminar 
 })
 
 
@@ -97,7 +97,7 @@ socket.on('products', (data) => {
                 </div>`;
     });
     products.innerHTML = productos;
-    btnDelete(); // Call btnEliminar function here
+    btnDelete(); // Llamo a la funcion btnEliminar 
 });
 
 

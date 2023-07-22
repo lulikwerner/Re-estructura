@@ -179,10 +179,12 @@ export default class CartManager {
       if (!cart) {
         throw new Error("Cart not found");
       }
-
+      console.log('id', productIdToDelete)
+      //console.log(cart.products)
+      const productIdsInCart = cart.products.map(item => item.product.toString());
       // Busco el index
-      const productIndex = cart.products.findIndex(product => product.product.toString() === productIdToDelete.toHexString());
-
+      const productIndex = productIdsInCart.findIndex(id => id === productIdToDelete);
+      //const productIndex = cart.products.findIndex(product => product.product.toString() === productIdToDelete.toHexString());
       if (productIndex !== -1) {
         // Remove the product from the array
         cart.products.splice(productIndex, 1);

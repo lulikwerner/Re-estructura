@@ -66,7 +66,7 @@ export const createCheckoutDAO = await CheckoutDAO(persistence);
 //Usando los commands
 import mongoose from "mongoose";
 import config from '../config.js'
-import { cartService } from "../services/repositories.js";
+
 
 //Depende de mi persistence que va a tomar si FilesSystem o Mongo
 export async function createCartDAO(persistenceType) {
@@ -81,9 +81,9 @@ export async function createCartDAO(persistenceType) {
       case 'MONGO':
         mongoose.connect(config.mongoSecret.MongoURL);
         console.log("Connected to MongoDB");
-        const { default: CartService} = await import('../services/repositories/cart.service.js');
-        //cartsDAO = new CartRepository();
-        cartsDAO = cartService; 
+        //const { default: cartService } = await import('../services/repositories/cart.service.js');
+        const { default: cartService } = await import('./mongo/managers/cartManager.js');
+        cartsDAO = new cartService ; 
 
    
        // const {default: MongoDAO} = await import ('../services/repositories.js')
@@ -105,8 +105,8 @@ export async function createProductDAO(persistenceType) {
                 break;
             case 'MONGO':
               mongoose.connect(config.mongoSecret.MongoURL);
-                const {default: MongoDAO} = await import ('../services/repositories.js')
-                //productsDAO = new MongoDAO();
+                const {default: productService} = await import ('../services/repositories/product.service.js')
+                productsDAO = new productService();
                 break;
         }
         return productsDAO;
@@ -120,8 +120,8 @@ export async function createCheckoutDAO(persistenceType) {
           break;
       case 'MONGO':
         mongoose.connect(config.mongoSecret.MongoURL);
-          const {default: MongoDAO} = await import ('./mongo/managers/checkoutManager.js')
-          ticketDAO = new MongoDAO();
+          const {default: CheckoutRepository } = await import ('../services/repositories/checkout.service.js')
+          ticketDAO = new CheckoutRepository ();
           break;
   }
   return ticketDAO;

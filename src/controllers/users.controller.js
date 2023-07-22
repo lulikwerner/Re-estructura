@@ -1,9 +1,11 @@
 import { usersServices } from '../dao/mongo/managers/index.js';
+
 import { generateToken } from '../services/auth.js';
 
 
+
 const register = (req,res) => {
-    console.log('estamos en register')
+
     res.sendSuccess()
   };
 
@@ -53,7 +55,6 @@ const register = (req,res) => {
   const current = (req, res) => {
     try {
         return res.sendSuccess(req.user);
-
     } catch (error) {
         return res.sendInternalError(error);
     }

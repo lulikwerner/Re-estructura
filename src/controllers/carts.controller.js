@@ -2,7 +2,12 @@ import { cartService, productService, checkoutService } from '../services/reposi
 import ticketModel from '../dao/mongo/models/tickets.js';
 import checkoutTicketModel from '../dao/mongo/models/checkout.js';
 import { v4 as uuidv4 } from 'uuid';
+import mongoose from 'mongoose';
 
+import { cartsInvalidValue } from '../constants/cartErrors.js';
+import ErrorService from '../services/Error/ErrorService.js';
+import EErrors from '../constants/EErrors.js'
+import { productsInvalidValue } from '../constants/productErrors.js';
 
 const addProductToCart = async (req, res) => {
     const products = req.body;
@@ -11,7 +16,7 @@ const addProductToCart = async (req, res) => {
         if (!Array.isArray(cart)) {
             return res.sendBadRequest('Cart should be an array');
             }
-          // Chequeo si el pid o el qty tiene valores
+          // Chequeo si el pid o el stock tiene valores
             for (const products of cart) {
                 if (!products.pid || !products.stock) {
                     return res.sendBadRequest('One or more fields are incomplete for a product' );
@@ -36,10 +41,21 @@ const addProductToCart = async (req, res) => {
     }
 };
 
-const getCartById =  async (req, res) => {
+const getCartById =  async (req, res,done) => {
     const { cid } = req.params;
   
     try {
+        if (!mongoose.Types.ObjectId.isValid(cid)) {
+          {
+            ErrorService.createError({
+                name: 'Cart input error',
+                cause: cartsInvalidValue(req.params),
+                message: 'Please enter a valid cart ID',
+                code: EErrors.INVALID_VALUE,
+                status: 400
+            })
+        }
+        }
         const cart = await cartService.getCartByIdService(cid);
         console.log(cart)
       
@@ -50,12 +66,12 @@ const getCartById =  async (req, res) => {
       // Si el cart se encuentra renderizo la info
       res.render('cart', { carth: cart });
     } catch (error) {
-        console.log(error);
-        res.sendInternalError('Internal server error');
+        done(error);
+        //res.sendInternalError('Internal server error');
     }
 };
 
-const postProductInCart = async (req, res) => {
+const postProductInCart = async (req, res,done) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body
     console.log(pid)
@@ -63,8 +79,7 @@ const postProductInCart = async (req, res) => {
     console.log('qty',quantity)
     const {  title, description, code, price, stock, category, thumbnails} = req.body;
     try {
-      //Evaluo que la cantidad enviada sea un numero
-      if (isNaN(Number(quantity))) return res.sendBadRequest('The quantity has to be a number');
+  
       //Evaluo que la cantidad sea mayor a 1
       if (quantity < 1) return res.sendBadRequest('The quantity must be greater than 1' );
       //Busco el Producto
@@ -73,13 +88,23 @@ const postProductInCart = async (req, res) => {
         if (!checkIdProduct) { return res.sendBadRequest('Product not found')};
      //Busco el carrito
       const checkIdCart = await cartService.getCartByIdService({ _id: cid });
-   
       //Si no se encuentra el carrito
       if(!checkIdCart){  return res.sendBadRequest('Cart not found')};
       //Tiene que enviar algun dato aunque sea para modificar
       if (!title && !description && !code && !price && !stock && !category && !quantity) {
-        return res.sendBadRequest('Please send a new value to update');
+        {
+          ErrorService.createError({
+              name: 'Missing values to update',
+              cause: productsInvalidValue(req.params),
+              message: 'Please send a new value to update',
+              code: EErrors.INCOMPLETE_VALUES,
+              status: 400
+          })
+      }
+       // return res.sendBadRequest('Please send a new value to update');
     }
+     //Evaluo que la cantidad enviada sea un numero
+     if (isNaN(Number(quantity))) return res.sendBadRequest('The quantity has to be a number');
       // Si paso el parametro qty para modificar
       if (isNaN(quantity) || quantity < 0) {
         return res.sendBadRequest('Quantity should be a valid value' );
@@ -90,17 +115,27 @@ const postProductInCart = async (req, res) => {
       return  res.sendSuccess('Product quantity added successfully' );
  
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      done(error)
     }
 };
 
-const deleteProductInCart = async (req, res) => {
+const deleteProductInCart = async (req, res,done) => {
     const { cid, pid } = req.params;
     try {
-      // Si no se envia ningun id de carrito
-      if (!cid)  {
-        return res.sendBadRequest('Please enter a cart ID' );
+       // Si no se envia ningun id de carrito
+      if (!cid||!mongoose.Types.ObjectId.isValid(cid)) {
+        {
+          ErrorService.createError({
+              name: 'Cart input error',
+              cause: cartsInvalidValue(req.params),
+              message: 'Please enter a valid cart ID',
+              code: EErrors.INVALID_VALUE,
+              status: 400
+          })
       }
+      }
+     
+
       // Busco el Id del carrito en carts
       const cart = await cartService.getCartByIdService({ _id: cid });
       // Si no se encuentra el carrito en carts
@@ -118,8 +153,9 @@ const deleteProductInCart = async (req, res) => {
       const productIndex = cart.products.findIndex((product) => {
         const productId = product.product._id.toString(); // Access the nested _id value
         console.log('productindex',productId )
-        return productId === pid;
         
+        return productId === pid;
+
       });
       // Si no encuentro el producto en el array
       if (productIndex === -1) {
@@ -128,11 +164,13 @@ const deleteProductInCart = async (req, res) => {
       //Si encuentro el producto en el array lo borro
       cart.products.splice(productIndex, 1);
       // Hago el update en el carrito
-      await cartService. deleteProductInCartService(cid, cart.products);
+      console.log(pid)
+      const cartWithoutProducts = await cartService.deleteProductInCartService(cid, pid);
+      //await cartiWithoutProducts.save();
       // Send a success response with the updated cart
       return res.status(200).send({ status: 'success', message: `Product with ID ${pid} removed from the cart`, cart });
     } catch (error) {
-      return res.sendBadRequest('Product could not be removed from the cart' );
+      done(error)
     }
 };
 
