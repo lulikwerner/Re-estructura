@@ -82,13 +82,10 @@ export async function createCartDAO(persistenceType) {
         mongoose.connect(config.mongoSecret.MongoURL);
         console.log("Connected to MongoDB");
         //const { default: cartService } = await import('../services/repositories/cart.service.js');
-        const { default: cartService } = await import('./mongo/managers/cartManager.js');
-        cartsDAO = new cartService ; 
-
-   
-       // const {default: MongoDAO} = await import ('../services/repositories.js')
-        //cartsDAO = new MongoDAO();
-        //cartService = new CartRepository(createCartDAO); 
+      const { default: Cartdao} = await import('./mongo/managers/cartManager.js');
+      //cartsDAO = new cartService(new dao()) ; 
+      cartsDAO = new Cartdao()
+      console.log('carttt',cartsDAO)
         break;
         default:
             throw new Error(`Invalid persistence type: ${persistenceType}`);
@@ -105,8 +102,10 @@ export async function createProductDAO(persistenceType) {
                 break;
             case 'MONGO':
               mongoose.connect(config.mongoSecret.MongoURL);
-                const {default: productService} = await import ('../services/repositories/product.service.js')
-                productsDAO = new productService();
+              console.log("Connected to MongoDBp");
+                const {default: ProducstDAO} = await import ('./mongo/managers/productManager.js')
+                productsDAO = new ProducstDAO();
+                console.log('PRODUCTt',productsDAO)
                 break;
         }
         return productsDAO;
@@ -120,8 +119,9 @@ export async function createCheckoutDAO(persistenceType) {
           break;
       case 'MONGO':
         mongoose.connect(config.mongoSecret.MongoURL);
-          const {default: CheckoutRepository } = await import ('../services/repositories/checkout.service.js')
-          ticketDAO = new CheckoutRepository ();
+          const {default: CheckoutDAO } = await import ('./mongo/managers/checkoutManager.js')
+          ticketDAO = new CheckoutDAO ();
+          console.log('CHECKOUT',ticketDAO)
           break;
   }
   return ticketDAO;

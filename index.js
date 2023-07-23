@@ -19,21 +19,15 @@ if ((MONGO && FILESYSTEM) || (!MONGO && !FILESYSTEM)) {
 const persistenceType = MONGO ? 'MONGO' : 'FILESYSTEM';
 console.log('Persistence:', persistenceType);
 
+startServer(persistenceType);
 
 
-// Define and export the startApplication function
-async function startApplication(persistenceType) {
-  try {
-    const cartDAOInstance = await createCartDAO(persistenceType);
-    const productDAO = await createProductDAO(persistenceType);
-    const checkoutDAO = await createCheckoutDAO(persistenceType);
-    startServer(persistenceType);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-// Call the startApplication function with persistenceType
-startApplication(persistenceType);
+
+
+
+
+
+
 
 /*import { productsM } from './src/dao/mongo/managers/index.js'
 
