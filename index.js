@@ -1,4 +1,3 @@
-import { createCartDAO, createProductDAO, createCheckoutDAO } from '../Re-estructura/src/dao/factory.js';
 import { Command } from 'commander';
 import startServer from './src/app.js';
 

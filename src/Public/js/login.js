@@ -16,7 +16,7 @@ form.addEventListener('submit', async(event)=>{
     });
 
     const responseText = await response.text();
-    console.log('soyrespose',responseText); // Log the response text
+    console.log('soyresponse',responseText); // Log the response text
     const responseData = JSON.parse(responseText);
     const role = responseData.payload.user.role;
     console.log('el rol',role)

@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import { __dirname } from "./utils.js";
 import passport from "passport";
 import config from './config.js'
+import nodemailer from 'nodemailer'
 
 import ProductRouter from "./routes/productsM.router.js";
 import CartRouter from "./routes/cartsM.router.js";
@@ -26,6 +27,14 @@ const PORT = config.app.PORT;
 
 const startServer = async (persistenceType) => {
 
+ const transport = nodemailer.createTransport({
+  service:'gmail',
+  port:587,
+  auth:{
+    user:config.app.email,
+    pass:config.app.password
+  }
+})
 
   //Conecta a mi mongoose db
 /*try {

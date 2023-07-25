@@ -11,7 +11,7 @@ const register = (req,res) => {
 
   const login = (req, res) => {
     // El login recibe SIEMPRE en req.user
-    console.log(req.user)
+    console.log('eluser',req.user)
     const token = generateToken(req.user);
     res.cookie('authToken', token, {
       maxAge: 1000 * 3600 * 24,

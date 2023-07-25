@@ -147,6 +147,7 @@ const deleteProductInCart = async (req, res,done) => {
       }
       // Si no se envia ningun pid
       if (!pid) {
+        
         return res.sendBadRequest('Please enter a valid product ID' );
       }
       // Busco el pid en el carrito
@@ -174,14 +175,21 @@ const deleteProductInCart = async (req, res,done) => {
     }
 };
 
-const deleteCart = async (req,res) =>{
+const deleteCart = async (req,res,done) =>{
     const { cid } = req.params;
     try {
-  
       // Si no se envia ningun id de carrito
-      if (!cid)  {
-        res.sendBadRequest('Please enter a cart ID' );
-      }
+      if (!cid||!mongoose.Types.ObjectId.isValid(cid))  {
+     
+          
+        ErrorService.createError({
+            name: 'Cart input error',
+            cause: cartsInvalidValue(req.params),
+            message: 'Please enter a valid cart ID',
+            code: EErrors.INCOMPLETE_VALUES,
+            status: 400
+        })
+  }else{
       // Busco el Id del carrito en carts
       const cart = await cartService.getCartByIdService({ _id: cid });
       console.log(cart)
@@ -196,8 +204,8 @@ const deleteCart = async (req,res) =>{
    await cartService.emptyCartService (cid);
   // Send a success response
      return res.sendSuccess('The cart is empty')
-      } catch (error) {
-        return res.sendBadRequest('Could not empty cart' );
+     } } catch (error) {
+        done(error);
       }
     };
 
@@ -208,7 +216,7 @@ const updateCart = async (req, res) => {
       if (!Array.isArray(products)) {
         return res.status(400).json({ message: 'Products must be an array' });
       }
-      const productIds = products.map((product) => product.pid);
+     // const productIds = products.map((product) => product.pid);
       // Mano a llamar a updateProductsInCart 
       const updatedCart = await cartService.updateProductsInCartService (cid, products);
     
@@ -220,15 +228,15 @@ const updateCart = async (req, res) => {
       res.status(500).json({ message: 'Internal server error', error: err });
     }
 };
-
-const updateQtyProductInCart = async (req, res) => {
+//Ver cuando no envio el cid
+const updateQtyProductInCart = async (req, res,done) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
     console.log('qty',quantity)
     console.log('pid',pid)
     try {
-      if (!cid ) {
-        return res.sendBadRequest('Please enter a cart ID' );
+      if (!cid || !mongoose.Types.ObjectId.isValid(cid)) {
+        return res.sendBadRequest('Please enter a valid cart ID');
       }
       const cart = await cartService.getCartByIdService({ _id: cid });
       if (!cart) {

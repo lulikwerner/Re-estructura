@@ -5,7 +5,9 @@ dotenv.config();
 
 export default{
     app:{
-        PORT:process.env.PORT||8080
+        PORT:process.env.PORT||8080,
+        email: process.env.APP_EMAIL,
+        password: process.env.APP_PASSWORD
     },
     adminPas:{
         adminEmail: process.env.ADMIN_EMAIL ,
@@ -19,8 +21,13 @@ export default{
         MongoURL: process.env.MONGO_URL
     },
     gitHub:{
-        ClientId: process.env.CLIENT_ID,
+        ClientId:process.env.CLIENT_ID,
         Secret:process.env.CLIENT_SECRET,
         callbackURL:process.env.CLIENT_URL
+    },
+    twilio:{
+        Number:process.env.TWILIO_NUMBER ,
+        sid:process.env.TWILIO_SID,
+        Token:process.env.TWILIO_TOKEN
     }
 }
