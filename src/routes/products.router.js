@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import productManager from '../managers/productManager.js';
+import LoggerService from './src/services/LoggerService.js';
+import config from './src/config.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 
 const router = Router();
 const ProductManager = new productManager();
@@ -23,7 +27,7 @@ router.get('/', async (req, res) => {
         return res.status(200).send({ limitedProducts });
     }
     catch (error) {
-        console.log(error)
+        logger.logger.error(error);
     }
 });
 
@@ -39,7 +43,7 @@ router.get('/:pid', async (req, res) => {
         //Si lo encuentro devuelvo la informacion del producto solicitado
         return res.status(200).send({ result });
     } catch (error) {
-        console.log(error)
+        logger.logger.error(error);
     }
 })
 
@@ -71,7 +75,7 @@ router.post('/', async (req, res) => {
         //Devuelo el producto agregado
         return res.status(200).send({ addedProduct });
     } catch (error) {
-        console.log(error);
+        logger.logger.error(error);
     }
 });
 
@@ -91,7 +95,7 @@ router.put('/:pid', async (req, res) => {
         
     }
     catch (error) {
-        console.log(error);
+        logger.logger.error(error);
     }
 
 });
@@ -106,7 +110,7 @@ router.delete('/:pid', async (req, res) => {
         return res.status(200).send({ status: 'success', message: { resultDelete } });
     }
     catch (error) {
-        console.log(error);
+        logger.logger.error(error);
     }
 });
 

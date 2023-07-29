@@ -13,13 +13,19 @@ import { cookieExtractor } from "../utils.js";
 import config from '../config.js';
 import TokenDTO from '../dto/user/TokenDto.js';
 import AdminDTO from '../dto/user/AdminDto.js'
+import LoggerService from '../services/LoggerService.js';
+
+
+
+const logger = new LoggerService(config.logger.type); 
 
 
 const LocalStrategy = local.Strategy; //Es la estrategia
 const JWTStrategy = Strategy;
 
 const initlizePassportStrategies = () => {
-  console.log('entro al initialized')
+  logger.logger.debug('entro al initialized');
+
 
   //username y password son obligatorios extraerlos por eso te lo pide. Pongo el valor en true passReqToCallback: true para que me deje extraer la otra info del user y le digo que el email va a ser el username field usernameField:'email' 
   passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, email, password, done) => {
@@ -56,7 +62,8 @@ const initlizePassportStrategies = () => {
           password: hashedPassword
         }
         const result = await usersServices.createUsers(newUser);
-        console.log('el resultado es', result)
+        logger.logger.info('el resultado es', result);
+
         //Si todo salio ok,
         done(null, result);
       }
@@ -68,13 +75,13 @@ const initlizePassportStrategies = () => {
   //le digo que el email va a ser el field username
   passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     //PASSPORT SOLO DEBE DEVOLVER EL USUARIO FINAL. NO ES RESPONSABLE DE LA SESION
-    console.log('en el login')
+    logger.logger.debug('entro al initialized');
     let user;
     try {
       if (email === config.adminPas.adminEmail && password === config.adminPas.adminPassword) {
         //Aca inicializo el admin
         user = new AdminDTO(user)
-        console.log('user admin', user)
+        logger.logger.info('user admin', user);
         return done(null, user);
 
       }
@@ -82,8 +89,8 @@ const initlizePassportStrategies = () => {
       if (!user) return done(null, false, { message: "Credenciales incorrectas" });
       // Si el usuario existe valido el pw
       const isPasswordValid = await isValidPassword(password, user.password);
-      console.log(password)
-      console.log(user.password)
+      logger.logger.debug(password);
+      logger.logger.debug(user.password);
       if (!isPasswordValid) return done(null, false, { message: "contrasenia incorrecta" });
       //Si el usuario existe y la contrasenia es correcta entonces devuelvo la sesion en passport
       user = new TokenDTO(user)
@@ -105,12 +112,15 @@ const initlizePassportStrategies = () => {
   }));
 
   passport.use('github', new GithubStrategy({
-    clientID: config.gitHub.ClientId,
-    clientSecret: config.gitHub.Secret,
-    callbackURL: config.gitHub.callbackURL
+    clientID: 'Iv1.1dd1410ac14946b5', //config.gitHub.ClientId,
+    clientSecret: '795760751219fa0e7038b9f9bbaa1e1f5d768235', //config.gitHub.Secret,
+    callbackURL: 'http://localhost:8080/api/sessions/githubcallback' //config.gitHub.callbackURL
   }, async (accessToken, refreshToken, profile, done) => {
     try {
-      console.log('el perfil', profile);
+      logger.logger.debug('entrostrategygithub');
+      logger.logger.info('el perfil', profile);
+
+
       //Tomo los datos que me sirven
       const { name, email } = profile._json;
       const user = await usersServices.getUserBy({ email });
@@ -142,16 +152,16 @@ const initlizePassportStrategies = () => {
       const userId = payload.id || payload._id;
       const user = await usersServices.getUserBy({ _id: userId });
       if (user) {
-        console.log('User found:', user);
+        logger.logger.info('User found:', user);
         return done(null, user);
       }
       //Si el id es 0 entonces es admin y devuelvo el admin
       if (payload.id === 0 || payload._id === 0) {
-        console.log('Admin user detected');
+        logger.logger.debug('Admin user detected');
         const adminUser = new AdminDTO(user)
         return done(null, adminUser);
       } else {
-        console.log('User not found');
+        logger.logger.debug('User not found');
         return done(null, false);
       }
     } catch (error) {

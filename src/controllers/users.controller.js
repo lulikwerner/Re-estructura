@@ -1,6 +1,10 @@
 import { usersServices } from '../dao/mongo/managers/index.js';
-
 import { generateToken } from '../services/auth.js';
+import LoggerService from '../services/LoggerService.js';
+import config from '../config.js';
+
+
+const logger = new LoggerService(config.logger.type); 
 
 
 
@@ -11,7 +15,7 @@ const register = (req,res) => {
 
   const login = (req, res) => {
     // El login recibe SIEMPRE en req.user
-    console.log('eluser',req.user)
+    logger.logger.info('eluser',req.user);
     const token = generateToken(req.user);
     res.cookie('authToken', token, {
       maxAge: 1000 * 3600 * 24,
@@ -29,25 +33,24 @@ const register = (req,res) => {
   };
 
   const loginGithub = (req, res) => {
-    //console.log('holagit')
     res.send({ status: "success", message: "Logged in with GitHub" });
   };
 
   const loginGitHubCallback = (req, res) => {
-    console.log('el usuario git', user);
+    logger.logger.debug('el usuario git', user);
     try {
       const token = generateToken(req.user);
-      console.log('token', token);
+      logger.logger.info('token', token);
       res.cookie('authToken', token, {
         maxAge: 1000 * 3600 * 24,
         httpOnly: true
       });
-      console.log('eltokenquenuevo',user)
-      // Redirect the user to the /products page
+      logger.logger.debug('eltokenquenuevo',user);
+       // Redirect the user to the /products page
       res.redirect('/products');
 
     } catch (error) {
-      console.error('Error creating token:', error);
+      logger.logger.error('Error creating token:', error);
       res.sendInternalError (error);
     }
   };

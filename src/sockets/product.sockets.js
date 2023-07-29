@@ -1,15 +1,19 @@
 import { productsM } from '../dao/mongo/managers/index.js'
+import config from '../config.js'
+import LoggerService from '../services/LoggerService.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 
 export default function  productSocket(io) {
     io.on('connection', async (socket) => {
-        console.log('Socket Product connected');
+      logger.logger.debug('Socket Product connected');
     
         const data = await productsM.getProducts();
         socket.emit('products', data);
     
         socket.on('newProduct', async newProductData => {
-          console.log('Received new product:',newProductData);
+          logger.logger.info('Received new product:',newProductData);
           const { title, description, code, price, status, stock, category, thumbnails } = newProductData;
           const product = await productsM.createProduct({
             title,

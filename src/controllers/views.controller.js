@@ -2,6 +2,11 @@ import { productService, cartService } from '../services/repositories.js';
 import productModel from '../dao/mongo/models/products.js';
 import TokenDTO from '../dto/user/TokenDto.js';
 import AdminDTO from '../dto/user/AdminDto.js';
+import LoggerService from '../services/LoggerService.js';
+import config from '../config.js';
+
+
+const logger = new LoggerService(config.logger.type); 
 
 const  realTimeProducts = async (req, res) => {
     const products = await productService.getProductsService();
@@ -13,7 +18,7 @@ const getProducts = async (req, res) => {
   
     try {
     const user = req.user;
-      console.log('en la ruta', user)
+    logger.logger.debug('en la ruta', user);
       if (limit) {
         const products = await productService.getProductsService();
   
@@ -41,14 +46,14 @@ const getProducts = async (req, res) => {
           prevLink: hasPrevPage ? `/?limit=${limit}&page=${prevPage}&sort=${sort}&category=${category}` : null,
           nextLink: hasNextPage ? `/?limit=${limit}&page=${nextPage}&sort=${sort}&category=${category}` : null
         };
-        console.log(response);
+        logger.logger.info(response);
         return res.render('home', { producth, hasPrevPage, hasNextPage, prevPage, nextPage, ...rest, user: user});
       }
   
       const products = await productService.getProductsService();
       const { categories, statuses } = await  productService.categoriesAndStatusService();
-      console.log('entro en categoria'); // Retrieve categories and statuses
-      console.log('el usuario', user);
+      logger.logger.debug('entro en categoria');
+      logger.logger.info('el usuario', user);
       return res.render('home', { producth: products, categories, statuses, user: user });
     } catch (error) {
       console.error(error);
@@ -61,7 +66,7 @@ const chat = async(req,res)=>{
 };
 
 const productsInCart = async(req,res)=>{
-  console.log('incart')
+  logger.logger.debug('incart');
     const { cid } = req.params;
     const carts = await cartService.getCartByIdService(cid);
     res.render('cart', { carth: carts});

@@ -1,5 +1,10 @@
 import { Router } from 'express';
 import cartManager from '../dao/fileSystem/Managers/cartManager.js';
+import LoggerService from './src/services/LoggerService.js';
+import config from './src/config.js';
+
+
+const logger = new LoggerService(config.logger.type); 
 
 
 const router = Router();
@@ -17,7 +22,8 @@ router.get('/:cid', async (req, res) => {
         return res.status(200).send({ resultCart });
     } 
     catch (error) {
-        console.log(error)
+   
+        logger.logger.error(error);
     }
 });
 
@@ -40,7 +46,7 @@ router.post('/', async (req, res) => {
         res.status(200).send({ addedCart });
     }
     catch (err) {
-        console.log(err);
+        logger.logger.error(error);
     }
 });
 

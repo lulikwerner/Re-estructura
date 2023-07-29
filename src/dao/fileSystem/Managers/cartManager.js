@@ -1,6 +1,10 @@
 import fs from 'fs';
 import __dirname from '../../../utils.js'
+import LoggerService from '../../../services/LoggerService.js';
+import config from '../../../config.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 export default class CartManager {
 
   constructor() {
@@ -29,7 +33,7 @@ export default class CartManager {
       await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
       return newCart;
     } catch (error) {
-      console.log(error);
+      logger.logger.error(error);
     }
   };
   
@@ -60,14 +64,14 @@ export default class CartManager {
       const cart = carts.find(c => c.cid === cid);
       //Si no lo ecuentro deuvelvo mensaje
       if (!cart) {
-        console.log(`The Cart with id ${cid} does not exist`);
+        logger.logger.info(`The Cart with id ${cid} does not exist`);
         return null;
       }
       //Si lo encuentro retorno el cart solicitado
-      console.log(`The Cart with id ${cid} is: `, cart);
+      logger.logger.info(`The Cart with id ${cid} is: `, cart);
       return cart;
     } catch (error) {
-      console.log('Error reading file:', error);
+      logger.logger.error('Error reading file:', error);
       return null;
     }
   }
@@ -86,8 +90,8 @@ export default class CartManager {
       const cartToUpdate = { ...Number(carts[cartIndex]), ...updatedCart };
       carts[cartIndex] = cartToUpdate;
       await fs.promises.writeFile(this.path, JSON.stringify(carts, null, '\t'));
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      logger.logger.error(error);
     }
 
   }

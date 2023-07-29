@@ -2,6 +2,11 @@ import bcrypt from 'bcrypt';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import config from '../config.js';
+import LoggerService from '../services/LoggerService.js';
+
+
+
+const logger = new LoggerService(config.logger.type); 
 //import userModel from '../dao/mongo/models/tickets.js';
 
 export const createHash = async (password) => {
@@ -13,11 +18,11 @@ export const isValidPassword = (password, hashedPassword) => bcrypt.compareSync(
 
 export const passportCall = (strategy, options = {}) => {
   return async (req, res, next) => {
-    console.log('entro al passport');
+    logger.logger.debug('entro al passport');
     passport.authenticate(strategy, (error, user, info) => {
       if (error) return next(error);
       if (!options.strategyType) {
-        console.log(`La ruta ${req.url} No tiene definida un tipo de estrategia`);
+        logger.logger.info(`La ruta ${req.url} No tiene definida un tipo de estrategia`);
         return res.sendServerError();
       }
       if (!user) {
@@ -26,12 +31,13 @@ export const passportCall = (strategy, options = {}) => {
             req.error = info && info.message ? info.message : 'User not found';
             return next();
           case 'locals':
-            console.log('el tema es locals');
+            logger.logger.debug('el tema es locals');
+
             return res.sendUnauthorized(info && info.message ? info.message : 'User not found');
         }
       }
       req.user = user;
-      console.log(user);
+      logger.logger.info(user);
       next();
     })(req, res, next);
   };
@@ -39,7 +45,7 @@ export const passportCall = (strategy, options = {}) => {
 
 export const generateToken = (user) => {
   try {
-    console.log(user)
+    logger.logger.info(user);
     return jwt.sign(JSON.parse(JSON.stringify(user)), config.tokenKey.key, { expiresIn: '1d' });
   } catch (error) {
     console.error('Token generation error:', error);

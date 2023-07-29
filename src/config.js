@@ -29,5 +29,8 @@ export default{
         Number:process.env.TWILIO_NUMBER ,
         sid:process.env.TWILIO_SID,
         Token:process.env.TWILIO_TOKEN
+    },
+    logger:{
+        type: process.env.LOGGER||'dev',
     }
 }

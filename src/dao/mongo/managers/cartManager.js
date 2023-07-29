@@ -1,6 +1,11 @@
 import cartModel from "../models/carts.js";
 import productModel from "../models/products.js";
 import mongoose from "mongoose";
+import LoggerService from '../../../services/LoggerService.js';
+import config from '../../../config.js';
+
+
+const logger = new LoggerService(config.logger.type); 
 
 export default class CartManager {
   //Obtiene todos los carts
@@ -22,14 +27,14 @@ export default class CartManager {
     });
 
     populatedCart.products = cartWithQuantity;
-    // console.log(JSON.stringify(populatedCart, null, '\t'));
+    //logger.logger.info(JSON.stringify(populatedCart, null, '\t'));
     return populatedCart;
   };
 
   //Obtiene un Cart por ID
   getCartById = async (params) => {
     const populatedCart = await cartModel.findById(params).populate('products.product').lean();
-    //console.log(JSON.stringify(populatedCart, null, '\t'));
+    //logger.logger.info(JSON.stringify(populatedCart, null, '\t'));
     return populatedCart
   };
   //Crea un cart
@@ -57,7 +62,7 @@ export default class CartManager {
     try {
       //Busco el carrito
       const cart = await cartModel.findById(cid);
-      console.log('el cart', cart)
+      logger.logger.info('el cart', cart);
       //Si no existe el carrito
       if (!cart) {
         throw new Error(`The ID cart: ${cid} not found`);
@@ -70,9 +75,10 @@ export default class CartManager {
         //Si el producto existe:
         if (product) {
           /*const NewQty = product.quantity += quantity
-          console.log(product.quantity)
-            console.log(quantity)
-          console.log('lacantidad',NewQty )
+          logger.logger.info(product.quantity);
+          logger.logger.info(quantity);
+          logger.logger.info('lacantidad',NewQty );
+
           //Si la cantidad que estoy agregando es mayor al stock del producto. Arrojo error
           if (NewQty > product.stock) {
             throw {
@@ -81,7 +87,7 @@ export default class CartManager {
             };
           }  */
           const existingProduct = cart.products.find(p => p.product.equals(product._id));
-          console.log('elexistingproduct', existingProduct)
+          logger.logger.info('elexistingproduct', existingProduct);
           //Si existe en el cart y la cantidad total no excede al stock
           if (existingProduct) {
             existingProduct.quantity += quantity;
@@ -90,14 +96,14 @@ export default class CartManager {
           if (!existingProduct) {
             const newProduct = { product: product._id, quantity: 1 };
             cart.products.push(newProduct);
-            console.log('Added product:', newProduct);
+            logger.logger.info('Added product:', newProduct);
           }
         }
       }
       await cart.save();
       return cart;
     } catch (error) {
-      console.log('Error:', error);
+      logger.logger.error('Error:', error);
       throw new Error('Failed to update the cart');
     }
   };
@@ -113,24 +119,24 @@ export default class CartManager {
 
       products.forEach(async (product) => {
         const productId = product._id.toString();
-        console.log('Product ID:', productId);
-        console.log('elcart', cart);
+        logger.logger.info('Product ID:', productId);
+        logger.logger.info('elcart', cart);
 
         const cartProduct = cart.products.find((cartProduct) => cartProduct.product._id.toString() === productId);
-        console.log('estaono', cartProduct);
+        logger.logger.debug('estaono', cartProduct);
         if (cartProduct) {
           const updateFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
 
           updateFields.forEach((field) => {
             if (product[field] !== undefined) {
               cartProduct.product[field] = product[field];
-              console.log(`Updated ${field}:`, product[field]);
+              logger.logger.info(`Updated ${field}:`, product[field]);
             }
           });
 
           // Save the updated product
           await cartProduct.product.save();
-          console.log('enelmanager', cartProduct);
+          logger.logger.debug('enelmanager', cartProduct);
         }
       });
 
@@ -146,7 +152,8 @@ export default class CartManager {
   updateCart = async (cid, pid, qty) => {
     try {
       const cart = await cartModel.findById(cid).populate('products.product');
-      console.log('cartt', cart)
+      logger.logger.info('cartt', cart);
+
       const productIndex = cart.products.findIndex((p) => p.product._id.equals(pid));
       if (productIndex !== -1) {
         //Si la nueva cantidad  es mayor al stock del producto. Arrojo error
@@ -179,8 +186,7 @@ export default class CartManager {
       if (!cart) {
         throw new Error("Cart not found");
       }
-      console.log('id', productIdToDelete)
-      //console.log(cart.products)
+      logger.logger.info('id', productIdToDelete);
       const productIdsInCart = cart.products.map(item => item.product.toString());
       // Busco el index
       const productIndex = productIdsInCart.findIndex(id => id === productIdToDelete);
@@ -208,7 +214,7 @@ export default class CartManager {
         { $set: { products: [] } },
         { new: true }
       );
-      console.log(JSON.stringify(updatedCart, null, '\t'));
+      logger.logger.info(JSON.stringify(updatedCart, null, '\t'));
       return updatedCart;
     } catch (error) {
       return error;
@@ -222,8 +228,8 @@ export default class CartManager {
       },
       { new: true }
     ).populate('products.product').lean();
+    logger.logger.info(JSON.stringify(updatedCart, null, '\t'));
 
-    console.log(JSON.stringify(updatedCart, null, '\t'));
     return updatedCart;
   };
 
@@ -232,30 +238,6 @@ export default class CartManager {
 
 
 
-
-
-
-
-
-
-
-  /*updateQtyCart = async (cid, pid, qty) => {
-    try {
-      console.log('hola');
-      console.log(cid);
-      console.log(pid);
-      const updatedCart = await cartModel.findOneAndUpdate(
-        { _id: cid },
-        { $set: { 'products.$[elem].product.stock': qty } },
-        { new: true, arrayFilters: [{ 'elem.product': mongoose.Types.ObjectId(pid) }] }
-      ).populate('products.product').lean();
-      console.log('chau');
-      console.log('Updated cart:', updatedCart);
-      return updatedCart;
-    } catch (error) {
-      return error;
-    }
-  };*/
 
 
 

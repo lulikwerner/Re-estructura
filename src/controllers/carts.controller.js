@@ -8,6 +8,12 @@ import { cartsInvalidValue } from '../constants/cartErrors.js';
 import ErrorService from '../services/Error/ErrorService.js';
 import EErrors from '../constants/EErrors.js'
 import { productsInvalidValue } from '../constants/productErrors.js';
+import config from '../config.js';
+import LoggerService from '../services/LoggerService.js';
+
+
+
+const logger = new LoggerService(config.logger.type); 
 
 const addProductToCart = async (req, res) => {
     const products = req.body;
@@ -57,7 +63,8 @@ const getCartById =  async (req, res,done) => {
         }
         }
         const cart = await cartService.getCartByIdService(cid);
-        console.log(cart)
+        logger.logger.debug(cart);
+
       
       // Si no encuentra el cart
         if (!cart) {
@@ -74,9 +81,10 @@ const getCartById =  async (req, res,done) => {
 const postProductInCart = async (req, res,done) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body
-    console.log(pid)
-    console.log('cid',cid)
-    console.log('qty',quantity)
+    logger.logger.info(pid);
+    logger.logger.info('cid',cid)
+    logger.logger.info('qty',quantity);
+
     const {  title, description, code, price, stock, category, thumbnails} = req.body;
     try {
   
@@ -111,7 +119,8 @@ const postProductInCart = async (req, res,done) => {
       }
       // Hago un update del cart , enviando el products y el cid
       const up=await cartService.updateQtyCartService (cid,checkIdProduct, quantity);
-      console.log('Product quantity added successfully',up);
+      logger.logger.info('Product quantity added successfully',up);
+
       return  res.sendSuccess('Product quantity added successfully' );
  
     } catch (error) {
@@ -153,8 +162,7 @@ const deleteProductInCart = async (req, res,done) => {
       // Busco el pid en el carrito
       const productIndex = cart.products.findIndex((product) => {
         const productId = product.product._id.toString(); // Access the nested _id value
-        console.log('productindex',productId )
-        
+        logger.logger.info('productindex',productId);   
         return productId === pid;
 
       });
@@ -165,7 +173,7 @@ const deleteProductInCart = async (req, res,done) => {
       //Si encuentro el producto en el array lo borro
       cart.products.splice(productIndex, 1);
       // Hago el update en el carrito
-      console.log(pid)
+      logger.logger.debug(pid);
       const cartWithoutProducts = await cartService.deleteProductInCartService(cid, pid);
       //await cartiWithoutProducts.save();
       // Send a success response with the updated cart
@@ -192,7 +200,7 @@ const deleteCart = async (req,res,done) =>{
   }else{
       // Busco el Id del carrito en carts
       const cart = await cartService.getCartByIdService({ _id: cid });
-      console.log(cart)
+      logger.logger.debug(cart);
       // Si no se encuentra el carrito en carts
       if (!cart) {
         return res.sendBadRequest('Cart not found' );
@@ -221,7 +229,7 @@ const updateCart = async (req, res) => {
       const updatedCart = await cartService.updateProductsInCartService (cid, products);
     
       await updatedCart.save();
-  console.log(JSON.stringify(updatedCart, null, '\t'));
+      logger.logger.info(JSON.stringify(updatedCart, null, '\t'));
         res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
     } catch (err) {
       console.error(err);
@@ -232,8 +240,8 @@ const updateCart = async (req, res) => {
 const updateQtyProductInCart = async (req, res,done) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    console.log('qty',quantity)
-    console.log('pid',pid)
+    logger.logger.info('quantity',quantity);
+    logger.logger.info('pid',pid);
     try {
       if (!cid || !mongoose.Types.ObjectId.isValid(cid)) {
         return res.sendBadRequest('Please enter a valid cart ID');
@@ -261,10 +269,11 @@ const updateQtyProductInCart = async (req, res,done) => {
       productToUpdate.quantity = Number(quantity);
       const cartUpd = await cartService.updateCartService(cid, pid, quantity);
       await cartUpd.save();
-      console.log(JSON.stringify(cartUpd, null, '\t'));
+      logger.logger.info(JSON.stringify(cartUpd, null, '\t'));
+  
       return res.sendSuccess('Product updated successfully');
     } catch (error) { 
-      console.log('Error:', error);
+      logger.logger.error('Error:', error);
       return res.sendBadRequest('Product could not be updated' );
     }
 };
@@ -274,19 +283,20 @@ const checkoutCart = async (req, res) => {
   try {
      // Primero busco si existe el cart
     const cartExist = await cartService.getCartByIdService(cid);
-    //console.log(JSON.stringify(cartExist, null, '\t'));
+    //logger.logger.info(JSON.stringify(cartExist, null, '\t'));
+
    //Si el cart existe 
     if (cartExist) {
       const InCart = [];
       const Outstock = [];
-        console.log(JSON.stringify(cartExist, null, '\t'));
-      //console.log('losticketsincart', cartExist.tickets)
-      console.log('losincart', cartExist.products)
+      logger.logger.info(JSON.stringify(cartExist, null, '\t'));
+      //logger.logger.info('losticketsincart', cartExist.tickets);
+      logger.logger.info('losincart', cartExist.products);
    // Checkeo si hay stock suficiente para comprar y lo guardo en un nuevo array
       Object.values(cartExist.products).forEach((product) => {
         if (product.quantity <= product.product.stock) {
           const subtotal = product.product.price * product.quantity;
-          console.log('sub',subtotal)
+           //logger.logger.info('sub',subtotal);
           const newStockValue = product.product.stock - product.quantity;
           // Hago update del stock en mi DB
           const updatedProduct = productService.updateProductService(product.product._id, {
@@ -300,7 +310,7 @@ const checkoutCart = async (req, res) => {
             subtotal,
           };
           InCart.push(prod);
-         console.log('Empujar al arreglo Incart', InCart);
+          logger.logger.info('Empujar al arreglo Incart', InCart);
          //Si no hay suficiente stock lo empujo ala rreglo Outstock
         } else {
           let outstockProduct = {
@@ -310,7 +320,7 @@ const checkoutCart = async (req, res) => {
             quantity: product.quantity,
           };
           Outstock.push(outstockProduct);
-          console.log('Empujar al arreglo Outstock', Outstock);
+          logger.logger.info('Empujar al arreglo Outstock', Outstock);
         }
       });
       //A los productos InCart los voy filtrando llamando a la funcion deleteProductInCartService y los voy sacando del cart
@@ -322,7 +332,7 @@ const checkoutCart = async (req, res) => {
       InCart.forEach((subtotal) => {
         totalProduct += subtotal.subtotal;
       });
-      //console.log('Total:', totalProduct);
+      // logger.logger.info('Total:', totalProduct);
       let ticket = null;
       //Si en el arreglo Incart hay productos genero el ticket de compra con esos mismos
       if (InCart.length != 0) {
@@ -342,20 +352,20 @@ const checkoutCart = async (req, res) => {
       Outstock: Outstock,
     });
     await checkOutTicket.save();
-    console.log('check',checkOutTicket )
-
+    logger.logger.info('check',checkOutTicket);
         return res.status(200).json(checkOutTicket);
       }
     
   } catch (error) {
-    console.log('Error:', error);
+    logger.logger.error('Error:', error);
     return res.sendBadRequest('Purchase could not be completed');
   }
 };
 
 const checkoutDisplay = async (req, res) => {
   const { cid } = req.params;
-  console.log('endisp');
+  logger.logger.info('endisp');
+
   try {
     const ticketData = await checkoutTicketModel
       .findOne({ cid: cid })
@@ -363,10 +373,10 @@ const checkoutDisplay = async (req, res) => {
       .populate('ticket')
       .lean()
       .exec();
-       //console.log(JSON.stringify(ticketData , null, '\t'));
+      // logger.logger.info(JSON.stringify(ticketData, null, '\t'));
     return res.render('purchase', { checkoutTicket: ticketData });
   } catch (error) {
-    console.log('Error:', error);
+    logger.logger.error('Error:', error);
     return res.sendBadRequest('Purchase could not be completed');
   }
 };

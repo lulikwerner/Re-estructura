@@ -1,10 +1,14 @@
 const socket = io();
 // Obtengo el Formulario
+
+
+
 const form = document.querySelector('form')
 const products = document.getElementById('products');
 
 //Muestro el producto agregado
 socket.on('productsAdd', (data) => {
+
     console.log(data)
 
     products.innerHTML  += `<div class="card bg-secondary mb-3 mx-4 my-4" style="max-width: 20rem;">

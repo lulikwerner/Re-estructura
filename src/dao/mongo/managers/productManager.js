@@ -1,5 +1,9 @@
 import productModel from "../models/products.js";
+import LoggerService from '../../../services/LoggerService.js';
+import config from '../../../config.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 
 export default class ProductManager {
 
@@ -14,12 +18,12 @@ export default class ProductManager {
           }
         }
       ]);
-console.log(categoriesData)
+      logger.logger.info(categoriesData);
       const { categories, statuses } = categoriesData[0];
       return { categories, statuses };
-    } catch (err) {
-      console.log(err);
-      return err;
+    } catch (error) {
+      logger.logger.error(error);
+      return error;
     }
   };
 
@@ -41,7 +45,7 @@ console.log(categoriesData)
         const updatedProduct = await productModel.findByIdAndUpdate(id, update, { new: true });
         return updatedProduct;
       } catch (error) {
-        console.log('Error updating product:', error);
+        logger.logger.error('Error updating product:', error);
         throw error;
       }
     };

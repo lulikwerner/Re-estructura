@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { passportCall } from '../services/auth.js';
 import UsersManager from '../dao/mongo/managers/usersManager.js';
+import LoggerService from '../services/LoggerService.js';
+import config from '../config.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 
 export default class BaseRouter {
   constructor() {
@@ -76,12 +80,13 @@ export default class BaseRouter {
     return (req, res, next) => {
       const user = req.user;
       const userRole= user && user.role; 
-      console.log('userRole',userRole)
+      logger.logger.debug('userRole',userRole);
       const { cid } = req.params;
       const cartInUser = user?.cart?.toString(); // Chequea que el usuario exista
+      if(!userRole) return next();
       if (userRole !== role) return next();
       if (userRole === 'admin' && !cartInUser) return next();
-      console.log('elcartdelciente', cartInUser);
+      logger.logger.debug('elcartdelciente', cartInUser);
       //Si no tengo un rol definido aun
       if (typeof role === 'undefined') return next();
       if (typeof userRole === 'undefined') return next();

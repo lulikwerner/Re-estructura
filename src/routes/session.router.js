@@ -2,12 +2,16 @@ import {privacy} from "../middlewares/auth.js"
 import BaseRouter from "./Router.js";
 import {passportCall } from '../services/auth.js';
 import usersController from '../controllers/users.controller.js';
+import LoggerService from '../services/LoggerService.js';
+import config from '../config.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 
 
 export default class SessionsRouter extends BaseRouter{
   init(){
-    console.log('entro al init')
+    logger.logger.debug('entro al init');
 
     this.post('/register',['NO_AUTH'], passportCall('register',{strategyType:'locals'}),usersController.register);
 

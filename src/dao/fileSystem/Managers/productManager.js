@@ -21,7 +21,8 @@ import __dirname from '../utils.js'
     addProducts = async ({ title, description, code, price, status, stock, category, thumbnails }) => {
         try {
           if (!title || !description || !code || !price || !status || !stock || !category) {
-            return console.log('Error! one or more fields are incomplete');
+            return  logger.logger.info('Error! one or more fields are incomplete');
+
           }
       
           const products = await this.getProducts();
@@ -40,7 +41,7 @@ import __dirname from '../utils.js'
           await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
           return product;
         } catch (error) {
-          console.log(error); 
+            logger.logger.error(error)
         }
       }
 
@@ -52,14 +53,14 @@ import __dirname from '../utils.js'
             const product = products.find(p => p.id === id);
             //Si no esta devuelvo null
             if (!product) {
-                console.log(`The product with id ${id} does not exist`);
+                logger.logger.info(`The product with id ${id} does not exist`)
                 return null;
             }
             //Si esta devuelvo el producto
-            console.log(`The product with id ${id} is: `, product);
+            logger.logger.info(`The product with id ${id} is: `, product)
             return product;
         } catch (error) {
-            console.log('Error reading file:', error);
+            logger.logger.error('Error reading file:', error)
         }
     }
 
@@ -84,24 +85,24 @@ import __dirname from '../utils.js'
 
     deleteProduct = async (id) => {
         try {
-            console.log(`Deleting product with id ${id}`);
+            logger.logger.debug(`Deleting product with id ${id}`)
             const data = await fs.promises.readFile(this.path, 'utf-8');
             const products = JSON.parse(data);
             //Busco el producto
             const productIndex = products.findIndex(p => parseInt(p.id) === parseInt(id));
             //Si no encuentro el producto devuelvo null
             if (productIndex === -1) {
-                console.log(`We could not find a product that matches the id: ${id}`);
+                logger.logger.debug(`We could not find a product that matches the id: ${id}`)
                 return null;
             } else {
             //Si lo encuentro devuelvo el array de los productos menos el que solicito borrar
                 const productNotEliminated = products.filter(p => parseInt(p.id) !== parseInt(id));
                 await fs.promises.writeFile(this.path, JSON.stringify(productNotEliminated, null, '\t'));
-                console.log(`The product with id ${id} has been eliminated`);
+                (`The product with id ${id} has been eliminated`);
                 return products[productIndex];
             }
         } catch (error) {
-            console.log(error);
+            logger.logger.error(error)
         }
     }
 }

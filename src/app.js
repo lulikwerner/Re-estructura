@@ -1,7 +1,6 @@
 import express from "express";
 import session from "express-session"
 import handlebars from "express-handlebars";
-import mongoose from "mongoose";
 import MongoStore from "connect-mongo"
 import cookieParser from 'cookie-parser';
 import { Server } from "socket.io";
@@ -9,6 +8,8 @@ import { __dirname } from "./utils.js";
 import passport from "passport";
 import config from './config.js'
 import nodemailer from 'nodemailer'
+import winston from 'winston'
+
 
 import ProductRouter from "./routes/productsM.router.js";
 import CartRouter from "./routes/cartsM.router.js";
@@ -20,10 +21,16 @@ import cartSocket from "./sockets/cart.sockets.js";
 import productSocket from "./sockets/product.sockets.js";
 import initlizePassportStrategies from './config/passport.config.js'
 import errorHandler from './middlewares/error.js'
+import attachLogger from "./middlewares/logger.js";
+import LoggerService from  '../src/services/LoggerService.js'
 
 
 const app = express();
 const PORT = config.app.PORT;
+const logger = new LoggerService(config.logger.type); 
+
+
+
 
 const startServer = async (persistenceType) => {
 
@@ -41,16 +48,17 @@ const startServer = async (persistenceType) => {
     await mongoose.connect(
       config.mongoSecret.MongoURL
     );
-    console.log("Connected to MongoDB");
+   logger.logger.info("Connected to MongoDB");
   } catch (error) {
-    console.error("Failed to connect to MongoDB:", error);
+    logger.logger.error("Failed to connect to MongoDB:", error);
   }*/
 
  
 
   //Conecto a mi puerto
   const server = app.listen(PORT, () => {
-    console.log(`Listening on ${PORT}`);
+    //logger.logger.info();
+    console.log(`Listening on ${PORT}`)
   });
   const io = new Server(server);
 
@@ -85,6 +93,23 @@ const startServer = async (persistenceType) => {
   app.use(ioMiddleware);
 
 
+app.use(attachLogger)
+
+
+
+
+app.get('/loggerTest', (req, res) => {
+  logger.logger.error("127.0.0.1 - there's no place like home");
+  logger.logger.warning("127.0.0.1 - there's no place like home");
+  logger.logger.http("127.0.0.1 - there's no place like home");
+  logger.logger.info("127.0.0.1 - there's no place like home");
+  logger.logger.debug("127.0.0.1 - there's no place like home");
+
+  res.sendStatus(200);
+});
+
+
+
   const viewsRouter = new ViewsRouter()
   const sessionRouter = new SessionRouter();
   const cartRouter = new CartRouter();
@@ -100,7 +125,7 @@ const startServer = async (persistenceType) => {
   //El chat 
   io.on("connection", async (socket) => {
     registerChatHandler(io, socket);
-    console.log("Socket connected");
+    logger.logger.info('Socket connected');
   });
 
   //Llama al ProductSocket y al cartSocket

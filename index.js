@@ -1,14 +1,20 @@
 import { Command } from 'commander';
 import startServer from './src/app.js';
+import LoggerService from './src/services/LoggerService.js';
+import config from './src/config.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 const program = new Command();
+
 program
   .option('-mg, --MONGO', 'Use MongoDB for persistence')
   .option('-fs, --FILESYSTEM', 'Use FileSystem for persistence');
-
 program.parse();
-console.log('Options:', program.opts());
+logger.logger.info('Options:', program.opts());
+
 const { MONGO, FILESYSTEM } = program.opts();
+
 
 if ((MONGO && FILESYSTEM) || (!MONGO && !FILESYSTEM)) {
   console.error('Please choose only one persistence option (MONGO or FILESYSTEM).');
@@ -16,7 +22,8 @@ if ((MONGO && FILESYSTEM) || (!MONGO && !FILESYSTEM)) {
 }
 
 const persistenceType = MONGO ? 'MONGO' : 'FILESYSTEM';
-console.log('Persistence:', persistenceType);
+logger.logger.info('Persistence:', persistenceType);
+
 
 startServer(persistenceType);
 
@@ -32,7 +39,7 @@ startServer(persistenceType);
 
 const context = async () => {
     const test = await productsM.getProducts();
-    //console.log(test)
+    //logger.logger.info(test);
 
    
 

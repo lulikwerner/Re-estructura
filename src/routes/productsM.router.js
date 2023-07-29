@@ -1,7 +1,11 @@
 import { passportCall } from '../services/auth.js';
 import BaseRouter from "./Router.js";
 import productsController from "../controllers/products.controller.js";
+import LoggerService from '../services/LoggerService.js';
+import config from '../config.js';
 
+
+const logger = new LoggerService(config.logger.type); 
 
 export default class ProductsRouter extends BaseRouter {
 
@@ -10,7 +14,7 @@ export default class ProductsRouter extends BaseRouter {
 const { limit, page, sort, category } = req.query;
 
    // const result  = await productModel.paginate({},{limit:10,lean:true})
-   //console.log(result)
+   logger.logger.info(result);
    // res.status(200).send({ status: 'success', payload: result});    
 try{
 
@@ -30,7 +34,7 @@ try{
         
             }      
     }catch(error) {
-        console.log(error);
+        logger.logger.error(error);
     }
 
 });*/
