@@ -147,6 +147,7 @@ const deleteProductInCart = async (req, res,done) => {
 
       // Busco el Id del carrito en carts
       const cart = await cartService.getCartByIdService({ _id: cid });
+      console.log('eneldeleteelcid', cart)
       // Si no se encuentra el carrito en carts
       if (!cart) {
         return res.sendBadRequest('Cart not found');
@@ -325,7 +326,10 @@ const checkoutCart = async (req, res) => {
       });
       //A los productos InCart los voy filtrando llamando a la funcion deleteProductInCartService y los voy sacando del cart
       for (const product of InCart) {
-        await cartService.deleteProductInCartService(cid,product._id);
+        console.log(cid)
+        console.log(product._id.toString())
+        const ver = await cartService.deleteProductInCartService(cid,product._id.toString());
+      
     }
       // Ahora Obtengo el total del cart
       let totalProduct = 0;
@@ -364,7 +368,7 @@ const checkoutCart = async (req, res) => {
 
 const checkoutDisplay = async (req, res) => {
   const { cid } = req.params;
-  logger.logger.info('endisp');
+  logger.logger.info('');
 
   try {
     const ticketData = await checkoutTicketModel
