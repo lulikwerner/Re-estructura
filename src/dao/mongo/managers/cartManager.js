@@ -58,8 +58,9 @@ export default class CartManager {
   };
 
   //Actualiza los productos del cart con el POST
-  updateQtyCart = async (cid, products, quantity) => {
+  updateQtyCart = async (cid, pid, quantity) => {
     try {
+      console.log('manager')
       //Busco el carrito
       const cart = await cartModel.findById(cid);
       logger.logger.info('el cart', cart);
@@ -67,11 +68,11 @@ export default class CartManager {
       if (!cart) {
         throw new Error(`The ID cart: ${cid} not found`);
       }
-      const [product] = [products];
-      const { _id: productId } = product; {
+      //const [product] = [products];
+      //const { _id: productId } = product; {
 
         //Busco el producto
-        const product = await productModel.findById(productId);
+        const product = await productModel.findById(pid);
         //Si el producto existe:
         if (product) {
           /*const NewQty = product.quantity += quantity
@@ -99,7 +100,7 @@ export default class CartManager {
             logger.logger.info('Added product:', newProduct);
           }
         }
-      }
+     // }
       await cart.save();
       return cart;
     } catch (error) {

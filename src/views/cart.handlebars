@@ -15,20 +15,21 @@
       <p>Image: {{this.product.thumbnail}}</p>
       <p>Cantidad: {{this.quantity}}</p>
     </li>
-    <button id="addButton" type="add" class="btn addButtonStyle m-3" data-cid="{{carth._id}}">+</button>
-    <button id="substractButton" type="add" class="btn substractButtonStyle m-3" data-cid="{{carth._id}}">-</button>
+    <button id="addButton" type="add" class="btn addButtonStyle m-3" data-pid="{{this.product._id}}" data-cid="{{carth._id}}"">+</button>
+    <button id="substractButton" type="add" class="btn substractButtonStyle m-3" data-pid="{{this.product._id}}">-</button>
     <button id="dButton" type="add" class="btn deleteButtonStyle m-3" data-cid-delete="{{carth._id}}" data-pid="{{this.product._id}}">Delete</button>
 
   {{/each}}
 </ul>
 {{#if carth.products.length}}
 <button id="checkoutButton" type="submit" class="btn checkoutButtonStyle m-3" data-cid="{{carth._id}}" >Checkout</button>
-<button>
-  <a href="/products" class="btn btn-secondary m-3 seguir-comprando-btn">Seguir Comprando</a>
-</button>
+
 {{else}}
   <h3>El carrito esta vacio</h3>
 {{/if}}
+<button>
+  <a href="/products" class="btn btn-secondary m-3 seguir-comprando-btn">Seguir Comprando</a>
+</button>
 <div class="row mt-4" id="cart"></div>
 
 

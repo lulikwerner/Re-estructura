@@ -220,15 +220,15 @@ const deleteCart = async (req,res,done) =>{
 
 const updateCart = async (req, res) => {
     try {
+      console.log('entroalupdate')
       const { cid } = req.params;
       const products = req.body;
       if (!Array.isArray(products)) {
         return res.status(400).json({ message: 'Products must be an array' });
       }
      // const productIds = products.map((product) => product.pid);
-      // Mano a llamar a updateProductsInCart 
+      // Mando a llamar a updateProductsInCart 
       const updatedCart = await cartService.updateProductsInCartService (cid, products);
-    
       await updatedCart.save();
       logger.logger.info(JSON.stringify(updatedCart, null, '\t'));
         res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
@@ -241,9 +241,10 @@ const updateCart = async (req, res) => {
 const updateQtyProductInCart = async (req, res,done) => {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    logger.logger.info('quantity',quantity);
-    logger.logger.info('pid',pid);
+    //logger.logger.info('quantity',quantity);
+    //logger.logger.info('pid',pid);
     try {
+    
       if (!cid || !mongoose.Types.ObjectId.isValid(cid)) {
         return res.sendBadRequest('Please enter a valid cart ID');
       }
@@ -268,13 +269,13 @@ const updateQtyProductInCart = async (req, res,done) => {
         return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
       }
       productToUpdate.quantity = Number(quantity);
-      const cartUpd = await cartService.updateCartService(cid, pid, quantity);
+     const cartUpd = await cartService.updateQtyCartService(cid, pid, quantity);
       await cartUpd.save();
       logger.logger.info(JSON.stringify(cartUpd, null, '\t'));
   
       return res.sendSuccess('Product updated successfully');
     } catch (error) { 
-      logger.logger.error('Error:', error);
+      logger.logger.error(error);
       return res.sendBadRequest('Product could not be updated' );
     }
 };

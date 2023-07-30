@@ -9,3 +9,35 @@
 {"level":"error","message":"127.0.0.1 - there's no place like home"}
 {"level":"error","message":"127.0.0.1 - there's no place like home"}
 {"level":"error","message":"127.0.0.1 - there's no place like home"}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"level":"error","message":"Error: There is not enough stock","statusCode":400}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"code":2,"level":"error","name":"Cart input error","status":400}
+{"code":2,"level":"error","name":"Cart input error","status":400}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"body":"4","expose":true,"level":"error","status":400,"statusCode":400,"type":"entity.parse.failed"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
+{"level":"error","message":"Error: products is not defined","stack":"ReferenceError: products is not defined\n    at CartManager.updateQtyCart (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/dao/mongo/managers/cartManager.js:71:26)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async CartsRouter.updateQtyProductInCart (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/carts.controller.js:276:22)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:72:9"}
+{"level":"error"}

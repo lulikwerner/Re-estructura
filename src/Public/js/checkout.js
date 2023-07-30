@@ -51,12 +51,40 @@ deleteButton.addEventListener('click', async () => {
   });
 
   if (deleteResponse.ok) {
-    // If the product deletion is successful, you can update the cart display or perform other actions
     console.log('Product deleted successfully!');
     window.location.reload();
   } else {
-    // If the product deletion request fails, handle the error
     console.error('Failed to delete product from the cart.');
+  }
+});
+
+
+
+let quantity = 0;
+
+const addButton = document.getElementById('addButton');
+
+addButton.addEventListener('click', async () => {
+  console.log('Add button clicked!');
+  quantity = quantity + 1;
+  console.log(quantity);
+
+  const cid = checkoutButton.dataset.cid;
+  const pid = deleteButton.getAttribute('data-pid');
+  const addQuantity = await fetch(`/api/carts/${cid}/product/${pid}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ quantity })
+  });
+  console.log(addQuantity);
+  if (addQuantity.ok) {
+    console.log('Product updated successfully!');
+     window.location.reload();
+  } else {
+    console.error('Failed to update product in the cart.');
   }
 });
 
