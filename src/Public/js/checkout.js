@@ -9,7 +9,7 @@ checkoutButton.addEventListener('click', async () => {
   const cid = checkoutButton.dataset.cid;
   console.log(cid);
 
-  // Make the API request to trigger the checkoutCart function in the backend
+  // Hago el request a la back
   const response = await fetch(`/api/carts/${cid}/purchase`, {
     method: 'POST',
     body: JSON.stringify(),
@@ -19,21 +19,45 @@ checkoutButton.addEventListener('click', async () => {
       'Accept': 'application/json',
     },
   });
-console.log('noresp')
   if (response.ok) {
-    checkoutData = await response.json(); // Assign the fetched data to checkoutData variable
-    console.log('estaok');
+    checkoutData = await response.json(); // Guardo la informacion del fetch
     console.log(checkoutData);
 
-    // Use the data to display or perform any other actions
+    // Lo dirijo a la ventana de compra
   window.location.href = `/api/carts/${cid}/purchase`;
   } else {
-    // Handle the case where the response is not successful (e.g., error handling)
     console.error('Error:', response.status, response.statusText);
   }
 });
 
 
-  
+
+
+// Assuming that the button with id "deleteButton" is present in your cartHandlebars
+const deleteButton = document.getElementById('dButton');
+
+deleteButton.addEventListener('click', async () => {
+  console.log('Delete button clicked!');
+  const cid = checkoutButton.dataset.cid;;
+  const pid =  deleteButton.getAttribute('data-pid');
+  console.log(pid)
+  console.log(cid)
+  const deleteResponse = await fetch(`/api/carts/${cid}/products/${pid}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  });
+
+  if (deleteResponse.ok) {
+    // If the product deletion is successful, you can update the cart display or perform other actions
+    console.log('Product deleted successfully!');
+    window.location.reload();
+  } else {
+    // If the product deletion request fails, handle the error
+    console.error('Failed to delete product from the cart.');
+  }
+});
 
 

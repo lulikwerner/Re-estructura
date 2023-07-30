@@ -4,9 +4,21 @@ import TokenDTO from '../dto/user/TokenDto.js';
 import AdminDTO from '../dto/user/AdminDto.js';
 import LoggerService from '../services/LoggerService.js';
 import config from '../config.js';
-
+import nodemailer from 'nodemailer'
+import twilio from "twilio";
 
 const logger = new LoggerService(config.logger.type); 
+
+const transport = nodemailer.createTransport({
+  service:'gmail',
+  port:587,
+  auth:{
+    user:config.app.email,
+    pass:config.app.password
+  }
+})
+
+const twilioClient = twilio(config.twilio.sid, config.twilio.Token)
 
 const  realTimeProducts = async (req, res) => {
     const products = await productService.getProductsService();
@@ -80,7 +92,7 @@ const login = async(req,res)=>{
     res.render('login');
 };
   
-const profile = (req, res) => {
+const profile = async (req, res) => {
   try {
     const user = new TokenDTO(req.user) || new AdminDTO(req.user);
     res.render('profile', { user: user });
@@ -92,6 +104,40 @@ const profile = (req, res) => {
   }
 };
 
+const mail =  async (req,res) => {
+  const result = await transport.sendMail({
+    from:'Luli Store <config.app.email>',
+    to:'inforpmusa@gmail.com',
+    subject:'Correo de prueba',
+    //Le doy el formato a mi email lo puedo guardar en un componentes
+    html:`
+    <div><h1>Esto es un correo de prueba</h1></div>`
+    //dentro de las bastics <img src='cid:perfilbonito'/>
+    /*,
+    attachments:[
+      {
+        filename:'Curriculum.pdf',
+        path://ruta donde lo tengo guardado al file
+      },
+      {
+        filename:'perritoDeprimido.jpg',
+        path://ruta donde lo tengo guardado la foto,
+        cid:'perfilbonito'
+      }
+    ]*/
+  })
+  res.send({status:'succes', payload:result})
+}
+
+const sms = async (req,res) => {
+  const clientNumber = '+9543832654';
+  const result = await twilioClient.messages.create({
+    body:'SMS de prueba',
+    from: config.twilio.Number,
+    to:clientNumber
+  })
+  res.send({status:'succes', payload:result})
+}
 
 export default {
     realTimeProducts,
@@ -100,5 +146,7 @@ export default {
     productsInCart,
     register,
     login,
-    profile
+    profile,
+    mail,
+    sms
 }

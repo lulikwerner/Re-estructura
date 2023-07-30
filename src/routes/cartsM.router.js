@@ -32,7 +32,7 @@ this.put('/:cid/product/:pid', ['USER'],passportCall('jwt', { strategyType: 'jwt
 //http://localhost:8080/api/carts/:cid/products/:pid
 this.delete('/:cid/products/:pid',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.deleteProductInCart);
 
-//Elimina la productos del carrito. Lo vacia
+//Elimina los productos del carrito. Lo vacia
 //http://localhost:8080/api/carts/:cid
 this.delete('/:cid',['USER'],passportCall('jwt', { strategyType: 'jwt' }), cartsController.deleteCart);
 
