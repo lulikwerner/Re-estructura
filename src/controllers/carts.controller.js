@@ -251,7 +251,7 @@ const updateQtyProductInCart = async (req, res) => {
         return res.status(404).send({ status: 'error', message: 'Product not found in the cart' });
       }
       productToUpdate.quantity = Number(quantity);
-      const cartUpd = await cartService.updateCartService(cid, pid, quantity);
+      const cartUpd = await cartService.updateQtyCartService(cid, pid, quantity);
       await cartUpd.save();
       console.log(JSON.stringify(cartUpd, null, '\t'));
       return res.sendSuccess('Product updated successfully');
