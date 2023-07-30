@@ -307,7 +307,7 @@ const checkoutCart = async (req, res) => {
       });
       //A los productos InCart los voy filtrando llamando a la funcion deleteProductInCartService y los voy sacando del cart
       for (const product of InCart) {
-        await cartService.deleteProductInCartService(cid,product._id);
+        await cartService.deleteProductInCartService(cid,product._id.toString());
     }
       // Ahora Obtengo el total del cart
       let totalProduct = 0;
