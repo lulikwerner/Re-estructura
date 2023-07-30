@@ -109,9 +109,8 @@ export default class CartManager {
       if (!cart) {
         return null;
       }
-
       products.forEach(async (product) => {
-        const productId = product._id.toString();
+        const productId = product.pid;
         console.log('Product ID:', productId);
         console.log('elcart', cart);
 
