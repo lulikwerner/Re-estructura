@@ -220,7 +220,6 @@ const deleteCart = async (req,res,done) =>{
 
 const updateCart = async (req, res) => {
     try {
-      console.log('entroalupdate')
       const { cid } = req.params;
       const products = req.body;
       if (!Array.isArray(products)) {

@@ -119,7 +119,8 @@ export default class CartManager {
       }
 
       products.forEach(async (product) => {
-        const productId = product._id.toString();
+        const productId = product.pid;
+        console.log('elpid',productId )
         logger.logger.info('Product ID:', productId);
         logger.logger.info('elcart', cart);
 
