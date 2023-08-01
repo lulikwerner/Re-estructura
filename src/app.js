@@ -54,11 +54,11 @@ const startServer = async (persistenceType) => {
     logger.logger.error("Failed to connect to MongoDB:", error);
   }*/
 
- 
+
 
   //Conecto a mi puerto
   const server = app.listen(PORT, () => {
-    //logger.logger.info();
+
     console.log(`Listening on ${PORT}`)
   });
   const io = new Server(server);

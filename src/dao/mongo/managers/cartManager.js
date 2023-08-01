@@ -60,7 +60,6 @@ export default class CartManager {
   //Actualiza los productos del cart con el POST
   updateQtyCart = async (cid, pid, quantity) => {
     try {
-      console.log('manager')
       //Busco el carrito
       const cart = await cartModel.findById(cid);
       logger.logger.info('el cart', cart);
@@ -120,7 +119,6 @@ export default class CartManager {
 
       products.forEach(async (product) => {
         const productId = product.pid;
-        console.log('elpid',productId )
         logger.logger.info('Product ID:', productId);
         logger.logger.info('elcart', cart);
 

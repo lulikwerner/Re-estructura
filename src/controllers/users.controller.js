@@ -38,11 +38,10 @@ const register = (req,res) => {
   };
 
   const loginGitHubCallback = (req, res) => {
-    console.log('paso2')
-    console.log('githubcallback')
+
     const user = req.user;
-    console.log('user',user)
-    console.log(user)
+    logger.logger.info('user',user)
+
     logger.logger.debug('el usuario git', user);
     try {
       const token = generateToken(req.user);

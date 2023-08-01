@@ -96,3 +96,5 @@
 {"level":"error"}
 {"level":"error"}
 {"level":"error"}
+{"level":"error","message":"Error: Cannot read properties of undefined (reading 'info')","stack":"TypeError: Cannot read properties of undefined (reading 'info')\n    at CartsRouter.checkoutCart (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/carts.controller.js:328:20)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:76:9"}
+{"level":"error","message":"Error: Cannot read properties of undefined (reading 'info')","stack":"TypeError: Cannot read properties of undefined (reading 'info')\n    at CartsRouter.checkoutCart (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/carts.controller.js:328:20)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:76:9"}

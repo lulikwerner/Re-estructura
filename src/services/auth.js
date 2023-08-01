@@ -46,7 +46,6 @@ export const passportCall = (strategy, options = {}) => {
 export const generateToken = (user) => {
   try {
     logger.logger.info(user);
-    console.log('engeneratetoken',user)
     return jwt.sign(JSON.parse(JSON.stringify(user)), config.tokenKey.key, { expiresIn: '1d' });
   } catch (error) {
     console.error('Token generation error:', error);
