@@ -14,22 +14,26 @@ export default class BaseRouter {
   }
   init() { }
 
+// Create a new function to wrap the callbacks and include verifyCart
+
   getRouter = () => this.router;
 
-  get(path, policies,role, ...callbacks) {
-    this.router.get(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies),  this.generateCustomResponses,this.verifyCart(role), this.applyCallbacks(callbacks));
+  
+
+  get(path, policies,...callbacks) {
+    this.router.get(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies),  this.generateCustomResponses,this.applyCallbacks(callbacks));
   }
 
-  post(path, policies,/*role.*/...callbacks) {
-    this.router.post(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, /*this.verifyCart(role),*/this.applyCallbacks(callbacks));
+  post(path, policies,...callbacks) {
+    this.router.post(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.applyCallbacks(callbacks));
   }
 
-  put(path, policies,role, ...callbacks) {
-    this.router.put(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.verifyCart(role),this.applyCallbacks(callbacks));
+  put(path, policies, ...callbacks) {
+    this.router.put(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses,this.applyCallbacks(callbacks));
   }
 
-  delete(path, policies,role, ...callbacks) {
-    this.router.delete(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses, this.verifyCart(role),this.applyCallbacks(callbacks));
+  delete(path, policies, ...callbacks) {
+    this.router.delete(path, passportCall('jwt', { strategyType: 'jwt' }), this.handlePolicies(policies), this.generateCustomResponses,this.applyCallbacks(callbacks));
   }
 
   generateCustomResponses = (req, res, next) => {
@@ -76,30 +80,5 @@ export default class BaseRouter {
     });
   }
 
-  verifyCart = role => {
-    return (req, res, next) => {
-      const user = req.user;
-      const userRole= user && user.role; 
-      logger.logger.debug('userRole',userRole);
-      const { cid } = req.params;
-      const cartInUser = user?.cart?.toString(); // Chequea que el usuario exista
-      if(!userRole) return next();
-      if (userRole !== role) return next();
-      if (userRole === 'admin' && !cartInUser) return next();
-      logger.logger.debug('elcartdelciente', cartInUser);
-      //Si no tengo un rol definido aun
-      if (typeof role === 'undefined') return next();
-      if (typeof userRole === 'undefined') return next();
-      //Si tengo un rol pero no tengo un cid nviado aun
-      if(userRole ==='user' && typeof cid === 'undefined') return next();
-      //Si tengo un rol user definido
-      if (userRole === 'user') {
-        //Comparo el carrito enviado por parametros con el que me trae el usuario
-      if (cid === cartInUser) return next();
-      else { res.status(403).send({ status: "error", error: "Forbidden" }) }
-      }
-    
   
-    }
-  }
 }   

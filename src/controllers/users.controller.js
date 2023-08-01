@@ -33,10 +33,16 @@ const register = (req,res) => {
   };
 
   const loginGithub = (req, res) => {
+
     res.send({ status: "success", message: "Logged in with GitHub" });
   };
 
   const loginGitHubCallback = (req, res) => {
+    console.log('paso2')
+    console.log('githubcallback')
+    const user = req.user;
+    console.log('user',user)
+    console.log(user)
     logger.logger.debug('el usuario git', user);
     try {
       const token = generateToken(req.user);

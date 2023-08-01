@@ -2,16 +2,12 @@ import {privacy} from "../middlewares/auth.js"
 import BaseRouter from "./Router.js";
 import {passportCall } from '../services/auth.js';
 import usersController from '../controllers/users.controller.js';
-import LoggerService from '../services/LoggerService.js';
-import config from '../config.js';
 
-
-const logger = new LoggerService(config.logger.type); 
 
 
 export default class SessionsRouter extends BaseRouter{
   init(){
-    logger.logger.debug('entro al init');
+    console.log('entro al init')
 
     this.post('/register',['NO_AUTH'], passportCall('register',{strategyType:'locals'}),usersController.register);
 
@@ -19,7 +15,7 @@ export default class SessionsRouter extends BaseRouter{
     
     this.post('/logout', ['PRIVATE'], usersController.logout);
 
-    this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), usersController.loginGitHubCallback);
+   this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), usersController.loginGitHubCallback);
 
     this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), usersController.loginGithub);
 

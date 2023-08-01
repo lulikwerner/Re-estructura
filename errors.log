@@ -41,3 +41,58 @@
 {"kind":"ObjectId","message":"Cast to ObjectId failed for value \"646cee41af75b5ab7ceaeb\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"646cee41af75b5ab7ceaeb\"","value":"646cee41af75b5ab7ceaeb","valueType":"string"}
 {"level":"error","message":"Error: products is not defined","stack":"ReferenceError: products is not defined\n    at CartManager.updateQtyCart (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/dao/mongo/managers/cartManager.js:71:26)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async CartsRouter.updateQtyProductInCart (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/carts.controller.js:276:22)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:72:9"}
 {"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error","message":"Error creating token: Unexpected token u in JSON at position 0","stack":"SyntaxError: Unexpected token u in JSON at position 0\n    at JSON.parse (<anonymous>)\n    at generateToken (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/services/auth.js:49:26)\n    at SessionsRouter.loginGitHubCallback (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:48:21)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:72:24\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:88:37\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at generateCustomResponses (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:42:5)"}
+{"level":"error","message":"Error creating token: Unexpected token u in JSON at position 0","stack":"SyntaxError: Unexpected token u in JSON at position 0\n    at JSON.parse (<anonymous>)\n    at generateToken (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/services/auth.js:49:26)\n    at SessionsRouter.loginGitHubCallback (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:48:21)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:72:24\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:103:6\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at generateCustomResponses (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:42:5)"}
+{"level":"error","message":"Error creating token: Unexpected token u in JSON at position 0","stack":"SyntaxError: Unexpected token u in JSON at position 0\n    at JSON.parse (<anonymous>)\n    at generateToken (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/services/auth.js:49:26)\n    at SessionsRouter.loginGitHubCallback (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:49:21)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:72:24\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:103:6\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at generateCustomResponses (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:42:5)"}
+{"level":"error","message":"Error creating token: Unexpected token u in JSON at position 0","stack":"SyntaxError: Unexpected token u in JSON at position 0\n    at JSON.parse (<anonymous>)\n    at generateToken (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/services/auth.js:49:26)\n    at SessionsRouter.loginGitHubCallback (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:53:21)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:72:24\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at generateCustomResponses (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:42:5)\n    at Layer.handle [as handle_request] (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/luli/Desktop/entrega 3/Re-estructura/node_modules/express/lib/router/route.js:144:13)\n    at file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:59:54"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}

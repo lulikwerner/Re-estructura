@@ -117,13 +117,13 @@ const initlizePassportStrategies = () => {
     callbackURL: 'http://localhost:8080/api/sessions/githubcallback' //config.gitHub.callbackURL
   }, async (accessToken, refreshToken, profile, done) => {
     try {
+      console.log('enlaestrategia')
       logger.logger.debug('entrostrategygithub');
       logger.logger.info('el perfil', profile);
-
-
       //Tomo los datos que me sirven
       const { name, email } = profile._json;
       const user = await usersServices.getUserBy({ email });
+
       if (!user) {
         //Si el usuario no existe lo creo yo
         const newUser = {
@@ -132,6 +132,7 @@ const initlizePassportStrategies = () => {
           age: 23,
           password: '',
         }
+
         //Creo el nuevo usuario
         const result = await usersServices.createUsers(newUser);
         done(null, result)
@@ -139,6 +140,7 @@ const initlizePassportStrategies = () => {
       //Si el usuario ya existia
       done(null, user);
     } catch (error) {
+      console.log('errorrrr')
       done(error);
     }
   }))

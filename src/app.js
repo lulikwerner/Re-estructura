@@ -23,6 +23,7 @@ import initlizePassportStrategies from './config/passport.config.js'
 import errorHandler from './middlewares/error.js'
 import attachLogger from "./middlewares/logger.js";
 import LoggerService from  '../src/services/LoggerService.js'
+import verifyCart from "./middlewares/verifyCart.js";
 
 
 const app = express();
@@ -92,8 +93,9 @@ const startServer = async (persistenceType) => {
   };
   app.use(ioMiddleware);
 
-
+//app.use(verifyCart)
 app.use(attachLogger)
+
 
 
 

@@ -8,11 +8,13 @@ const logger = new LoggerService(config.logger.type);
 
 export const cookieExtractor = (req) => {
   let token = null;
+  console.log('paso3')
   logger.logger.debug('entro en extractor');
 
   
   if (req && req.cookies) {
     token = req.cookies['authToken'];
+    console.log('token',token)
   }
   
   // Maneja socket.io connection
@@ -28,6 +30,7 @@ export const cookieExtractor = (req) => {
   }
   
   return token;
+
 };
 
 
