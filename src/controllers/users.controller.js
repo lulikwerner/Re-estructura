@@ -1,6 +1,8 @@
 import { usersServices } from '../dao/mongo/managers/index.js';
-
 import { generateToken } from '../services/auth.js';
+
+
+
 
 
 
@@ -11,7 +13,7 @@ const register = (req,res) => {
 
   const login = (req, res) => {
     // El login recibe SIEMPRE en req.user
-    console.log(req.user)
+    console.log('eluser',req.user);
     const token = generateToken(req.user);
     res.cookie('authToken', token, {
       maxAge: 1000 * 3600 * 24,
@@ -29,25 +31,28 @@ const register = (req,res) => {
   };
 
   const loginGithub = (req, res) => {
-    //console.log('holagit')
     res.send({ status: "success", message: "Logged in with GitHub" });
   };
 
   const loginGitHubCallback = (req, res) => {
-    console.log('el usuario git', user);
+    console.log('paso2')
+    console.log('githubcallback')
+    const user = req.user;
+    console.log('user',user)
     try {
-      const token = generateToken(req.user);
+      const token = generateToken(user);
+      console.log(token)
       console.log('token', token);
       res.cookie('authToken', token, {
         maxAge: 1000 * 3600 * 24,
         httpOnly: true
       });
-      console.log('eltokenquenuevo',user)
-      // Redirect the user to the /products page
+      console.log('eltokenquenuevo',user);
+       // Redirect the user to the /products page
       res.redirect('/products');
 
     } catch (error) {
-      console.error('Error creating token:', error);
+      console.log('Error creating token:', error);
       res.sendInternalError (error);
     }
   };
