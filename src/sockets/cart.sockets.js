@@ -34,6 +34,7 @@ export default function socketCarts(io) {
           const cartUser=payload.cart;
           //logger.logger.info('el cart que viene con el usuario',payload.cart);
           const user = await usersServices.getUserBy({ _id: userId });
+          console.log(user)
           //Busco el cart
           const cart = await cartsM.getCartById(cartUser);
           logger.logger.info(JSON.stringify(cart, null, '\t'));
@@ -48,8 +49,11 @@ export default function socketCarts(io) {
             // Create a new cart and associate it with the user
             const newCart = await cartsM.createCart(productsArray);
             logger.logger.info('New Cart created:', newCart);
+            console.log('antes de update al user')
             // Update the user's cart field with the new cart ID
-            await usersServices.updateUsers ({ _id: userId }, { cart: newCart._id });
+            const user = await usersServices.updateUsers ( { cart: newCart._id }, { _id: userId });
+
+         console.log('seactualizoeluser',user)
             logger.logger.debug('User cart updated');
           }
       

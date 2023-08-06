@@ -1,5 +1,4 @@
 
-
 console.log('detailProduct.js loaded');
 const socket = io();
 
@@ -22,6 +21,7 @@ document.addEventListener('DOMContentLoaded', AddProductToCart);
 const cartButton = document.getElementById('CartButton');
 
 cartButton.addEventListener('click', async (event) => {
+  console.log('clickeo el checkout')
   event.preventDefault();
   //Traigo la informacion del user desde current
   const response = await fetch('/api/sessions/current', {
@@ -30,6 +30,7 @@ cartButton.addEventListener('click', async (event) => {
       'Content-Type': 'application/json'
     }
   });
+  console.log(response)
 //Si me trae info entonces extraigo el cid
   if (response.ok) {
     const data = await response.json();

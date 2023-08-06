@@ -1,7 +1,7 @@
 import { productService, cartService } from '../services/repositories.js';
 import productModel from '../dao/mongo/models/products.js';
-import TokenDTO from '../dto/user/TokenDto.js';
-import AdminDTO from '../dto/user/AdminDto.js';
+import TokenDTO from '../dto/user/TokenDTO.js';
+import AdminDTO from '../dto/user/AdminDTO.js';
 import LoggerService from '../services/LoggerService.js';
 import config from '../config.js';
 import nodemailer from 'nodemailer'

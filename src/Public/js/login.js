@@ -1,13 +1,13 @@
 const form = document.getElementById('loginForm')
 
 form.addEventListener('submit', async(event)=>{
-    console.log('entroalogin')
- 
+
     event.preventDefault();
+     
     const data = new FormData(form);
     const  obj ={};
     data.forEach((value,key)=>(obj[key] = value));
-    const response = await fetch('/api/sessions/login', {
+    const response = await fetch("/api/sessions/login", {
         method:'POST',
         body:JSON.stringify(obj),
         headers:{
@@ -16,10 +16,8 @@ form.addEventListener('submit', async(event)=>{
     });
 
     const responseText = await response.text();
-    console.log('soyrespose',responseText); // Log the response text
     const responseData = JSON.parse(responseText);
     const role = responseData.payload.user.role;
-    console.log('el rol',role)
     if(responseData.status === "success"){
         Swal.fire({
             position: 'top-end',

@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt'
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import config from '../config.js';

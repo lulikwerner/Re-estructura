@@ -8,7 +8,7 @@ import { __dirname } from "./utils.js";
 import passport from "passport";
 import config from './config.js'
 import nodemailer from 'nodemailer'
-import winston from 'winston'
+
 
 
 import ProductRouter from "./routes/productsM.router.js";
@@ -24,6 +24,24 @@ import errorHandler from './middlewares/error.js'
 import attachLogger from "./middlewares/logger.js";
 import LoggerService from  '../src/services/LoggerService.js'
 import verifyCart from "./middlewares/verifyCart.js";
+
+
+/*import cluster from 'cluster'
+import os from 'os'
+
+const cpus = os.cpus.length
+if(cluster.isPrimary){
+  console.log('Primary process is running');
+  console.log('soy el procesador principal, procedo a iniciar a mis workers')
+  for(let i=0;i<cpus;i++){
+  cluster.fork();
+  }
+  /*cluster.on('exit', worker =>{
+    console.log('Proceso hijo muerto, generando reemplazo')
+    cluster.fork()
+  })
+}else{*/
+ 
 
 
 const app = express();
@@ -75,7 +93,8 @@ const startServer = async (persistenceType) => {
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.static(`${__dirname}/public`));
+  app.use(express.static(`${__dirname}/Public`));
+  //app.use(express.static('public'));
 
   app.use(session({
     store:new MongoStore({
@@ -117,8 +136,8 @@ app.get('/loggerTest', (req, res) => {
   const cartRouter = new CartRouter();
   const productRouter = new ProductRouter();
   //Son las rutas que uso
-  app.use("/api/products", productRouter.getRouter());
   app.use('/', viewsRouter.getRouter());
+  app.use("/api/products", productRouter.getRouter());
   app.use("/api/carts", cartRouter.getRouter());
   app.use("/api/sessions", sessionRouter.getRouter());
   
@@ -134,5 +153,5 @@ app.get('/loggerTest', (req, res) => {
   productSocket(io);
   cartSocket(io);
 };
-
+//}
 export default startServer;

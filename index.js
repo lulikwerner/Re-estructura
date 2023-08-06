@@ -4,6 +4,24 @@ import LoggerService from './src/services/LoggerService.js';
 import config from './src/config.js';
 
 
+import cluster from 'cluster'
+import os from 'os'
+
+/*const cpus = os.cpus().length;
+console.log(cpus)
+if(cluster.isPrimary){
+  console.log('Primary process is running');
+  console.log('soy el procesador principal, procedo a iniciar a mis workers')
+  for(let i=0;i<cpus;i++){
+  cluster.fork();
+  }
+}else{*/
+
+
+
+
+
+
 const logger = new LoggerService(config.logger.type); 
 const program = new Command();
 
@@ -26,7 +44,7 @@ logger.logger.info('Persistence:', persistenceType);
 
 
 startServer(persistenceType);
-
+//}
 
 
 
@@ -59,3 +77,9 @@ const context = async () => {
 }
 
 context();*/
+
+
+/*  cluster.on('exit', worker =>{
+    console.log('Proceso hijo muerto, generando reemplazo')
+    cluster.fork()
+  })*/

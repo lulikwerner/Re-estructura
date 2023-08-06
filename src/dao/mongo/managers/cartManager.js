@@ -40,7 +40,8 @@ export default class CartManager {
   //Crea un cart
   createCart = async (products) => {
     try {
-
+      console.log('creandoelcart')
+      console.log(products)
       const cart = new cartModel();
       const productIds = products.map(product => product._id);
       const productsToAdd = await productModel.find({ _id: { $in: productIds } });
@@ -51,6 +52,7 @@ export default class CartManager {
         }
       }
       await cart.save();
+      console.log('elcartttt',cart)
       return cart;
     } catch (error) {
       throw new Error('Failed to create the cart');
@@ -59,6 +61,9 @@ export default class CartManager {
 
   //Actualiza los productos del cart con el POST
   updateQtyCart = async (cid, pid, quantity) => {
+    console.log('entro')
+    console.log(cid)
+    console.log(pid)
     try {
       //Busco el carrito
       const cart = await cartModel.findById(cid);
@@ -89,9 +94,11 @@ export default class CartManager {
           const existingProduct = cart.products.find(p => p.product.equals(product._id));
           logger.logger.info('elexistingproduct', existingProduct);
           //Si existe en el cart y la cantidad total no excede al stock
+          //while(existingProduct.quantity>0){
           if (existingProduct) {
             existingProduct.quantity += quantity;
           }
+        //}
           //Si no existe en el cart lo agrego
           if (!existingProduct) {
             const newProduct = { product: product._id, quantity: 1 };

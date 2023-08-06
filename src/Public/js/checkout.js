@@ -1,13 +1,11 @@
 // Declare checkoutData in the outer scope
 let checkoutData;
 
-console.log('checkout.js loaded');
 
 const checkoutButton = document.getElementById('checkoutButton');
 
 checkoutButton.addEventListener('click', async () => {
   const cid = checkoutButton.dataset.cid;
-  console.log(cid);
 
   // Hago el request a la back
   const response = await fetch(`/api/carts/${cid}/purchase`, {
@@ -21,7 +19,6 @@ checkoutButton.addEventListener('click', async () => {
   });
   if (response.ok) {
     checkoutData = await response.json(); // Guardo la informacion del fetch
-    console.log(checkoutData);
 
     // Lo dirijo a la ventana de compra
   window.location.href = `/api/carts/${cid}/purchase`;
@@ -30,47 +27,37 @@ checkoutButton.addEventListener('click', async () => {
   }
 });
 
-
-
-
-// Assuming that the button with id "deleteButton" is present in your cartHandlebars
-const deleteButton = document.getElementById('dButton');
-
-deleteButton.addEventListener('click', async () => {
-  console.log('Delete button clicked!');
-  const cid = checkoutButton.dataset.cid;;
-  const pid =  deleteButton.getAttribute('data-pid');
-  console.log(pid)
-  console.log(cid)
-  const deleteResponse = await fetch(`/api/carts/${cid}/products/${pid}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
+document.addEventListener('DOMContentLoaded', () => {
+  const deleteButtons = document.querySelectorAll('.deleteButtonStyle');
+    //Para cada boton delete
+  deleteButtons.forEach(deleteButton => {
+    deleteButton.addEventListener('click', async () => {
+      const cid = checkoutButton.dataset.cid;
+      const pid = deleteButton.getAttribute('data-pid');
+      const deleteResponse = await fetch(`/api/carts/${cid}/products/${pid}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+      if (deleteResponse.ok) {
+        window.location.reload();
+      } else {
+        console.error('Failed to delete product from the cart.');
+      }
+    });
   });
-
-  if (deleteResponse.ok) {
-    console.log('Product deleted successfully!');
-    window.location.reload();
-  } else {
-    console.error('Failed to delete product from the cart.');
-  }
 });
 
-
-
-let quantity = 0;
-
-const addButton = document.getElementById('addButton');
-
-addButton.addEventListener('click', async () => {
-  console.log('Add button clicked!');
+document.addEventListener('DOMContentLoaded', () => {
+  let quantity = 0;
+const addButtons = document.querySelectorAll('.addButtonStyle');
+addButtons.forEach(addButton => {
+  addButton.addEventListener('click', async () => {
   quantity = quantity + 1;
-  console.log(quantity);
-
   const cid = checkoutButton.dataset.cid;
-  const pid = deleteButton.getAttribute('data-pid');
+  const pid = addButton.getAttribute('data-pid');
   const addQuantity = await fetch(`/api/carts/${cid}/product/${pid}`, {
     method: 'PUT',
     headers: {
@@ -79,13 +66,46 @@ addButton.addEventListener('click', async () => {
     },
     body: JSON.stringify({ quantity })
   });
-  console.log(addQuantity);
   if (addQuantity.ok) {
-    console.log('Product updated successfully!');
      window.location.reload();
   } else {
     console.error('Failed to update product in the cart.');
   }
 });
+});
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const substractButtons = document.querySelectorAll('.substractButtonStyle');
+
+  substractButtons.forEach(substractButton => {
+    substractButton.addEventListener('click', async () => {
+      const cid = checkoutButton.dataset.cid;
+      const pid = substractButton.getAttribute('data-pid');
+      
+      console.log(cid)
+      console.log(pid)
+      // Calculate the quantity to subtract (e.g., -1)
+      const quantity = -1;
+      console.log(typeof(quantity))
+      const substractQuantity = await fetch(`/api/carts/${cid}/product/${pid}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ quantity })
+      });
+
+      if (substractQuantity.ok) {
+         window.location.reload();
+      } else {
+        console.error('Failed to update product in the cart.');
+      }
+    });
+  });
+});
+
 
 

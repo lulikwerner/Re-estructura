@@ -15,7 +15,7 @@ export default class SessionsRouter extends BaseRouter{
     
     this.post('/logout', ['PRIVATE'], usersController.logout);
 
-   this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), usersController.loginGitHubCallback);
+    this.get('/githubcallback', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), usersController.loginGitHubCallback);
 
     this.get('/github', ['NO_AUTH'], passportCall('github', { strategyType: 'locals' }), usersController.loginGithub);
 

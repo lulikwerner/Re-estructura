@@ -11,7 +11,6 @@ logOutButton.addEventListener('click', async () => {
     cancelButtonText: 'No'
   }).then(response => {
     if (response.isConfirmed) {
-      console.log('la respuesta', response);
       fetch('/api/sessions/logout', {
         method: 'POST',
    
@@ -19,7 +18,6 @@ logOutButton.addEventListener('click', async () => {
         .then(response => {
           if (response.ok) {
             window.location.replace('/login');
-            console.log('entro a la destruccion');
           } else {
             response.text().then(errorMsg => {
               console.error('Error:', errorMsg);

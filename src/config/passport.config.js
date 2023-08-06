@@ -1,7 +1,7 @@
 import passport from "passport";
 import local from "passport-local";
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { usersServices } from '../dao/mongo/managers/index.js';
+import { usersServices, cartsM } from '../dao/mongo/managers/index.js';
 import ErrorService from '../services/Error/ErrorService.js';
 import { userErrorIncompleteValue } from '../constants/userErrors.js'
 import EErrors from '../constants/EErrors.js'
@@ -11,8 +11,8 @@ import GithubStrategy from "passport-github2";
 import { createHash, isValidPassword } from "../services/auth.js";
 import { cookieExtractor } from "../utils.js";
 import config from '../config.js';
-import TokenDTO from '../dto/user/TokenDto.js';
-import AdminDTO from '../dto/user/AdminDto.js'
+import TokenDTO from '../dto/user/TokenDTO.js'
+import AdminDTO from '../dto/user/AdminDTO.js'
 import LoggerService from '../services/LoggerService.js';
 
 
@@ -63,7 +63,15 @@ const initlizePassportStrategies = () => {
         }
         const result = await usersServices.createUsers(newUser);
         logger.logger.info('el resultado es', result);
+       
+        const products = []; // Using const to declare an empty array
+        // Initialize with an empty array or any initial products
+      
 
+        const newCart = await cartsM.createCart(products);
+        const cartId = newCart._id.toString();
+        const userId = result._id.toString();
+        const user = await usersServices.updateUsers({ _id: userId }, { cart: cartId });
         //Si todo salio ok,
         done(null, result);
       }
