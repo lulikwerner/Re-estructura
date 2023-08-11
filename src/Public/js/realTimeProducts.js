@@ -116,12 +116,27 @@ const btnDelete = () => {
 }
 
 // Listen for the submit event on the form  
-form.addEventListener('submit', event => {
+form.addEventListener('submit', async (event)  => {
     event.preventDefault();
     console.log("Submit event listener function called");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    socket.emit('newProduct', data);
+    //Traigo la informacion del user desde current
+    const response = await fetch('/api/sessions/current', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    //Le pongo por default este email
+    let userEmail = 'adminCoder@coder.com'; 
+
+    if (response.ok) {
+        const userData = await response.json();
+        console.log('User data:', userData);
+        userEmail = userData.message.email; // Si el fetch me trae un email entonces envio ese email encambio del de admin
+    }
+    socket.emit('newProduct', { data, userEmail });
   
    
     form.reset();

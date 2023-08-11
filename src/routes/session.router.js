@@ -21,6 +21,7 @@ export default class SessionsRouter extends BaseRouter{
 
     this.get('/current', ['PRIVATE'], passportCall('jwt', { strategyType: "locals" }), usersController.current);
 
+    this.get('/premium:uid',['PRIVATE'],passportCall('jwt', { strategyType: "locals" }),usersController.profileRole);
 
   }
 }

@@ -1,9 +1,8 @@
 import { cookieExtractor } from '../utils.js';
 import config from '../config.js';
-import jwt from 'jsonwebtoken';
 import LoggerService from '../services/LoggerService.js';
 
-
+import jwt from 'jsonwebtoken';
 
 const logger = new LoggerService(config.logger.type); 
 

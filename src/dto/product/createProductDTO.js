@@ -1,5 +1,5 @@
 export default class createProductDTO {
-    constructor(product){
+    constructor(product,user){
         this.title = product.title ||' Sin titulo',
         this.price = product.price || 'Le falta el precio',
         this.code = product.code ||'Aignar un code',
@@ -8,6 +8,7 @@ export default class createProductDTO {
         this.stock = product.stock || 0,
         this.category = product.category || 'Sin categoria asignada',
         this.thumbnails = product.thumbnails|| 'No image'
+        this.owner = user
     }
 }
 

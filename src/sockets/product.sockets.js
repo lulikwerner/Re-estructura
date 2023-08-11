@@ -14,7 +14,8 @@ export default function  productSocket(io) {
     
         socket.on('newProduct', async newProductData => {
           logger.logger.info('Received new product:',newProductData);
-          const { title, description, code, price, status, stock, category, thumbnails } = newProductData;
+          const { data, userEmail } = newProductData;
+          const { title, description, code, price, status, stock, category, thumbnails } = data;
           const product = await productsM.createProduct({
             title,
             description,
@@ -24,6 +25,7 @@ export default function  productSocket(io) {
             stock,
             category,
             thumbnails: data.thumbnails ? JSON.stringify(data.thumbnail) : 'No image',
+            owner:userEmail 
           });
           socket.emit('productsAdd', product);
         });

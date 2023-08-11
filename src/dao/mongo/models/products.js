@@ -20,7 +20,12 @@ const schema = new mongoose.Schema(
       type: Array, // Use Array instead of []
       default: ['No image'], // Provide a default value
     },
+    owner:{
+      type: String,
+      default: 'adminCoder@coder.com',
+    } 
   },
+
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 

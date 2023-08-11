@@ -22,7 +22,7 @@ const postProducts = async (req, res, done) => {
                 status: 400
             })
         }
-        const product = new createProductDTO(req.body)
+        const product = new createProductDTO(req.body,req.user.email)
         //Antes del DTO
         /*const product = {
             title,
@@ -112,6 +112,7 @@ const putProducts = async (req, res, done) => {
 };
 
 const deleteProducts = async (req, res, done) => {
+    console.log(req.user.email)
     const { pid } = req.params
     try {
         if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {

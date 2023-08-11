@@ -40,8 +40,6 @@ export default class CartManager {
   //Crea un cart
   createCart = async (products) => {
     try {
-      console.log('creandoelcart')
-      console.log(products)
       const cart = new cartModel();
       const productIds = products.map(product => product._id);
       const productsToAdd = await productModel.find({ _id: { $in: productIds } });
@@ -52,7 +50,6 @@ export default class CartManager {
         }
       }
       await cart.save();
-      console.log('elcartttt',cart)
       return cart;
     } catch (error) {
       throw new Error('Failed to create the cart');
@@ -61,9 +58,7 @@ export default class CartManager {
 
   //Actualiza los productos del cart con el POST
   updateQtyCart = async (cid, pid, quantity) => {
-    console.log('entro')
-    console.log(cid)
-    console.log(pid)
+
     try {
       //Busco el carrito
       const cart = await cartModel.findById(cid);

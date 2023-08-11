@@ -68,6 +68,15 @@ const register = (req,res) => {
     }
 };
 
+const profileRole =(req,res) => {
+  try {
+    console.log(req.user)
+    //return res.sendSuccess(req.user);
+} catch (error) {
+    return res.sendInternalError(error);
+}
+}
+
 
   export default{
     register,
@@ -76,4 +85,5 @@ const register = (req,res) => {
     loginGithub,
     loginGitHubCallback,
     current,
+    profileRole,
   }

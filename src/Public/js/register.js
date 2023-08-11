@@ -39,5 +39,5 @@ form.addEventListener('submit', async(event)=>{
             icon:"error"
         }) 
     }
-    
+    form.reset();
 })
