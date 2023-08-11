@@ -72,6 +72,7 @@ const initlizePassportStrategies = () => {
         const cartId = newCart._id.toString();
         const userId = result._id.toString();
         const user = await usersServices.updateUsers({ _id: userId }, { cart: cartId });
+
         //Si todo salio ok,
         done(null, result);
       }
@@ -93,7 +94,9 @@ const initlizePassportStrategies = () => {
         return done(null, user);
 
       }
+      console.log(email)
       user = await usersServices.getUserBy({ email }); //Solo busco por email
+      console.log(email)
       if (!user) return done(null, false, { message: "Credenciales incorrectas" });
       // Si el usuario existe valido el pw
       const isPasswordValid = await isValidPassword(password, user.password);

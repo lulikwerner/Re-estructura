@@ -9,7 +9,7 @@ export default class UsersManager {
     };
     
     getUserBy = (params) => {
-        return userModel.findOne(params).lean();
+       return userModel.findOne(params).lean();
     };
 
     createUsers = async (user) => {

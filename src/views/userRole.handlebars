@@ -1,0 +1,17 @@
+
+    <title>User Role</title>
+
+    <h1>{{ userh.email }}</h1> 
+    <h2> Tu rol actual es: {{userh.role}}</h2>
+    <div>
+        <form id="roleForm">
+            <label for="roles">Elige un tipo de rol:</label>
+            <input id="role_u" class="premium" type="radio" name="role" value="USER" checked>
+            <label for="role_u">USER</label>
+            <input id="role_p" class="premium" type="radio" name="role" value="PREMIUM">
+            <label for="role_p">PREMIUM</label>
+            <button id="modifyRole" type="submit" class="btn addButtonStyle m-3" data-id="{{userh._id}}">Submit</button>
+        </form>
+    </div>
+    <script src="/js/role.js" type="module"></script>
+

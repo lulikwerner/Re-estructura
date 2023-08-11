@@ -158,3 +158,8 @@
 {"level":"error"}
 {"_message":"products validation failed","errors":{"owner":{"kind":"string","message":"Cast to string failed for value \"AdminDTO {\n  id: 0,\n  first_name: 'Admin',\n  last_name: 'Admin',\n  age: 0,\n  role: 'admin',\n  email: 'adminCoder@coder.com'\n}\" (type AdminDTO) at path \"owner\"","name":"CastError","path":"owner","reason":null,"stringValue":"\"AdminDTO {\n  id: 0,\n  first_name: 'Admin',\n  last_name: 'Admin',\n  age: 0,\n  role: 'admin',\n  email: 'adminCoder@coder.com'\n}\"","value":{"age":0,"email":"adminCoder@coder.com","first_name":"Admin","id":0,"last_name":"Admin","role":"admin"},"valueType":"AdminDTO"}},"level":"error","message":"products validation failed: owner: Cast to string failed for value \"AdminDTO {\n  id: 0,\n  first_name: 'Admin',\n  last_name: 'Admin',\n  age: 0,\n  role: 'admin',\n  email: 'adminCoder@coder.com'\n}\" (type AdminDTO) at path \"owner\"","name":"ValidationError"}
 {"code":"ERR_HTTP_HEADERS_SENT","level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}

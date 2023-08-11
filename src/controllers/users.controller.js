@@ -1,7 +1,10 @@
-import { usersServices } from '../dao/mongo/managers/index.js';
+//import { usersServices } from '../dao/mongo/managers/index.js';
 import { generateToken } from '../services/auth.js';
+import {userService}  from '../services/repositories.js'
 import LoggerService from '../services/LoggerService.js';
 import config from '../config.js';
+import { UsageRecordInstance } from 'twilio/lib/rest/wireless/v1/usageRecord.js';
+import { usersServices } from '../dao/mongo/managers/index.js';
 
 
 const logger = new LoggerService(config.logger.type); 
@@ -9,11 +12,11 @@ const logger = new LoggerService(config.logger.type);
 
 
 const register = (req,res) => {
-
     res.sendSuccess()
   };
 
   const login = (req, res) => {
+    console.log('login')
     // El login recibe SIEMPRE en req.user
     logger.logger.info('eluser',req.user);
     const token = generateToken(req.user);
@@ -68,15 +71,29 @@ const register = (req,res) => {
     }
 };
 
-const profileRole =(req,res) => {
+const profileRole = async (req,res) => {
+  const { uid } = req.params;
   try {
-    console.log(req.user)
-    //return res.sendSuccess(req.user);
+    const user= await userService.getUserByService({_id: uid})
+    logger.logger.debug(user);
+    // Si no encuentra el user
+    if (!user) {
+      return res.sendBadRequest('User not found');
+    }
+    // Si el user se encuentra renderizo la info
+    res.render('userRole', { userh: user});
 } catch (error) {
     return res.sendInternalError(error);
 }
 }
 
+const selectRole = async (req,res) => {
+  const {uid} = req.params
+ const role = req.body
+
+  const newRole = await usersServices.updateUsers({_id:uid},role)
+  console.log(newRole)
+}
 
   export default{
     register,
@@ -86,4 +103,5 @@ const profileRole =(req,res) => {
     loginGitHubCallback,
     current,
     profileRole,
+    selectRole,
   }

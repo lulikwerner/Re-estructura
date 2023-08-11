@@ -17,7 +17,9 @@ form.addEventListener('submit', async(event)=>{
 
     const responseText = await response.text();
     const responseData = JSON.parse(responseText);
+  
     const role = responseData.payload.user.role;
+
     if(responseData.status === "success"){
         Swal.fire({
             position: 'top-end',

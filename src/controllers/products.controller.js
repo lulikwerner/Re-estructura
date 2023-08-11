@@ -124,7 +124,9 @@ const deleteProducts = async (req, res, done) => {
                 status: 400
             })
         }
-
+        //Busco el producto 
+        const productoAEliminar =  await productService.getProductByService({ _id: pid })
+        console.log(productoAEliminar)
         const resultDelete = await productService.deleteProductService({ _id: pid })
         //Busco el id del producto a eliminar si no lo encuentro devuelvo error sino devuelvo producto eliminado
         if (!resultDelete) return res.sendBadRequest('Product not found')
