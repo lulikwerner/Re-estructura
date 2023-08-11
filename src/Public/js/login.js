@@ -28,9 +28,9 @@ form.addEventListener('submit', async(event)=>{
             showConfirmButton: false,
             timer: 1500
           }).then(() => {
-            if(responseData.payload.user.role==='user'){
+            if(responseData.payload.user.role==='user'||responseData.payload.user.role==='PREMIUM'){
                 window.location.replace('/products');
-        } else {
+        } else if(responseData.payload.user.role==='admin'){
             window.location.replace('/realTimeProducts');
         }
         

@@ -19,10 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (responseData.status === 'success') {
             alert('User role updated successfully');
-            // Delay for 500 milliseconds before reloading
-            setTimeout(() => {
-                window.location.reload();
-            }, 500);
+            // Reload the page after the form submission is complete
+            window.location.reload();
         } else {
             alert('Failed to update user role');
         }
