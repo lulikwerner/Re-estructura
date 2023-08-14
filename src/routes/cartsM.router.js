@@ -10,27 +10,27 @@ export default class CartsRouter extends BaseRouter {
 //Busca un cart
 //http://localhost:8080/api/carts/:cid
 //Funciona ok pero tengo que limitar que solo el usuario pueda ver unicamente su carrito
-this.get('/:cid',['USER'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.getCartById);
+this.get('/:cid',['USER','user','PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.getCartById);
 
 //Crea carrito y agrega producto al carrito
 //http://localhost:8080/api/carts/    
-this.post('/',['USER'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.addProductToCart);
+this.post('/',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.addProductToCart);
 
 //Agrega un producto con su cantidad al carrito
 //http://localhost:8080/api/carts/:cid/product/:pid
-this.post('/:cid/product/:pid',['USER'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.postProductInCart);
+this.post('/:cid/product/:pid',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.postProductInCart);
   
 //Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba. USER O ADMIN?
 //http://localhost:8080/api/carts/:cid
-this.put('/:cid', ['USER'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart,cartsController.updateCart);
+this.put('/:cid', ['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart,cartsController.updateCart);
 
 //Actualiza SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body. Si paso 3 por body voy a tener entonces 3 en qty
 //http://localhost:8080/api/carts/:cid/product/:pid
-this.put('/:cid/product/:pid', ['USER'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.updateQtyProductInCart);
+this.put('/:cid/product/:pid', ['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.updateQtyProductInCart);
 
 //Elimina del carrito seleccionado el producto seleccionado
 //http://localhost:8080/api/carts/:cid/products/:pid
-this.delete('/:cid/products/:pid',['USER'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.deleteProductInCart);
+this.delete('/:cid/products/:pid',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.deleteProductInCart);
 
 //Elimina los productos del carrito. Lo vacia
 //http://localhost:8080/api/carts/:cid
@@ -38,11 +38,11 @@ this.delete('/:cid',['USER'],passportCall('jwt', { strategyType: 'jwt' }),verify
 
 //Finaliza el proceso de compra
 //http://localhost:8080/api/carts/:cid/purchase
-this.post('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.checkoutCart);
+this.post('/:cid/purchase',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.checkoutCart);
 
 //Muestra el ticket de compra 
 //http://localhost:8080/api/carts/:cid/purchase
-this.get('/:cid/purchase',['USER'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.checkoutDisplay);
+this.get('/:cid/purchase',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.checkoutDisplay);
   }
 }
 

@@ -55,7 +55,6 @@ socket.on('productsAdd', (data) => {
     btnDelete(); // Llamo a la funcion btnEliminar 
 })
 
-
 //Muestro todos los productos
 socket.on('products', (data) => {
     let productos = '';
@@ -140,9 +139,6 @@ const btnDelete = () => {
                 if (!product.ok) {
                     throw new Error('Failed to fetch current product');
                 }
-                console.log(roleUser )
-                console.log(emailUser)
-                console.log(ownerEmail)
                 if(roleUser ==='PREMIUM' && emailUser===ownerEmail ||roleUser =='ADMIN' ){
                 socket.emit('deleteProduct', btn.id)
         Swal.fire({
@@ -168,7 +164,6 @@ const btnDelete = () => {
         });
     });
 };
-
 
 // Listen for the submit event on the form  
 form.addEventListener('submit', async (event)  => {

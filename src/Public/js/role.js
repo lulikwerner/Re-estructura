@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (responseData.status === 'success') {
             alert('User role updated successfully');
-            // Redirect or perform any other action
+            window.location.replace('/profile');
         } else {
             alert('Failed to update user role');
         }

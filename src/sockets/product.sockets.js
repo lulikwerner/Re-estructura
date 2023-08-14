@@ -8,7 +8,6 @@ const logger = new LoggerService(config.logger.type);
 export default function  productSocket(io) {
     io.on('connection', async (socket) => {
       logger.logger.debug('Socket Product connected');
-    
         const data = await productsM.getProducts();
         socket.emit('products', data);
     

@@ -75,7 +75,6 @@ addButtons.forEach(addButton => {
 });
 });
 
-
 document.addEventListener('DOMContentLoaded', () => {
   const substractButtons = document.querySelectorAll('.substractButtonStyle');
 
