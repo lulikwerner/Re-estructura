@@ -1,8 +1,8 @@
+// role.js
 document.addEventListener('DOMContentLoaded', () => {
     const roleForm = document.getElementById('roleForm');
     roleForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
+        event.preventDefault()
         const formData = new FormData(roleForm);
         const roleId = formData.get('role');
         const userId = modifyRole.getAttribute('data-id');
@@ -19,10 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (responseData.status === 'success') {
             alert('User role updated successfully');
-            // Reload the page after the form submission is complete
-            window.location.reload();
+            // Redirect or perform any other action
         } else {
             alert('Failed to update user role');
         }
+       
     });
+//window.location.reload();
 });

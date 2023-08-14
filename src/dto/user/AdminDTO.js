@@ -4,7 +4,7 @@ export default class AdminDTO {
             this.first_name ='Admin',
             this.last_name='Admin',
             this.age = 0,
-            this.role = 'admin',
+            this.role = 'ADMIN',
             this.email = 'adminCoder@coder.com'
     }
 }

@@ -30,7 +30,7 @@ form.addEventListener('submit', async(event)=>{
           }).then(() => {
             if(responseData.payload.user.role==='user'||responseData.payload.user.role==='PREMIUM'){
                 window.location.replace('/products');
-        } else if(responseData.payload.user.role==='admin'){
+        } else if(responseData.payload.user.role==='ADMIN'){
             window.location.replace('/realTimeProducts');
         }
         

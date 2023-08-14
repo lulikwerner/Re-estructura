@@ -3,7 +3,7 @@ import BaseRouter from "./Router.js";
 import productsController from "../controllers/products.controller.js";
 import LoggerService from '../services/LoggerService.js';
 import config from '../config.js';
-
+import modifyProducts from '../middlewares/modifyProducts.js';
 
 const logger = new LoggerService(config.logger.type); 
 
@@ -52,11 +52,11 @@ this.get('/:pid',['PUBLIC'], passportCall('jwt', {strategyType: 'jwt'}), product
 
 //Actualiza el producto
 //http://localhost:8080/api/products/:pid
-this.put('/:pid',['ADMIN','PREMIUM'], passportCall('jwt', {strategyType: 'jwt'}),productsController.putProducts); 
+this.put('/:pid',['ADMIN','PREMIUM'], passportCall('jwt', {strategyType: 'jwt'}),modifyProducts,productsController.putProducts); 
 
 //Borra el producto
 //http://localhost:8080/api/products/:pid
-this.delete('/:pid',['ADMIN', 'PREMIUM'], passportCall('jwt', {strategyType: 'jwt'}),productsController.deleteProducts); 
+this.delete('/:pid',['ADMIN', 'PREMIUM'], passportCall('jwt', {strategyType: 'jwt'}),modifyProducts,productsController.deleteProducts); 
 
 }
 }

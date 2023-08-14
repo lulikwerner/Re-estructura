@@ -106,14 +106,69 @@ socket.on('products', (data) => {
 
 
 const btnDelete = () => {
-    const buttons = document.querySelectorAll('.btn-danger')
+    const buttons = document.querySelectorAll('.btn-danger');
     buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            console.log(`Deleting product with id ${btn.id}`);
-            socket.emit('deleteProduct', btn.id)
-        })
-    })
-}
+        btn.addEventListener('click', async (event) => {
+            event.preventDefault();
+            try {
+                //Traigo la informacion del user loggeado
+                const user = await fetch('/api/sessions/current', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!user.ok) {
+                    throw new Error('Failed to fetch current user');
+                }
+                const data = await user.json();
+                //Extraigo la informacion del email y el role del user
+                const currentUser = data.message; 
+                const emailUser = currentUser.email;
+                const roleUser = currentUser.role;
+                   //Traigo la informacion del product seleccionado
+                   const product = await fetch(`/api/products/${btn.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const dataProduct = await product.json();
+                //Extraigo el owner del producto
+                const currentProduct = dataProduct.payload;
+                const ownerEmail = currentProduct.payload.owner;
+                if (!product.ok) {
+                    throw new Error('Failed to fetch current product');
+                }
+                console.log(roleUser )
+                console.log(emailUser)
+                console.log(ownerEmail)
+                if(roleUser ==='PREMIUM' && emailUser===ownerEmail ||roleUser =='ADMIN' ){
+                socket.emit('deleteProduct', btn.id)
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: `Deleting product with id ${btn.id}`,
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }else{
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'No puedes borrar productos de otros',
+                showConfirmButton: false,
+                timer: 1500
+              });
+        }
+    
+            } catch (error) {
+                console.error('Error fetching current user or product:', error);
+            }
+        });
+    });
+};
+
 
 // Listen for the submit event on the form  
 form.addEventListener('submit', async (event)  => {

@@ -3,7 +3,7 @@ import { passportCall } from '../services/auth.js';
 import BaseRouter from '../routes/Router.js'
 import viewsController from '../controllers/views.controller.js';
 import config from "../config.js";
-
+import modifyProducts from "../middlewares/modifyProducts.js";
 
 
 const router = Router();
