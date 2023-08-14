@@ -16,10 +16,10 @@ export default class UsersManager {
         return  userModel.create(user);
     };
 
-    updateUsers = (id, user) => {
-        return userModel.findByIdAndUpdate(id,{$set:user});
+    updateUsers = async (id, user) => {
+            return userModel.findByIdAndUpdate(id, { $set: { role: user.role } },{ new: true });
     };
-
+    
     deleteUsers = (id) => {
         return userModel.findByIdAndDelete(id);
     };

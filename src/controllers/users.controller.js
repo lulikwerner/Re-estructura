@@ -87,13 +87,19 @@ const profileRole = async (req,res) => {
 }
 }
 
-const selectRole = async (req,res) => {
-  const {uid} = req.params
- const role = req.body
+ const selectRole = async (req, res) => {
+  try {
+      const { uid } = req.params;
+      const role = req.body;
+      const newRole = await userService.updateUsersService(uid, role);
+      console.log('elnuevorole', newRole);
+      res.status(200).json({ message: 'User role updated successfully', newRole });
+  } catch (error) {
+      logger.logger.error('Error updating user role:', error);
+      res.status(500).json({ message: 'Failed to update user role', error });
+  }
+};
 
-  const newRole = await usersServices.updateUsers({_id:uid},role)
-  console.log(newRole)
-}
 
   export default{
     register,

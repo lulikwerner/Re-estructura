@@ -25,7 +25,6 @@ import attachLogger from "./middlewares/logger.js";
 import LoggerService from  '../src/services/LoggerService.js'
 import verifyCart from "./middlewares/verifyCart.js";
 
-
 /*import cluster from 'cluster'
 import os from 'os'
 
@@ -83,8 +82,14 @@ const startServer = async (persistenceType) => {
 
 
   app.engine("handlebars", handlebars.engine());
+  app.set('view engine', 'handlebars');
   app.set("views", `${__dirname}/views`);
-  app.set("view engine", "handlebars");
+
+  //Creo un handlebars para que me haga comparativo de roles en el profile.handlebars y me meustre o no el boton de cambiar role
+  const hbs = handlebars.create();
+  hbs.handlebars.registerHelper("equalsIgnoreCase", function (a, b, options) {
+    return a.toLowerCase() === b.toLowerCase();
+});
 
 
   app.use(passport.initialize());

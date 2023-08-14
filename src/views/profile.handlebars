@@ -7,15 +7,26 @@
 <button>
     <a href="/products" class="btn btn-secondary m-3 keep-shopping-btn">Seguir Comprando</a>
 </button>
-<button>
-    <a href="/api/sessions/premium/{{user.id}}" class="btn btn-secondary m-3 change-role-btn">Cambiar role</a>
-</button>
 
+{{#if (equalsIgnoreCase user.role 'USER')}}
     <button>
-        <a href="/realTimeProducts" class="btn btn-secondary m-3 add-product-btn">Crear producto</a>
+        <a href="/api/sessions/premium/{{user.id}}" class="btn btn-secondary m-3 change-role-btn">Cambiar role</a>
     </button>
+{{/if}}
 
+<button>
+    <a href="/realTimeProducts" class="btn btn-secondary m-3 add-product-btn">Crear producto</a>
+</button>
 
 <button id="logOutButton" type="submit" class="btn logOutButtonStyle m-3">Log Out</button>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/logout.js" type="module"></script>
+
+
+
+
+
+
+
+
+

@@ -1,29 +1,31 @@
-// role.js
 document.addEventListener('DOMContentLoaded', () => {
     const roleForm = document.getElementById('roleForm');
+    const modifyRole = document.getElementById('modifyRole');
+
     roleForm.addEventListener('submit', async (event) => {
-        event.preventDefault()
+        event.preventDefault();
+        console.log('Form submitted');
         const formData = new FormData(roleForm);
-        const roleId = formData.get('role');
+        const role = formData.get('role');
         const userId = modifyRole.getAttribute('data-id');
 
-        const response = await fetch(`/api/sessions/premium/${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ role: roleId })
-        });
+        //Le envio el nuevo role del usuario
+        try {
+            const response = await fetch(`/api/sessions/premium/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({role} )
+            });
 
-        const responseData = await response.json();
-
-        if (responseData.status === 'success') {
-            alert('User role updated successfully');
-            window.location.replace('/profile');
-        } else {
-            alert('Failed to update user role');
+            if (response.ok) {
+               window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-       
     });
-//window.location.reload();
 });
+
+

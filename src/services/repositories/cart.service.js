@@ -18,12 +18,12 @@ export default class CartRepository {
     }
 
     updateProductsInCartService = (cid, products) => {
-        return this.dao.updateProductsInCart(cid, products);
+        return this.dao.updateProductsInCart(cid, products); //ver
     }
 
     updateQtyCartService = (cid, pid, qty) => {
         return this.dao.updateQtyCart(cid, pid,qty);
-    }
+    } //ver
     
     deleteCartService = (cid) => {
         return this.dao.deleteCart(cid);
