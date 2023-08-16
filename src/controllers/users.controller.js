@@ -1,10 +1,15 @@
 //import { usersServices } from '../dao/mongo/managers/index.js';
+import jwt from 'jsonwebtoken';
 import { generateToken } from '../services/auth.js';
 import {userService}  from '../services/repositories.js'
 import LoggerService from '../services/LoggerService.js';
 import config from '../config.js';
 import { UsageRecordInstance } from 'twilio/lib/rest/wireless/v1/usageRecord.js';
 import { usersServices } from '../dao/mongo/managers/index.js';
+import RestoreTokenDTO from '../dto/user/RestoreTokenDTO.js';
+import DTemplates from '../constants/DTemplates.js';
+import MailingServices from '../services/mailService/mailService.js';
+import { createHash, isValidPassword } from "../services/auth.js";
 
 
 const logger = new LoggerService(config.logger.type); 
@@ -90,7 +95,9 @@ const profileRole = async (req,res) => {
  const selectRole = async (req, res) => {
   try {
       const { uid } = req.params;
+      console.log('hastaa')
       const role = req.body;
+      console.log('elrol',role)
       const newRole = await userService.updateUsersService(uid, role);
       console.log('elnuevorole', newRole);
       res.status(200).json({ message: 'User role updated successfully', newRole });
@@ -100,6 +107,39 @@ const profileRole = async (req,res) => {
   }
 };
 
+const restoreRequest = async (req,res) =>{
+  const {email} = req.body;
+  if(!email) return res.sendBadRequest('No se proporciono un email')
+  const user = await userService. getUserByService({email})
+  if(!user) return res.sendBadRequest('Email no valido')
+  //Se crea el restoreToken
+  const restoreToken = generateToken(RestoreTokenDTO.getFrom(user),3600);
+  const mailingService = new MailingServices();
+  const result = await mailingService.sendMail(user.email, DTemplates.RESTORE, {restoreToken})
+  res.sendSuccess('Correo enviado exitosamente')
+}
+
+const restorePassword = async (req,res) => {
+  const {password,token} = req.body;
+  try{
+    const tokenUser =jwt.verify(token, config.tokenKey.key)
+    console.log(tokenUser.email)
+    const user = await userService.getUserByService({email: tokenUser.email})
+    console.log('eluser', user)
+    //Verificar que la contrasenia no es la misma a la que ya tenia
+    const isSamePassword = isValidPassword(password, user.password)
+    console.log(isSamePassword)
+    if(isSamePassword) res.sendBadRequest('Su nueva contrasenia no puede ser igual a la anterior');
+    const newHashedPassword = await createHash(password)
+    console.log(user._id)
+    console.log(newHashedPassword)
+    const updateuSER=await userService.updateUsersService(user._id,{password:newHashedPassword})
+    console.log(updateuSER)
+     res.sendSuccess('Contrasenia modificada exitosamente')
+  }catch(error){
+    console.log(error);
+  }
+}
 
   export default{
     register,
@@ -110,4 +150,6 @@ const profileRole = async (req,res) => {
     current,
     profileRole,
     selectRole,
+    restoreRequest,
+    restorePassword
   }

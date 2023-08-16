@@ -43,6 +43,7 @@ export default class BaseRouter {
     res.sendInternalError = error => res.status(500).send({ status: "error", error });
     res.sendUnauthorized = error => res.status(401).send({ status: "error", error });
     res.sendNotFound = error => res.status(404).send({ status: "error", error })
+    res.sendForbidden = error => res.status(403). send({status:"error",error})
     next();
   };
 

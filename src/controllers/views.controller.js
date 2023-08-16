@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken'
 import { productService, cartService } from '../services/repositories.js';
 import productModel from '../dao/mongo/models/products.js';
 import TokenDTO from '../dto/user/TokenDTO.js';
@@ -139,6 +140,22 @@ const sms = async (req,res) => {
   res.send({status:'succes', payload:result})
 }
 
+const restoreRequest = (req,res) => {
+  res.render('restoreRequest')
+}
+
+const restorePassword = (req,res) => {
+  const {token} = req.query;
+  try{
+    const validToken = jwt.verify(token, config.tokenKey.key);
+    res.render('restorePassword')
+  }catch(error){
+   return res.render('invalidToken');
+
+  }
+  res.render('restorePassword')
+}
+
 export default {
     realTimeProducts,
     getProducts,
@@ -148,5 +165,7 @@ export default {
     login,
     profile,
     mail,
-    sms
+    sms,
+    restoreRequest,
+    restorePassword
 }

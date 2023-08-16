@@ -52,14 +52,14 @@ const logger = new LoggerService(config.logger.type);
 
 const startServer = async (persistenceType) => {
 
- const transport = nodemailer.createTransport({
+ /*const transport = nodemailer.createTransport({
   service:'gmail',
   port:587,
   auth:{
     user:config.app.email,
     pass:config.app.password
   }
-})
+})*///para borrar
 
   //Conecta a mi mongoose db
 /*try {

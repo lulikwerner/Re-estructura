@@ -21,9 +21,13 @@ export default class SessionsRouter extends BaseRouter{
 
     this.get('/current', ['PRIVATE'], passportCall('jwt', { strategyType: "locals" }), usersController.current);
     //me trae la informacion del cliente
-    this.get('/premium/:uid',['PRIVATE'],passportCall('jwt', { strategyType: "locals" }),usersController.profileRole);
+    this.get('/premium/:uid',['PRIVATE'], passportCall('jwt', { strategyType: "locals" }),usersController.profileRole);
     //Modifico la informacion del cliente de acuerdo a lo que seleccione
-    this.put('/premium/:uid',['PRIVATE'],passportCall('jwt', { strategyType: "locals" }),usersController.selectRole);
+    this.put('/premium/:uid',['PRIVATE'], passportCall('jwt', { strategyType: "locals" }),usersController.selectRole);
+
+    this.post('/restoreRequest',['NO_AUTH'], passportCall('jwt', { strategyType: "jwt" }), usersController.restoreRequest);
+
+    this.post('/restorePassword', ['PUBLIC'], passportCall('jwt', { strategyType: "jwt" }), usersController.restorePassword);
   }
 }
 

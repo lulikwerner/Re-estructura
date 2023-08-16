@@ -43,15 +43,16 @@ export const passportCall = (strategy, options = {}) => {
   };
 };
 
-export const generateToken = (user) => {
+export const generateToken = (user, expiresIn = '1d') => {
   try {
-    logger.logger.info(user);
-    return jwt.sign(JSON.parse(JSON.stringify(user)), config.tokenKey.key, { expiresIn: '1d' });
+    logger.logger.info(user, expiresIn);
+    return jwt.sign(JSON.parse(JSON.stringify(user)), config.tokenKey.key, { expiresIn });
   } catch (error) {
     console.error('Token generation error:', error);
     throw error;
   }
 };
+
 
 
 /*export const generateTicket = async (cid) => {

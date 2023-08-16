@@ -36,5 +36,8 @@ this.get('/login', ['NO_AUTH'],passportCall('login', { strategyType: 'jwt' }), v
 
 this.get('/profile', ['USER','ADMIN','PREMIUM'], passportCall('jwt', { strategyType: 'jwt' }), viewsController.profile);
 
+this.get('/restoreRequest', ['NO_AUTH'], passportCall('login', { strategyType: 'jwt' }), viewsController.restoreRequest);
+
+this.get('/restorePassword',['NO_AUTH'], passportCall('jwt', { strategyType: 'jwt' }), viewsController.restorePassword);
 
 }}
