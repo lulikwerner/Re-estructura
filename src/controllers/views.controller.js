@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { productService, cartService } from '../services/repositories.js';
+import { productService, cartService, userService } from '../services/repositories.js';
 import productModel from '../dao/mongo/models/products.js';
 import TokenDTO from '../dto/user/TokenDTO.js';
 import AdminDTO from '../dto/user/AdminDTO.js';
@@ -140,6 +140,22 @@ const sms = async (req,res) => {
   res.send({status:'succes', payload:result})
 }
 
+const profileRole = async (req,res) => {
+  const { uid } = req.params;
+  try {
+    const user= await userService.getUserByService({_id: uid})
+    logger.logger.debug(user);
+    // Si no encuentra el user
+    if (!user) {
+      return res.sendBadRequest('User not found');
+    }
+    // Si el user se encuentra renderizo la info
+    res.render('userRole', { userh: user});
+} catch (error) {
+    return res.sendInternalError(error);
+}
+}
+
 const restoreRequest = (req,res) => {
   res.render('restoreRequest')
 }
@@ -166,6 +182,7 @@ export default {
     profile,
     mail,
     sms,
+    profileRole,
     restoreRequest,
     restorePassword
 }

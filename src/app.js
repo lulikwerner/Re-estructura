@@ -59,7 +59,7 @@ const startServer = async (persistenceType) => {
     user:config.app.email,
     pass:config.app.password
   }
-})*///para borrar
+})*///para
 
   //Conecta a mi mongoose db
 /*try {

@@ -76,21 +76,7 @@ const register = (req,res) => {
     }
 };
 
-const profileRole = async (req,res) => {
-  const { uid } = req.params;
-  try {
-    const user= await userService.getUserByService({_id: uid})
-    logger.logger.debug(user);
-    // Si no encuentra el user
-    if (!user) {
-      return res.sendBadRequest('User not found');
-    }
-    // Si el user se encuentra renderizo la info
-    res.render('userRole', { userh: user});
-} catch (error) {
-    return res.sendInternalError(error);
-}
-}
+
 
  const selectRole = async (req, res) => {
   try {
@@ -148,7 +134,7 @@ const restorePassword = async (req,res) => {
     loginGithub,
     loginGitHubCallback,
     current,
-    profileRole,
+    //profileRole,
     selectRole,
     restoreRequest,
     restorePassword

@@ -9,7 +9,12 @@
 
 {{#if (equalsIgnoreCase user.role 'USER')}}
     <button>
-        <a href="/api/sessions/premium/{{user.id}}" class="btn btn-secondary m-3 change-role-btn">Cambiar role</a>
+        <a href="/premium/{{user.id}}" class="btn btn-secondary m-3 change-role-btn">Cambiar role</a>
+    </button>
+{{/if}}
+{{#if (equalsIgnoreCase user.role 'PREMIUM')}}
+    <button>
+        <a href="/premium/{{user.id}}" class="btn btn-secondary m-3 change-role-btn">Cambiar role</a>
     </button>
 {{/if}}
 
