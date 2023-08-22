@@ -4,28 +4,39 @@ let checkoutData;
 
 const checkoutButton = document.getElementById('checkoutButton');
 
-checkoutButton.addEventListener('click', async () => {
-  const cid = checkoutButton.dataset.cid;
+document.addEventListener('DOMContentLoaded', () => {
+  // Get the checkout button element
+  const checkoutButton = document.getElementById('checkoutButton');
 
-  // Hago el request a la back
-  const response = await fetch(`/api/carts/${cid}/purchase`, {
-    method: 'POST',
-    body: JSON.stringify(),
-    headers: {
-      'Content-Type': 'application/json',
-      // Add this line to indicate that you expect a JSON response
-      'Accept': 'application/json',
-    },
-  });
-  if (response.ok) {
-    checkoutData = await response.json(); // Guardo la informacion del fetch
+  // Check if the checkout button exists
+  if (checkoutButton) {
+    // Add the click event listener only if the button exists
+    checkoutButton.addEventListener('click', async () => {
+      const cid = checkoutButton.dataset.cid;
 
-    // Lo dirijo a la ventana de compra
-  window.location.href = `/api/carts/${cid}/purchase`;
-  } else {
-    console.error('Error:', response.status, response.statusText);
+      // Make the request to the backend
+      const response = await fetch(`/api/carts/${cid}/purchase`, {
+        method: 'POST',
+        body: JSON.stringify(),
+        headers: {
+          'Content-Type': 'application/json',
+          // Add this line to indicate that you expect a JSON response
+          'Accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        checkoutData = await response.json(); // Save the fetched data
+
+        // Redirect to the purchase window
+        window.location.href = `/api/carts/${cid}/purchase`;
+      } else {
+        console.error('Error:', response.status, response.statusText);
+      }
+    });
   }
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const deleteButtons = document.querySelectorAll('.deleteButtonStyle');
@@ -34,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     deleteButton.addEventListener('click', async () => {
       const cid = checkoutButton.dataset.cid;
       const pid = deleteButton.getAttribute('data-pid');
-      const deleteResponse = await fetch(`/api/carts/${cid}/products/${pid}`, {
+      const deleteResponse = await fetch(`/api/carts/${cid}/product/${pid}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

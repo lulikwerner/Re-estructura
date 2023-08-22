@@ -1,0 +1,322 @@
+paths:
+  /api/carts:
+    post:
+      summary: Crea un nuevo carrito
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/CreateCart'
+      responses:
+        "200":
+          description: Se creo el carrito
+        "403":
+          description: Acceso denegado
+        "404":
+          description: No se pudo crear el carrito, porque uno o mas de los productos no existe o esta incompleto
+        "500":
+          description: Error en la petición. Revisar la conexión
+  /api/carts/{cid}:
+    get:
+      summary: Devuelve el carrito con el ID proporcionado
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID para obtener el carrito
+          schema:
+            type: string  
+      responses:
+        "200":
+          description: Se encontró el carrito
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "404":
+          description: No se encontró el carrito
+        "403":
+          description: Acceso denegado
+        "500":
+          description: Error en la petición. Revisar la conexión
+    put:
+      summary: Actualizar el carrito con un arreglo de productos enviado en el body
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID para obtener el carrito
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/UpdateCart'
+      responses:
+        "200":
+          description: Se Updateo uno o mas productos
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        "400":
+          description: No se envio ningun campo para actualizar O no hay ningun producto en el cart con los id enviados
+        "403":
+          description: Acceso denegado
+        "500":
+          description: Error en la petición. Revisar la conexión
+    delete:
+      summary: Vacia el cart con el id proporcionado
+      tags:
+      - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id para obtener el cart y vaciarlo
+        schema:
+          type: string
+      responses:
+        "200":
+          description: El cart fue eliminado exitosamente
+        "400":
+          description: El cart con el id proporcionado no se encontro, o el se encuentra vacio
+        "403":
+          description: Acceso denegado
+        "500":
+          description: Error en la petición. Revisar la conexión
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Agrega el producto enviado en el param con la cantidad que se especifique en el body
+      tags:
+      - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID para obtener el ticket del carrito requerido
+          schema:
+            type: string  
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto que se quiere agregar
+          schema:
+            type: string  
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/AddProductToCart'
+      responses:
+        "200":
+          description: Se agrego el producto con la cantidad especificada
+        "400":
+          description: No se envio la cantidad del producto o la cantidad enviada no es un numero
+        "403":
+          description: Acceso denegado
+        "404":
+          description: El producto o el carrito no se encontro 
+        "500":
+          description: Error en la petición. Revisar la conexión
+    put:
+      summary: Actualiza SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID para obtener el ticket del carrito requerido
+          schema:
+            type: string  
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto que se quiere modificar la cantidad
+          schema:
+            type: string 
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/ModifyCart' 
+      responses:
+        "200":
+          description: Se actualizo el producto con la cantidad especificada
+        "400":
+          description: No se envio ninguna cantidad para modificar
+        "403":
+          description:
+        "404":
+          description: El id del producto enviado no se encuentra en el carrito
+        "500":
+          description: Error en la petición. Revisar la conexión
+    delete:
+      summary: Elimina el producto enviado en el param del carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID para obtener el ticket del carrito requerido
+          schema:
+            type: string  
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto que se quiere agregar
+          schema:
+            type: string  
+      responses:
+        "200":
+          description: Se Elimino el producto solicitado
+        "400":
+          description: El carrito esta vacio. O el producto no se encuentra en el cart
+        "403":
+          description: Acceso denegado
+        "404":
+          description: El producto no existe
+        "500":
+          description: Error en la petición. Revisar la conexión
+  /api/carts/{cid}/purchase:
+    get:
+      summary: Muestra el ticket de compra
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID para obtener el ticket del carrito requerido
+          schema:
+            type: string  
+      responses:
+        "200":
+          description: Se genero el ticket de compra
+        "403":
+          description: No estas autorizado a obtener la informacion del ticket. Probablemente se esta tratando de acceder a un carrito que no le corresponde al usuario
+        "404":
+          description: La compra no se pudo efectuar
+        "500":
+          description: Error en la petición. Revisar la conexión
+    post:
+      summary: Finaliza el proceso de compra
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID para obtener el ticket del carrito requerido
+          schema:
+            type: string  
+      responses:
+        "200":
+          description: Se realizo la compra
+        "403":
+          description: No estas autorizado a obtener la informacion del ticket. Probablemente se esta tratando de acceder a un carrito que no le corresponde al usuario
+        "404":
+          description: La compra no se pudo efectuar
+        "500":
+          description: Error en la petición. Revisar la conexión
+    
+components:
+  schemas:
+    Cart:
+      type: object
+      properties: 
+        title:
+          type: string
+          description: El titulo de los Productos que tiene el carrito
+        descriptionn:
+          type: string
+          description: La descripcion de los Productos que tiene el carrito
+        code:
+          type: string
+          description: Es el code del producto en el carrito
+        price:
+          type: number
+          description: Precio del Producto
+        status:
+          type: string
+          description: Confirma si el producto que esta en el carrito esta activado o no
+        thumbnail:
+          type: array
+          description: Imagen del producto que esta en el carrito
+        id: 
+          type: string
+          description: Se va a generar automaticamente en mongo y es el id del carrito
+        quantity:
+          type: string
+          description: La cantidad de ese producto que tiene
+  requestBodies:
+    UpdateCart:
+      type: object
+      properties:
+        pid:
+          type: string
+          description: El id del Producto a modificat
+        title:
+          type: string
+          description: El nuevo titulo  del Producto
+        description:
+          type: string
+          description: La nueva descripcion del Producto
+        stock: 
+          type: number
+          description: La nueva cantidad del Producto
+      required:
+      -pid
+    CreateCart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: El id del Producto a agregar
+        quantity: 
+          type: number
+          description: La cantidad del Producto a agregar
+      required:
+      -pid
+    ModifyCart:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: La cantidad del producto que se quiere modificar
+    AddProductToCart:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: La cantidad del Producto que se quiere agregar
+        title:
+          type: string
+          description: El nuevo titulo  del Producto
+        description:
+          type: string
+          description: La nueva descripcion del Producto
+        code:
+          type: string
+          description: El codigo del Producto que se quiere agregar
+        thumnbail:
+          type: array
+          description: Imagen del producto a agregar
+      required:
+      -quantity
+
+
+

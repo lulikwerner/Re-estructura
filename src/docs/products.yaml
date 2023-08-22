@@ -1,0 +1,191 @@
+paths :
+  /api/products:
+    post:
+      summary: Crea el producto
+      tags:
+      - Products
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/CreateProduct'
+      responses:
+        "200":
+          description: El producto fue creado exitosamente
+          content:
+            application/json:
+                items:
+                  $ref: '#components/schemas/Product'
+        "400":
+          description: Datos incompletos
+        "401":
+          description: No tiene permisos de acceso para modificar el producto
+        "500": 
+          description: Error en la peticion. revisar la conexion
+  /api/products/{pid}:
+    get:
+      summary: Devuelve el producto del id proporcionado
+      tags:
+      - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Id para obtener el producto
+        schema:
+          type: string
+      responses:
+        "200":
+          description: El producto se encontro
+          content:
+            application/json:
+                items:
+                  $ref: '#components/schemas/Product'
+        "404":
+          description: No se encontro el producto
+        "500": 
+          description: Error en la peticion. Revisar la conexion
+    put:
+      summary: Actualiza el producto del id proporcionado
+      tags:
+      - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Id para obtener el producto
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/UpdateProduct'
+      responses:
+        "200":
+          description: El producto fue actualizado exitosamente
+        "400":
+          description: Datos incompletos
+        "403":
+          description: No tiene permisos de acceso para modificar el producto
+        "404":
+          description: El producto no ha sido encontrado
+        "500":
+          description: Fallo al modificar el registro
+    delete:
+      summary: Elimina el producto del id proporcionado
+      tags:
+      - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: Id para obtener el producto y eliminarlo
+        schema:
+          type: string
+      responses:
+        "200":
+          description: El producto fue eliminado exitosamente
+        "400":
+          description: Se ingreso un id invalido o el producto no fue encontrado     
+  /api/products/mock:
+    get:
+      summary: Devuelve los productos creados con mock
+      tags:
+      - Products
+      responses:
+        "200":
+          description: El producto fue creado exitosamente
+          content:
+            application/json:
+                items:
+                  $ref: '#components/schemas/Product'
+        "500": 
+          description: Error en la peticion. revisar la conexion
+
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties: 
+        title:
+          type: string
+          description: Nombre del Producto
+        descriptionn:
+          type: string
+          description: Descripcion del Producto
+        price:
+          type: number
+          description: Precio del Producto
+        status:
+          type: string
+          description: Confirma si el producto esta activado o no
+        stock:
+          type: number
+          descrption: Cantidad de producto disponible
+        category:
+          type: string
+          description: Categoria del producto
+        thumbnail:
+          type: array
+          description: Imagen del producto
+        owner:
+          type: string
+          description: El email del creador del producto.Por default es 'adminCoder@coder.com'
+        id: string
+        description: Se va a generar automaticamente en mongo y es el id del producto
+        type: 
+  requestBodies:
+    UpdateProduct:
+      type: object
+      properties: 
+        title:
+          type: string
+          description: Nuevo nombre del Producto
+        description:
+          type: string
+          description: Nueva descripcion del Producto
+        price:
+          type: number
+          description: Nuevo precio del Producto
+        status:
+          type: string
+          description: Nuevo status del Producto
+        stock:
+          type: number
+          descrption: Nueva cantidad de Producto disponible
+        category:
+          type: string
+          description: Nueva categoria del Producto
+        thumbnail:
+          type: array
+          description: Nueva imagen del producto
+    CreateProduct:
+      type: object
+      properties: 
+        title:
+          type: string
+          description: Nuevo nombre del Producto
+        description:
+          type: string
+          description: Nueva descripcion del Producto
+        price:
+          type: number
+          description: Nuevo precio del Producto
+        status:
+          type: string
+          description: Nuevo status del Producto
+        stock:
+          type: number
+          descrption: Nueva cantidad de Producto disponible
+        category:
+          type: string
+          description: Nueva categoria del Producto
+        code:
+          type: string
+          description: El codigo del Producto
+

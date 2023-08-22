@@ -22,21 +22,22 @@ const addProductToCart = async (req, res) => {
     }
     // Chequeo si el pid o el stock tiene valores
     for (const products of cart) {
-      if (!products.pid || !products.stock) {
+      if (!products._id || !products.quantity) {
         return res.sendBadRequest('One or more fields are incomplete for a product');
       }
       //Chequeo si las cantidades sean un numero o mayor a 0
-      if (isNaN(products.stock) || products.stock < 0) {
+      if (isNaN(products.quantity) || products.quantity < 0) {
         return res.sendBadRequest('Enter a valid value for the  products');
       }
     }
+    console.log('losproductos a agregar', products)
     const createdCart = await cartService.createCartService(products);
     if (!createdCart) {
       return res.sendBadRequest('Failed to create the cart');
     }
 
     return res.sendSuccess('Cart created and products added successfully');
-  } catch (error) {
+  }catch (error) {
     if (error.message.includes('does not exist')) {
       return res.sendBadRequest('One or more products do not exist');
     }
@@ -117,9 +118,9 @@ const postProductInCart = async (req, res, done) => {
     }
     // Hago un update del cart , enviando el products y el cid
     const up = await cartService.updateQtyCartService(cid, checkIdProduct, quantity);
-    logger.logger.info('Product quantity added successfully', up);
+    logger.logger.info('The Product with the quantity  specified has been added successfully', up);
 
-    return res.sendSuccess('Product quantity added successfully');
+    return res.sendSuccess('The Product with the quantity  specified has been added successfully');
 
   } catch (error) {
     done(error)
@@ -141,8 +142,6 @@ const deleteProductInCart = async (req, res, done) => {
         })
       }
     }
-
-
     // Busco el Id del carrito en carts
     const cart = await cartService.getCartByIdService({ _id: cid });
     // Si no se encuentra el carrito en carts
@@ -154,15 +153,13 @@ const deleteProductInCart = async (req, res, done) => {
     }
     // Si no se envia ningun pid
     if (!pid) {
-
       return res.sendBadRequest('Please enter a valid product ID');
     }
     // Busco el pid en el carrito
     const productIndex = cart.products.findIndex((product) => {
-      const productId = product.product._id.toString(); // Access the nested _id value
+      const productId = product.product._id.toString(); 
       logger.logger.info('productindex', productId);
       return productId === pid;
-
     });
     // Si no encuentro el producto en el array
     if (productIndex === -1) {
@@ -174,8 +171,8 @@ const deleteProductInCart = async (req, res, done) => {
     logger.logger.debug(pid);
     const cartWithoutProducts = await cartService.deleteProductInCartService(cid, pid);
     //await cartiWithoutProducts.save();
-    // Send a success response with the updated cart
-    return res.status(200).send({ status: 'success', message: `Product with ID ${pid} removed from the cart`, cart });
+    // Envia un success response con el update del carrito
+    return res.status(200).send({ status: 'success', message: `Product with ID ${pid} removed from the cart`, cart }); //cambiar
   } catch (error) {
     done(error)
   }
@@ -221,19 +218,47 @@ const updateCart = async (req, res) => {
     const { cid } = req.params;
     const products = req.body;
     if (!Array.isArray(products)) {
-      return res.status(400).json({ message: 'Products must be an array' });
+      return res.status(400).json({ message: 'Products must be an array' });//cambiar el response
     }
-    // const productIds = products.map((product) => product.pid);
-    // Mando a llamar a updateProductsInCart 
-    const updatedCart = await cartService.updateProductsInCartService(cid, products);
-    await updatedCart.save();
-    logger.logger.info(JSON.stringify(updatedCart, null, '\t'));
-    res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
+
+    // Busco el cart
+    const cart = await cartService.getCartByIdService(cid);
+
+    let productFound = false;
+    let updatedProducts = [];
+
+    // Para cada producto que envio en el body para modificar
+    products.forEach(async (product) => {
+      const productId = product.pid;
+      // Busco el producto en el cart
+      const cartProduct = cart.products.find(
+        (cartProduct) =>
+          cartProduct.product &&
+          cartProduct.product._id &&
+          cartProduct.product._id.toString() === productId
+      );
+        //Si el producto no se encuentra
+      if (!cartProduct) {
+        logger.logger.error('Product not found in cart');
+      } else {
+        productFound = true;
+        logger.logger.info('Product found');
+        //Si se encuentra lo pusheo a un nuevo array
+        updatedProducts.push(product);
+      }
+    });
+//Si no se envia ningun producto a actualizar
+    if (!productFound) {
+      return res.sendBadRequest('There are no products matching those id/s ');
+    }
+    // Updateo el cart con los nuevos valores
+    const updatedCart = await cartService.updateProductsInCartService(cid, updatedProducts);
+    res.sendSuccessWithPayload({ message: 'Cart updated successfully', cart: updatedCart });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error', error: err });
+    res.sendInternalError('Internal server error', err);
   }
 };
+
 //Ver cuando no envio el cid
 const updateQtyProductInCart = async (req, res, done) => {
   const { cid, pid } = req.params;
@@ -247,7 +272,7 @@ const updateQtyProductInCart = async (req, res, done) => {
     }
     const cart = await cartService.getCartByIdService({ _id: cid });
     if (!cart) {
-      return res.status(404).send({ status: 'error', message: 'Cart not found' });
+      return res.sendNotFound({ status: 'error', message: 'Cart not found' });
     }
     if (cart.products.length === 0) {
       return res.sendBadRequest('The cart is empty');

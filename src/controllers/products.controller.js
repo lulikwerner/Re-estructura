@@ -101,7 +101,7 @@ const putProducts = async (req, res, done) => {
         const updateProduct = await productService.updateProductService(pid, productUpdate);
 
         //Si Modifico algo retorno que el producto fue modificado con exito
-        if (updateProduct) return res.status(201).send({ status: 'success', message: `The product with id ${pid} has been succesfully updated` });
+        if (updateProduct) return res.status(200).send({ status: 'success', message: `The product with id ${pid} has been succesfully updated` });
         //Sino devuelvot que no se pudo modifica
         return res.sendInternalError("Update product failed");
     }

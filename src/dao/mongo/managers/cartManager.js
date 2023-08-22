@@ -40,9 +40,12 @@ export default class CartManager {
   //Crea un cart
   createCart = async (products) => {
     try {
+    console.log(products)
       const cart = new cartModel();
       const productIds = products.map(product => product._id);
+      console.log('id',productIds)
       const productsToAdd = await productModel.find({ _id: { $in: productIds } });
+      console.log('elproductoagregar',productsToAdd)
       for (const product of productsToAdd) {
         const matchingProduct = products.find(p => p._id.toString() === product._id.toString());
         if (matchingProduct) {
@@ -56,7 +59,7 @@ export default class CartManager {
     }
   };
 
-  //Actualiza los productos del cart con el POST
+  //Actualiza los productos del cart con el POST y los agrega al CART
   updateQtyCart = async (cid, pid, quantity) => {
 
     try {
@@ -118,37 +121,37 @@ export default class CartManager {
       if (!cart) {
         return null;
       }
-
       products.forEach(async (product) => {
         const productId = product.pid;
-        logger.logger.info('Product ID:', productId);
+        logger.logger.info(productId);
         logger.logger.info('elcart', cart);
-
+        //Busco el product en el cart
         const cartProduct = cart.products.find((cartProduct) => cartProduct.product._id.toString() === productId);
         logger.logger.debug('estaono', cartProduct);
         if (cartProduct) {
+          //Si tiene cantidad le hago un update de la misma sino mantengo la que ya tengo
+          if (product.quantity !== undefined) {
+            cartProduct.quantity = product.quantity; 
+            logger.logger.info(`Updated quantity:`, product.quantity);
+          }
+          //Para el resto de los Fields
           const updateFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
-
           updateFields.forEach((field) => {
             if (product[field] !== undefined) {
               cartProduct.product[field] = product[field];
               logger.logger.info(`Updated ${field}:`, product[field]);
             }
           });
-
-          // Save the updated product
-          await cartProduct.product.save();
-          logger.logger.debug('enelmanager', cartProduct);
         }
       });
-
+  
       await cart.save();
-
       return cart;
     } catch (error) {
-      throw error;
+      console.log(error);
     }
   };
+  
 
   //Actualiza la cantidad en un cart
   updateCart = async (cid, pid, qty) => {

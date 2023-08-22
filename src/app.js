@@ -8,7 +8,8 @@ import { __dirname } from "./utils.js";
 import passport from "passport";
 import config from './config.js'
 import nodemailer from 'nodemailer'
-
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
 
 
 import ProductRouter from "./routes/productsM.router.js";
@@ -51,6 +52,20 @@ const logger = new LoggerService(config.logger.type);
 
 
 const startServer = async (persistenceType) => {
+
+  const swaggerOptions = { 
+    definition: {
+      openapi: '3.0.1',
+      info: {
+        title: 'Documentacion ecommerce',
+        description: 'Documentacion para API Ecommerce Joyas'
+      }
+    },
+    apis: [`${__dirname}/docs/**/*.yaml`] //Van las rutas de los archivos que guardo en docs o ${__dirname}/../docs/**/*.yaml
+  }
+
+  const specs = swaggerJSDoc(swaggerOptions);
+  app.use('/docs',swaggerUiExpress.serve,swaggerUiExpress.setup(specs))//Le digo que se inizialize en /docs que lo procese en el panel swagger y que lo haga a partir de las configuraciones de las  specs
 
  /*const transport = nodemailer.createTransport({
   service:'gmail',

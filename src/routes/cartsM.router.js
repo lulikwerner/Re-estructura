@@ -12,15 +12,15 @@ export default class CartsRouter extends BaseRouter {
 //Funciona ok pero tengo que limitar que solo el usuario pueda ver unicamente su carrito
 this.get('/:cid',['USER','user','PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.getCartById);
 
-//Crea carrito y agrega producto al carrito
+//Crea un carrito con el producto enviado
 //http://localhost:8080/api/carts/    
-this.post('/',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }), verifyCart,cartsController.addProductToCart);
+this.post('/',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),cartsController.addProductToCart);
 
 //Agrega un producto con su cantidad al carrito
 //http://localhost:8080/api/carts/:cid/product/:pid
 this.post('/:cid/product/:pid',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.postProductInCart);
   
-//Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba. USER O ADMIN?
+//Deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba. 
 //http://localhost:8080/api/carts/:cid
 this.put('/:cid', ['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart,cartsController.updateCart);
 
@@ -30,11 +30,11 @@ this.put('/:cid/product/:pid', ['USER', 'PREMIUM'],passportCall('jwt', { strateg
 
 //Elimina del carrito seleccionado el producto seleccionado
 //http://localhost:8080/api/carts/:cid/products/:pid
-this.delete('/:cid/products/:pid',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.deleteProductInCart);
+this.delete('/:cid/product/:pid',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.deleteProductInCart);
 
 //Elimina los productos del carrito. Lo vacia
 //http://localhost:8080/api/carts/:cid
-this.delete('/:cid',['USER'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.deleteCart);
+this.delete('/:cid',['USER', 'PREMIUM'],passportCall('jwt', { strategyType: 'jwt' }),verifyCart, cartsController.deleteCart);
 
 //Finaliza el proceso de compra
 //http://localhost:8080/api/carts/:cid/purchase

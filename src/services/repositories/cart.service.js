@@ -18,7 +18,7 @@ export default class CartRepository {
     }
 
     updateProductsInCartService = (cid, products) => {
-        return this.dao.updateProductsInCart(cid, products); //ver
+        return this.dao.updateProductsInCart(cid, products); 
     }
 
     updateQtyCartService = (cid, pid, qty) => {
@@ -38,7 +38,5 @@ export default class CartRepository {
     }
     findOneandUpdateServices = (cid,cart) =>{
     return this.dao.updateOneProductInCart(cid,cart)
-}
-
-
+  }
 }
