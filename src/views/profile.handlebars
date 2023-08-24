@@ -3,9 +3,12 @@
     <p>{{user.email}}</p>
     <p>Tu rol es de {{user.role}}</p>
 </div>
-<button>
+    {{#unless (equalsIgnoreCase user.role 'ADMIN')}}
+ <button>
     <a href="/products" class="btn btn-secondary m-3 keep-shopping-btn">Seguir Comprando</a>
 </button>
+{{/unless}}
+
 
 {{#if (equalsIgnoreCase user.role 'USER')}}
     <button>

@@ -12,6 +12,12 @@
      </button>
     {{/if}}
 
+    {{#if (equalsIgnoreCase user.role 'PREMIUM')}}
+    <button>
+        <a href="/realTimeProducts" class="btn btn-secondary m-3 change-role-btn">Agregar Productos</a>
+    </button>
+{{/if}}
+
 <h2>PRODUCTOS</h2>
 
 

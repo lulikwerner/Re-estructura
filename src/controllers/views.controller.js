@@ -22,8 +22,9 @@ const transport = nodemailer.createTransport({
 const twilioClient = twilio(config.twilio.sid, config.twilio.Token)
 
 const  realTimeProducts = async (req, res) => {
+  console.log(req.user)
     const products = await productService.getProductsService();
-    res.render('realTimeProducts', { producth: products });
+    res.render('realTimeProducts', { producth: products, user: req.user });
 };
 
 const getProducts = async (req, res) => {

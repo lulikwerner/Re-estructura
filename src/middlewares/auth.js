@@ -10,7 +10,7 @@ const user = cookieExtractor(req);
     switch (privacyType) {
       //En caso de ser Privado
       case 'PRIVATE':
-        // Si el usuario esta logead
+        // Si el usuario esta logeado
         if (user) {
           next();
         } else {

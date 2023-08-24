@@ -32,7 +32,7 @@ this.get('/cart/:cid',['USER','ADMIN','PREMIUM'],passportCall('jwt', { strategyT
 
 this.get('/register',['NO_AUTH'], passportCall('register',{strategyType:'jwt'}), viewsController.register);
 
-this.get('/login', ['NO_AUTH'],passportCall('login', { strategyType: 'jwt' }), viewsController.login);
+this.get('/login', /*['SEMIPRIVATE']*/['NO_AUTH'],passportCall('login', { strategyType: 'jwt' }), viewsController.login);
 
 this.get('/profile', ['USER','ADMIN','PREMIUM'], passportCall('jwt', { strategyType: 'jwt' }), viewsController.profile);
 

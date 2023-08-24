@@ -55,9 +55,23 @@ export default class BaseRouter {
       // Si el usuario quiere acceder a la ruta de logout, permitirlo sin realizar las verificaciones de políticas
       if (req.path === '/logout') return next();
       //Si tiene el policy PRIVATE
-      if (policies[0] === "PRIVATE" && user) return next();
+      if (policies[0] === 'PRIVATE' && user) return next();
       //Si tiene el policy PRIVATE y no tiene user    
-      if (policies[0] === "PRIVATE" && !user) return res.status(401).send({ status: "error", error: "Unauthorized.Please login" });
+      if (policies[0] === 'PRIVATE' && !user) return res.status(401).send({ status: "error", error: "Unauthorized.Please login" });
+      //Si mis politicas dice NO-AUTH y tengo un usuario y quiere entrar a la ruta login lo redirijo
+       if (policies[0] === 'NO_AUTH' && user && req.path === '/login') {
+        if (user.role === 'ADMIN') {
+          return res.redirect('/realTimeProducts')
+      }else if(user.role === 'PREMIUM' || user.role === 'USER'){
+        return res.redirect('/products')
+      }}
+      //Si mis politicas dice NO-AUTH y tengo un usuario y quiere entrar a la ruta register lo redirijo
+      if (policies[0] === 'NO_AUTH' && user && req.path === '/register') {
+        if (user.role === 'ADMIN') {
+        return res.redirect('/realTimeProducts')
+      }else if(user.role === 'PREMIUM' || user.role === 'USER'){
+        return res.redirect('/products')
+      }}
       //Si mis politicas dice NO-AUTH y tengo un usuario le tiro error de unauthorized
       if (policies[0] === 'NO_AUTH' && user) return res.status(401).send({ status: 'error', error: 'Unauthorized' });//No le puedo hacer con generateCustomResponses porque nuestras politicas se registan antes de las respuestas 
       //Si mis politicas dice NO-AUTH y no encuentro un usuario si lo deberia dejar pasar
