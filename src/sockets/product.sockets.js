@@ -12,9 +12,15 @@ export default function  productSocket(io) {
         socket.emit('products', data);
     
         socket.on('newProduct', async newProductData => {
-          logger.logger.info('Received new product:',newProductData);
+          //logger.logger.info('Received new product:',newProductData);
+          console.log('newProductData ', newProductData )
+          console.log('thumbnails', newProductData.data.thumbnails);
           const { data, userEmail } = newProductData;
-          const { title, description, code, price, status, stock, category, thumbnails } = data;
+          const { title, description, code, price, status, stock, category, thumbnail } = data;
+          //const thumbnailBuffer = Buffer.from(newProductData.data.thumbnails, 'base64');
+          const thumbnailBuffer = Buffer.from(newProductData.data.thumbnails).toString('base64');
+
+          console.log(thumbnailBuffer)
           const product = await productsM.createProduct({
             title,
             description,
@@ -23,7 +29,7 @@ export default function  productSocket(io) {
             status,
             stock,
             category,
-            thumbnails: data.thumbnails ? JSON.stringify(data.thumbnail) : 'No image',
+            thumbnail: thumbnailBuffer,
             owner:userEmail 
           });
           socket.emit('productsAdd', product);

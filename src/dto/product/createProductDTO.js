@@ -7,7 +7,7 @@ export default class createProductDTO {
         this.status = product.status || 'active',
         this.stock = product.stock || 0,
         this.category = product.category || 'Sin categoria asignada',
-        this.thumbnails = product.thumbnails|| 'No image'
+        this.thumbnail = product.thumbnail|| 'No image'
         this.owner = user
     }
 }

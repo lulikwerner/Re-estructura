@@ -8,9 +8,8 @@ const products = document.getElementById('products');
 
 //Muestro el producto agregado
 socket.on('productsAdd', (data) => {
-
-    console.log(data)
-
+console.log('agregando')
+    console.log('soyyy',data)
     products.innerHTML  += `<div class="card bg-secondary mb-3 mx-4 my-4" style="max-width: 20rem;">
                        
                         <div class="card-body">
@@ -39,8 +38,9 @@ socket.on('productsAdd', (data) => {
                                 status: ${data.status}
                                 </li>
                                 <li>
-                                    thumbnail: ${data.thumbnails}
-                                </li>
+                                thumbnail:
+                                <img src="data:image/png;base64, ${data.thumbnail}" alt="Thumbnail">
+                            </li>
                             </p>
                         </div>
                         <div class="d-flex justify-content-center mb-4">
@@ -171,6 +171,7 @@ form.addEventListener('submit', async (event)  => {
     console.log("Submit event listener function called");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+    console.log('soyladata',data)
     //Traigo la informacion del user desde current
     const response = await fetch('/api/sessions/current', {
         method: 'GET',

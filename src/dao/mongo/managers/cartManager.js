@@ -151,7 +151,7 @@ export default class CartManager {
       console.log(error);
     }
   };
-  
+
 
   //Actualiza la cantidad en un cart
   updateCart = async (cid, pid, qty) => {

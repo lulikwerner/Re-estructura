@@ -10,6 +10,8 @@ import mongoose from 'mongoose';
 
 const postProducts = async (req, res, done) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
+    const thumbnailBuffer = req.file ? req.file.buffer : null;
+ 
     try {
         //Si no me envian alguno de estos campos a excepcion de thumbnails(que no es obligatorio) arrojo error
         if (!title || !description || !code || !price || !status || !stock || !category) {
@@ -21,18 +23,25 @@ const postProducts = async (req, res, done) => {
                 status: 400
             })
         }
-        const product = new createProductDTO(req.body,req.user.email)
+        let thumbnail = 'No image';
+        if (thumbnailBuffer) {
+            // Convert buffer to base64-encoded string
+            thumbnail = thumbnailBuffer.toString('base64');
+          }
+          console.log('soy', thumbnailBuffer)
+       // const product = new createProductDTO(req.body,req.user.email)
+       const product = new createProductDTO({
+        title,
+        description,
+        code,
+        price,
+        status,
+        stock,
+        category,
+        thumbnails: [thumbnail], // Use an array to match your schema definition
+    }, req.user.email);
         //Antes del DTO
-        /*const product = {
-            title,
-            description,
-            code,
-            price,
-            status:"Active", 
-            stock,
-            category,
-            thumbnail: thumbnails !== undefined ? thumbnails : 'No image'
-        }*/
+   
         //Agrego el producto con la informacion enviada
         const addedProduct = await productService.createProductService(product);
         //Vuelvo a traer a mis productos
