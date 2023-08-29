@@ -44,7 +44,7 @@ this.get('/mock',['ADMIN'], passportCall('jwt', {strategyType: 'jwt'}),productsC
 
 //Crea el producto
 //http://localhost:8080/api/products
-this.post('/',['ADMIN','PREMIUM'], passportCall('jwt', {strategyType: 'jwt'}), productsController.postProducts);
+this.post('/',['PREMIUM'], passportCall('jwt', {strategyType: 'jwt'}), productsController.postProducts);
 
 //Busca el producto
 //http://localhost:8080/api/products/:pid

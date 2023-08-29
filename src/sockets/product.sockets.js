@@ -17,10 +17,8 @@ export default function  productSocket(io) {
           console.log('thumbnails', newProductData.data.thumbnails);
           const { data, userEmail } = newProductData;
           const { title, description, code, price, status, stock, category, thumbnail } = data;
-          //const thumbnailBuffer = Buffer.from(newProductData.data.thumbnails, 'base64');
           const thumbnailBuffer = Buffer.from(newProductData.data.thumbnails).toString('base64');
 
-          console.log(thumbnailBuffer)
           const product = await productsM.createProduct({
             title,
             description,
@@ -29,7 +27,7 @@ export default function  productSocket(io) {
             status,
             stock,
             category,
-            thumbnail: thumbnailBuffer,
+            thumbnail: thumbnailBuffer ||'No image',
             owner:userEmail 
           });
           socket.emit('productsAdd', product);

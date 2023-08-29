@@ -48,9 +48,16 @@
             <li>
                 stock: {{this.stock}}
             </li>
-            <li>
-                thumbnail: {{this.thumbnail}}
-            </li>
+         <li>
+             thumbnail:
+            {{#if this.thumbnail}}
+
+                <img src="data:image/png;base64, {{this.thumbnail}}" alt="Thumbnail">
+            {{else}}
+                No Image
+            {{/if}}
+        </li>
+
         </ul>
 
 <button id="addProductButton" type="submit" class="btn addButtonStyle m-3" data-id="{{this._id}}">Agregar al carrito</button>

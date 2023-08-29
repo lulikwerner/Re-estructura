@@ -6,7 +6,8 @@ import { productsErrorIncompleteValue } from '../constants/productErrors.js';
 import { productsInvalidValue } from '../constants/productErrors.js';
 import EErrors from '../constants/EErrors.js'
 import mongoose from 'mongoose';
-
+import fs from 'fs'
+import path from 'path'
 
 const postProducts = async (req, res, done) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
@@ -28,20 +29,8 @@ const postProducts = async (req, res, done) => {
             // Convert buffer to base64-encoded string
             thumbnail = thumbnailBuffer.toString('base64');
           }
-          console.log('soy', thumbnailBuffer)
-       // const product = new createProductDTO(req.body,req.user.email)
-       const product = new createProductDTO({
-        title,
-        description,
-        code,
-        price,
-        status,
-        stock,
-        category,
-        thumbnails: [thumbnail], // Use an array to match your schema definition
-    }, req.user.email);
-        //Antes del DTO
-   
+
+    const product = new createProductDTO(req.body,req.user.email)
         //Agrego el producto con la informacion enviada
         const addedProduct = await productService.createProductService(product);
         //Vuelvo a traer a mis productos
@@ -87,6 +76,13 @@ const getProductsById = async (req, res, done) => {
 const putProducts = async (req, res, done) => {
     const { pid } = req.params;
     const productUpdate = req.body;
+    //console.log(productUpdate)
+   /* console.log(productUpdate.thumbnail)
+    //const base64ImageData = productUpdate.thumbnail.toString('base64');
+    const thumbnailBuffer = Buffer.from(productUpdate.thumbnail).toString('base64');
+    productUpdate.thumbnail=thumbnailBuffer
+    console.log(thumbnailBuffer)*/
+
     try {
         //Si no envian parametro de pid
         if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
@@ -100,6 +96,7 @@ const putProducts = async (req, res, done) => {
                 })
             }
         }
+
         //Si no se envia nada en el body a modificar
         if (Object.keys(productUpdate).length === 0) {
             return res.sendBadRequest('No updates provided. Product not modified');
