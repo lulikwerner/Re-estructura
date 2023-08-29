@@ -128,9 +128,6 @@ describe("Testing Integrador ", () => {
         .set("Cookie", [`${cookie.name}=${cookie.value}`])
         .send(updatedProductData);
         expect(response.status).to.equal(200);
-        console.log(response)
-    //console.log(response.body.payload)
-   
       }else{
         console.log('No esta autorizado a realizar dicho cambio')
       }
@@ -140,7 +137,73 @@ describe("Testing Integrador ", () => {
       const pid = '64ed64be8d259ffe1ca12845';
       const response = await requester.get(`/api/products/${pid}`);
       const responseBody = response.body;
-      console.log(responseBody);
+      expect(response.status).to.equal(200);
+      expect(response._body).to.have.property("payload");
+      console.log('res',responseBody);
     });
   });
+
+  describe("Test de Carts", () => {
+    let cookie;
+    let responseBodyRole; // Declare responseBodyRole
+    let responseBodyCart;
+    before(async () => {
+      const mockUser = {
+        email: "aprt@correo.com",
+        password: "123",
+      };
+      const responseUser = await requester
+        .post("/api/sessions/login")
+        .send(mockUser);
+      const cookieResult = responseUser.headers["set-cookie"][0];
+
+      cookie = {
+        name: cookieResult.split("=")[0],
+        value: cookieResult.split("=")[1],
+      };
+
+      const response = await requester
+        .get("/api/sessions/current")
+        .set("Cookie", [`${cookie.name}=${cookie.value}`]);
+      const responseBody = response.body;
+      responseBodyRole = responseBody.message.role;
+      responseBodyCart = responseBody.message.cart;
+
+    });
+
+    it("Endpoint GET /api/carts/:cid debera traer el carrito del usuario logeado", async function () {
+      
+      const cid = '64cd4c3ee54a7b5a0d78eb52';     
+      const response = await requester
+      .get(`/api/carts/${cid}`)
+      .set("Cookie", [`${cookie.name}=${cookie.value}`])
+      expect(response.status).to.equal(200);
+      expect(response.text).to.have.includes(`Cart ID: ${cid}`);
+    });
+
+    it('Endpoint DELETE /:cid/product/:pid elimina el producto seleccionado del carrito ', async function () {
+      const cid = '64cd4c3ee54a7b5a0d78eb52'
+      const pid = '646ee1600456bb786b005fd7';
+      console.log(responseBodyRole)
+      if (responseBodyRole === "PREMIUM" || responseBodyRole === "USER") {
+      const response = await requester
+        .delete(`/api/carts/${cid}/product/${pid}`)
+        .set("Cookie", [`${cookie.name}=${cookie.value}`])
+        expect(response.status).to.equal(200);
+        expect(response._body.message).to.have.includes(`Product with ID ${pid} removed from the cart`);
+      }else{
+        console.log('No esta autorizado a realizar dicho cambio')
+      }
+    });
+
+    it('Endpoint POST /api/carts/:cid/purchase finaliza el proceso de compra ', async function () {
+      const cid = '64cd4c3ee54a7b5a0d78eb52';
+      const response = await requester.post(`/api/carts/${cid}/purchase`).set("Cookie", [`${cookie.name}=${cookie.value}`])
+      expect(response.status).to.equal(200);
+      expect(response._body._id).to.be.ok.but.not.include(null).to.not.be.undefined.to.not.be.NaN 
+      const responseBody = response.body;
+      console.log(responseBody)
+    });
+  });
+
 });
