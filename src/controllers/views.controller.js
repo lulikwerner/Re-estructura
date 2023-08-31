@@ -173,6 +173,7 @@ const restorePassword = (req,res) => {
   res.render('restorePassword')
 }
 
+
 export default {
     realTimeProducts,
     getProducts,
@@ -185,5 +186,6 @@ export default {
     sms,
     profileRole,
     restoreRequest,
-    restorePassword
+    restorePassword,
+ 
 }

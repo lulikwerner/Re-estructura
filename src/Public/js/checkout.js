@@ -1,7 +1,5 @@
-// Declare checkoutData in the outer scope
+
 let checkoutData;
-
-
 const checkoutButton = document.getElementById('checkoutButton');
 
 document.addEventListener('DOMContentLoaded', () => {

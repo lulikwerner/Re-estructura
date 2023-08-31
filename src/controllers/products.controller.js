@@ -1,5 +1,5 @@
 import createProductDTO from '../dto/product/createProductDTO.js';
-import { productService } from '../services/repositories.js'
+import { productService, userService } from '../services/repositories.js'
 import { generateProducts } from '../mocks/products.mock.js';
 import ErrorService from '../services/Error/ErrorService.js';
 import { productsErrorIncompleteValue } from '../constants/productErrors.js';
@@ -8,6 +8,18 @@ import EErrors from '../constants/EErrors.js'
 import mongoose from 'mongoose';
 import fs from 'fs'
 import path from 'path'
+import config from "../config.js";
+import nodemailer from 'nodemailer'
+
+const transport = nodemailer.createTransport({
+    service:'gmail',
+    port:587,
+    auth:{
+      user:config.app.email,
+      pass:config.app.password
+    }
+  })
+
 
 const postProducts = async (req, res, done) => {
     const { title, description, code, price, status, stock, category, thumbnails } = req.body;
@@ -132,6 +144,23 @@ const deleteProducts = async (req, res, done) => {
         //Busco el producto 
         const productoAEliminar =  await productService.getProductByService({ _id: pid })
         console.log(productoAEliminar)
+        const emailUser =productoAEliminar.owner
+        //Busco el user 
+        const userProductoAEliminar = await userService.getUserByService ({ email: emailUser })
+        const userOwnerRole =userProductoAEliminar.role
+        if(userOwnerRole==='PREMIUM'){
+            const result = await transport.sendMail({
+                from:'Luli Store <config.app.email>',
+                to:`${emailUser}`,
+                subject:'Su producto fue eliminado',
+                //Le doy el formato a mi email lo puedo guardar en un componentes
+                html:`
+                <div>
+                <h1>Se elimino uno de sus productos </h1>
+                <h2> Este mail es para confirmar que el producto ${pid} ha sido eliminado</h2>
+                </div>`
+            })
+        }
         const resultDelete = await productService.deleteProductService({ _id: pid })
         //Busco el id del producto a eliminar si no lo encuentro devuelvo error sino devuelvo producto eliminado
         if (!resultDelete) return res.sendBadRequest('Product not found')

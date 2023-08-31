@@ -41,5 +41,4 @@ this.get('/restoreRequest', ['NO_AUTH'], passportCall('login', { strategyType: '
 this.get('/restorePassword',['NO_AUTH'], passportCall('jwt', { strategyType: 'jwt' }), viewsController.restorePassword);
 //me trae la informacion del cliente
 this.get('/premium/:uid',['PRIVATE'], passportCall('jwt', { strategyType: "locals" }),viewsController.profileRole);
-
 }}

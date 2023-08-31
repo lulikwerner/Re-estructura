@@ -259,7 +259,6 @@ const updateCart = async (req, res) => {
   }
 };
 
-//Ver cuando no envio el cid
 const updateQtyProductInCart = async (req, res, done) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;

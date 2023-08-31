@@ -27,6 +27,14 @@ export default class SessionsRouter extends BaseRouter{
     this.post('/restoreRequest',['NO_AUTH'], passportCall('jwt', { strategyType: "jwt" }), usersController.restoreRequest);
 
     this.post('/restorePassword', ['PUBLIC'], passportCall('jwt', { strategyType: "jwt" }), usersController.restorePassword);
+
+    this.get('/', ['ADMIN'],passportCall('jwt', { strategyType: "jwt" }), usersController.getUsers);  
+    
+    this.get('/delete',['ADMIN'], passportCall('jwt', { strategyType: 'jwt' }), usersController.deleteUsers);
+
+    this.delete('/delete',['ADMIN'],passportCall('jwt', { strategyType: "jwt" }), usersController.deleteInactiveUsers);
+
+    this.put('/:uid',['ADMIN'], passportCall('jwt', { strategyType: "locals" }),usersController.modifyUser);
   }
 }
 

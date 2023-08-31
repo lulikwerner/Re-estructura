@@ -123,8 +123,8 @@ const btnDelete = () => {
                 const data = await user.json();
                 //Extraigo la informacion del email y el role del user
                 const currentUser = data.message; 
-                const emailUser = currentUser.email;
-                const roleUser = currentUser.role;
+                const userEmail = currentUser.email;
+                const userRole = currentUser.role;
                    //Traigo la informacion del product seleccionado
                    const product = await fetch(`/api/products/${btn.id}`, {
                     method: 'GET',
@@ -136,11 +136,12 @@ const btnDelete = () => {
                 //Extraigo el owner del producto
                 const currentProduct = dataProduct.payload;
                 const ownerEmail = currentProduct.payload.owner;
+               
                 if (!product.ok) {
                     throw new Error('Failed to fetch current product');
                 }
-                if(roleUser ==='PREMIUM' && emailUser===ownerEmail ||roleUser =='ADMIN' ){
-                socket.emit('deleteProduct', btn.id)
+                if(userRole ==='PREMIUM' && userEmail===ownerEmail ||userRole =='ADMIN' ){
+                    socket.emit('deleteProduct', btn.id, ownerEmail);
         Swal.fire({
             position: 'top-end',
             icon: 'success',
