@@ -480,3 +480,46 @@
 {"level":"error","message":"Error fetching product: Cannot read properties of null (reading 'owner')","stack":"TypeError: Cannot read properties of null (reading 'owner')\n    at ProductsRouter.modifyProducts (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/middlewares/modifyProducts.js:20:34)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
 {"level":"error","message":"Error fetching product: Cannot read properties of null (reading 'owner')","stack":"TypeError: Cannot read properties of null (reading 'owner')\n    at ProductsRouter.modifyProducts (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/middlewares/modifyProducts.js:20:34)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
 {"level":"error","message":"Error fetching product: Cannot read properties of null (reading 'owner')","stack":"TypeError: Cannot read properties of null (reading 'owner')\n    at ProductsRouter.modifyProducts (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/middlewares/modifyProducts.js:20:34)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"level":"error"}
+{"level":"error"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \"{ _id: undefined }\" (type Object) at path \"_id\" for model \"Users\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"{ _id: undefined }\"","value":{},"valueType":"Object"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}

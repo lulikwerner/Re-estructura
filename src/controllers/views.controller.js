@@ -173,6 +173,29 @@ const restorePassword = (req,res) => {
   res.render('restorePassword')
 }
 
+const showUser = async (req,res) => {
+  res.render('searchUser');
+}
+
+const searchUser = async (req, res) => {
+  console.log('ensearch')
+  const { uid } = req.params;
+  try {
+    const findUser = await userService.getUserByService({ _id: uid });
+    console.log('encontro')
+    console.log(findUser)
+    if (findUser) {
+      // Include user data and success status in the response and render the template
+      res.status(200).render('modify', { user: findUser, success: true });
+    } else {
+      res.status(404).json({ success: false, message: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Failed to fetch the user", error });
+  }
+};
+
 
 export default {
     realTimeProducts,
@@ -187,5 +210,6 @@ export default {
     profileRole,
     restoreRequest,
     restorePassword,
- 
+    showUser,
+    searchUser
 }

@@ -4,28 +4,25 @@ import { generateToken } from "../services/auth.js";
 import { userService } from "../services/repositories.js";
 import LoggerService from "../services/LoggerService.js";
 import config from "../config.js";
-import UserDTO from '../dto/user/userDTO.js'
+import UserDTO from "../dto/user/userDTO.js";
 import { UsageRecordInstance } from "twilio/lib/rest/wireless/v1/usageRecord.js";
 import { usersServices } from "../dao/mongo/managers/index.js";
 import RestoreTokenDTO from "../dto/user/RestoreTokenDTO.js";
 import DTemplates from "../constants/DTemplates.js";
 import MailingServices from "../services/mailService/mailService.js";
 import { createHash, isValidPassword } from "../services/auth.js";
-import nodemailer from 'nodemailer'
-
+import nodemailer from "nodemailer";
 
 const logger = new LoggerService(config.logger.type);
 
 const transport = nodemailer.createTransport({
-  service:'gmail',
-  port:587,
-  auth:{
-    user:config.app.email,
-    pass:config.app.password
-  }
-})
-
-
+  service: "gmail",
+  port: 587,
+  auth: {
+    user: config.app.email,
+    pass: config.app.password,
+  },
+});
 
 const register = (req, res) => {
   res.sendSuccess();
@@ -44,14 +41,16 @@ const login = (req, res) => {
   res.sendSuccessWithPayload({ user: req.user });
 };
 
-const logout = async (req, res, next) =>  {
+const logout = async (req, res, next) => {
   //Traigo el usuario logeado y busco la fecha del del momento
   const userRole = req.user.role.toString();
-  if(userRole != 'ADMIN'){
-  const userId = req.user._id.toString();
-  const currentDate = Date.now();
-//Actualizo el time connection por ser la ultima vez que tuvo actividad
-  const updateTimeConnection = await usersServices.updateUsers(userId, { last_connection: currentDate })
+  if (userRole != "ADMIN") {
+    const userId = req.user._id.toString();
+    const currentDate = Date.now();
+    //Actualizo el time connection por ser la ultima vez que tuvo actividad
+    const updateTimeConnection = await usersServices.updateUsers(userId, {
+      last_connection: currentDate,
+    });
   }
   // Limpio la cookie
   res.clearCookie("authToken");
@@ -154,75 +153,89 @@ const getUsers = async (req, res) => {
   try {
     const { uid } = req.params;
     const users = await userService.getUsersService();
-    const userDTOs = users.map(user => new UserDTO(user)); 
-    res.render('users', { userh: userDTOs }); 
-    
+    const userDTOs = users.map((user) => new UserDTO(user));
+    res.render("users", { userh: userDTOs });
   } catch (error) {
     console.error(error);
-    res.status(500).send('An internal server error occurred.'); // Set status code and send error response
+    res.status(500).send("An internal server error occurred."); // Set status code and send error response
   }
 };
 
-const deleteUsers = async (req,res) => {
+const deleteUsers = async (req, res) => {
   //172,800,000 milliseconds
   //30 minutes * 60 seconds/minute * 1000 milliseconds/second = 1,800,000 milliseconds
   try {
-    const dateToday = Date.now()
-    console.log('lafecha',dateToday)
+    const dateToday = Date.now();
+    console.log("lafecha", dateToday);
     const { uid } = req.params;
     const users = await userService.getUsersService();
     //console.log(users)
 
     const deleteUsers = [];
     users.forEach((user) => {
-      if (user.last_connection || user.role != 'ADMIN') {
+      if (user.last_connection || user.role != "ADMIN") {
         // Calculate the time difference between the current date and user's last_connection
         const connectionDate = dateToday - new Date(user.last_connection); // Convert to Date object
         if (connectionDate > 1800000) {
           deleteUsers.push(user);
-          logger.logger.info('Empujar al arreglo delete', deleteUsers);
+          logger.logger.info("Empujar al arreglo delete", deleteUsers);
         }
       }
     });
-    console.log(deleteUsers)
-    res.render('deleteUsers', { userh: deleteUsers }); 
-    
+    console.log(deleteUsers);
+    res.render("deleteUsers", { userh: deleteUsers });
   } catch (error) {
     console.error(error);
-    res.status(500).send('An internal server error occurred.'); // Set status code and send error response
+    res.status(500).send("An internal server error occurred."); // Set status code and send error response
   }
-}
+};
 
-const deleteInactiveUsers = async (req,res) => {
-  const uid = req.body.idUsuario
-  const email = req.body.emailUsuario
-  console.log(uid)
-  console.log(email)
- try {
-     /* // Delete the users in the usersToDelete array
-      await userService.deleteUsersService(uid);
-      //Aca tengo que enviar el email al usuario*/
-      const result = await transport.sendMail({
-        from:'Luli Store <config.app.email>',
-        to:`${email}`,
-        subject:'Su cuenta ha sido eliminada',
-        //Le doy el formato a mi email lo puedo guardar en un componentes
-        html:`
-        <div>
-        <h1>Eliminacion</h1>
-        <h2> Su cuenta ha sido eliminada ya que no tuvo actividad en los ultimos dos dias</h2>
-        </div>`
-        
-     
-      })
+const deleteInactiveUsers = async (req, res) => {
+  console.log("inactive");
+  const emailArray = req.body;
+  const deletedUsers = [];
+  console.log(emailArray);
+
+  try {
+    for (const obj of emailArray) {
+      const email = obj.email;
+      console.log(email);
+      deletedUsers.push(email);
+    }
+    console.log(deletedUsers);
     
-    res.status(200).json({ message: 'Users deleted successfully' });
+    const deletedUsersFilter = { email: { $in: deletedUsers } };
+    const deletedUsersCount = await userService.deleteManyService(deletedUsersFilter);
+
+    if (deletedUsersCount) {
+      for (const obj of emailArray) {
+        const email = obj.email;
+        try {
+          // Send email to the user
+          const result = await transport.sendMail({
+            from: "Luli Store <config.app.email>",
+            to: email,
+            subject: "Su cuenta ha sido eliminada",
+            html: `
+              <div>
+                <h1>Eliminacion</h1>
+                <h2>Su cuenta ha sido eliminada ya que no tuvo actividad en los ultimos dos dias</h2>
+              </div>
+            `,
+          });
+          console.log(`Email sent to: ${email}`);
+        } catch (emailError) {
+          console.error(`Error sending email to ${email}:`, emailError);
+        }
+      }
+    }
+    res.status(200).json({ message: "Users deleted successfully", deletedUsers });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'An internal server error occurred' });
+    res.status(500).json({ message: "An internal server error occurred" });
   }
-}
-
+};
 
 
 const modifyUser = async (req,res) => {
@@ -230,8 +243,9 @@ const modifyUser = async (req,res) => {
 }
 
 
+
 export default {
-  register,
+  register, 
   login,
   logout,
   loginGithub,
@@ -243,5 +257,6 @@ export default {
   getUsers,
   deleteUsers,
   modifyUser,
-  deleteInactiveUsers
+  deleteInactiveUsers,
+
 };

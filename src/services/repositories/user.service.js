@@ -22,4 +22,9 @@ export default class UserRepository  {
         return this.dao.deleteUsers(id);
     };
 
+    deleteManyService = (params) => {
+        return this.dao.deleteManyUsers(params);
+    };
+
+
 }

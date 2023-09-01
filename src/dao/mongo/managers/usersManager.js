@@ -9,10 +9,17 @@ export default class UsersManager {
     return userModel.find().lean();
   };
 
-  getUserBy = async (params) => {
-    //console.log('aca',params)
- return await userModel.findOne(params).lean();
+  getUserBy = async (userId) => {
+    try {
+      const user = await userModel.findOne( userId ).lean();
+      return user;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
   };
+  
+  
 
   createUsers = async (user) => {
     return await userModel.create(user);
@@ -26,7 +33,13 @@ export default class UsersManager {
     );
   };
 
-  deleteUsers = (id) => {
-    return userModel.findByIdAndDelete(id);
+  deleteUsers = (param) => {
+    return userModel.findByIdAndDelete(param);
   };
+
+  deleteManyUsers = (params) => {
+    console.log('recibido')
+    console.log(params)
+    return userModel.deleteMany(params);
+  }
 }

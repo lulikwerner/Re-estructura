@@ -1,0 +1,17 @@
+<h1>El usuario {{this.user._id}}</h1>
+<ul>
+    <li>Nombre: {{this.user.first_name}}</li>
+    <li>Apellido: {{this.user.last_name}}</li>
+    <li>Role: {{this.user.role}}</li>
+    <li>Email: {{this.user.email}}</li>
+         <form id="roleForm">
+            <label for="roles">Modificar role:</label>
+            <input id="role_u" class="premium" type="radio" name="role" value="USER" checked>
+            <label for="role_u">USER</label>
+            <input id="role_p" class="premium" type="radio" name="role" value="PREMIUM">
+            <label for="role_p">PREMIUM</label>
+            <button id="modifyRole" type="submit" class="btn modifyButtonStyle m-3" data-id="{{userh._id}}">Submit</button>
+        </form>
+    <button id="deleteUserButton" type="submit" class="btn deleteUserButtonStyle m-3">Eliminar Usuario</button>
+
+</ul>
