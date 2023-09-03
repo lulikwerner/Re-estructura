@@ -85,6 +85,7 @@ const initlizePassportStrategies = () => {
   passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     //PASSPORT SOLO DEBE DEVOLVER EL USUARIO FINAL. NO ES RESPONSABLE DE LA SESION
     logger.logger.debug('entro al initialized');
+    
     let user;
     try {
       if (email === config.adminPas.adminEmail && password === config.adminPas.adminPassword) {

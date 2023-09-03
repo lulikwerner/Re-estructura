@@ -18,8 +18,6 @@ export default class UsersManager {
       throw error;
     }
   };
-  
-  
 
   createUsers = async (user) => {
     return await userModel.create(user);
@@ -38,8 +36,6 @@ export default class UsersManager {
   };
 
   deleteManyUsers = (params) => {
-    console.log('recibido')
-    console.log(params)
     return userModel.deleteMany(params);
   }
 }

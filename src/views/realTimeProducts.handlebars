@@ -3,11 +3,21 @@
     <button>
         <a href="/profile" class="btn btn-secondary m-3 profile-btn">Perfil</a>
     </button>
+    
     {{#unless (equalsIgnoreCase user.role 'ADMIN')}}
     <button>
         <a href="/products" class="btn btn-secondary m-3 keep-shopping-btn">Seguir Comprando</a>
     </button>
     {{/unless}}
+
+    {{#if (equalsIgnoreCase user.role 'ADMIN')}}
+    <button>
+        <a href="/search" class="btn btn-secondary m-3 keep-shopping-btn">Editar Usuario</a>
+    </button>
+       <button>
+        <a href="/api/sessions/delete" class="btn btn-secondary m-3 keep-shopping-btn">Eliminar usuarios</a>
+    </button>
+    {{/if}}
 </div>
 <form class="row g-3 mx-4" name="form" id="form" method="POST" enctype="multipart/form-data">
     <div class="col-md-4">

@@ -22,7 +22,6 @@ const transport = nodemailer.createTransport({
 const twilioClient = twilio(config.twilio.sid, config.twilio.Token)
 
 const  realTimeProducts = async (req, res) => {
-  console.log(req.user)
     const products = await productService.getProductsService();
     res.render('realTimeProducts', { producth: products, user: req.user });
 };
@@ -178,12 +177,10 @@ const showUser = async (req,res) => {
 }
 
 const searchUser = async (req, res) => {
-  console.log('ensearch')
   const { uid } = req.params;
   try {
     const findUser = await userService.getUserByService({ _id: uid });
-    console.log('encontro')
-    console.log(findUser)
+    logger.logger.debug(findUser)
     if (findUser) {
       // Include user data and success status in the response and render the template
       res.status(200).render('modify', { user: findUser, success: true });

@@ -77,7 +77,7 @@ cartButton.addEventListener('click', async (event) => {
       'Content-Type': 'application/json'
     }
   });
-  console.log(response)
+
 //Si me trae info entonces extraigo el cid
   if (response.ok) {
     const data = await response.json();

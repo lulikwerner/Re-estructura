@@ -523,3 +523,12 @@
 {"level":"error"}
 {"level":"error"}
 {"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error","message":"Missing helper: \"equals\"","name":"Error"}
+{"level":"error","message":"Missing helper: \"eq\"","name":"Error"}

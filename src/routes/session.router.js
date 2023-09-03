@@ -34,8 +34,9 @@ export default class SessionsRouter extends BaseRouter{
 
     this.delete('/delete',['ADMIN'],passportCall('jwt', { strategyType: "jwt" }), usersController.deleteInactiveUsers);
 
+    this.post ('/search/:uid', ['ADMIN'],passportCall('jwt', { strategyType: "jwt" }), usersController.modifyUser );
 
-    this.post ('/search/:uid', ['ADMIN'],passportCall('jwt', { strategyType: "locals" }), usersController.modifyUser )
+    this.delete('/search/:uid/delete', ['ADMIN'],passportCall('jwt', { strategyType: "jwt" }), usersController.deleteuS)
   }
 }
 

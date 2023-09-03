@@ -30,6 +30,7 @@ const register = (req, res) => {
 
 const login = (req, res) => {
   console.log("login");
+  console.log('aa')
   // El login recibe SIEMPRE en req.user
   logger.logger.info("eluser", req.user);
   const token = generateToken(req.user);
@@ -186,12 +187,11 @@ const deleteUsers = async (req, res) => {
     res.render("deleteUsers", { userh: deleteUsers });
   } catch (error) {
     console.error(error);
-    res.status(500).send("An internal server error occurred."); // Set status code and send error response
+    res.status(500).send("An internal server error occurred."); 
   }
 };
 
 const deleteInactiveUsers = async (req, res) => {
-  console.log("inactive");
   const emailArray = req.body;
   const deletedUsers = [];
   console.log(emailArray);
@@ -232,14 +232,44 @@ const deleteInactiveUsers = async (req, res) => {
     res.status(200).json({ message: "Users deleted successfully", deletedUsers });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "An internal server error occurred" });
   }
 };
 
 
-const modifyUser = async (req,res) => {
-
+const deleteuS = async (req,res) => {
+  try {
+  const { uid } = req.params; 
+  //Busco el usuario
+  const userExist = await userService.getUserByService({_id:uid})
+  const userEmail = userExist.email
+  if(userExist){
+const deleteUser = await userService.deleteUsersService({_id:uid});
+ res.status(200).json({ message: "Users deleted successfully" });
+ if(deleteUser){
+  try {
+    // Enviar email al usuario
+    const result = await transport.sendMail({
+      from: "Luli Store <config.app.email>",
+      to: userEmail,
+      subject: "Su cuenta ha sido eliminada",
+      html: `
+        <div>
+          <h1>Eliminacion</h1>
+          <h2>Su cuenta ha sido eliminada. Si cree que esto fue un error contacte al administrador</h2>
+        </div>
+      `,
+    });
+    console.log(`Email sent to: ${userEmail}`);
+  } catch (emailError) {
+    console.error(`Error sending email to ${userEmail}:`, emailError);
+  }
+ }
+  }else{
+  res.sendBadRequest({message:"User does not exist"})}
+}catch(error){
+  res.status(500).json({ message: "An internal server error occurred" });
+}
 }
 
 
@@ -256,7 +286,7 @@ export default {
   restorePassword,
   getUsers,
   deleteUsers,
-  modifyUser,
   deleteInactiveUsers,
+  deleteuS
 
 };

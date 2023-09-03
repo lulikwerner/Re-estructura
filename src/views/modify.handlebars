@@ -1,4 +1,4 @@
-<h1>El usuario {{this.user._id}}</h1>
+<h1 data-id="{{this.user._id}}" class="UserId">El usuario {{this.user._id}}</h1>
 <ul>
     <li>Nombre: {{this.user.first_name}}</li>
     <li>Apellido: {{this.user.last_name}}</li>
@@ -10,8 +10,14 @@
             <label for="role_u">USER</label>
             <input id="role_p" class="premium" type="radio" name="role" value="PREMIUM">
             <label for="role_p">PREMIUM</label>
-            <button id="modifyRole" type="submit" class="btn modifyButtonStyle m-3" data-id="{{userh._id}}">Submit</button>
+            <button id="modifyRole" type="submit" class="btn modifyButtonStyle m-3" data-id="{{this.user._id}}">Submit</button>
         </form>
-    <button id="deleteUserButton" type="submit" class="btn deleteUserButtonStyle m-3">Eliminar Usuario</button>
+    <button id="deleteUserBtn" type="submit" class="btn deleteUserBtnStyle m-3">Eliminar Usuario</button>
+      <button>
+        <a href="/search" class="btn btn-secondary m-3 keep-shopping-btn">Volver al buscador</a>
+    </button>
 
 </ul>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/role.js" type="module"></script>
+<script src="/js/deleteUs.js" type="module"></script>

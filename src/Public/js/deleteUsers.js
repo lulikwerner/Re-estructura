@@ -30,9 +30,6 @@ window.addEventListener("DOMContentLoaded", () => {
         userElement.remove(); // Remove user container
       });
 
-      // Do something with the usersToDelete array
-      
-
       deleteUsers(usersToDelete);
     }
     
