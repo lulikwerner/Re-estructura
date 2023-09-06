@@ -4,7 +4,7 @@ import BaseRouter from '../routes/Router.js'
 import viewsController from '../controllers/views.controller.js';
 import config from '../config.js';
 import modifyProducts from '../middlewares/modifyProducts.js';
-import uploader from '../services/uploader.js'
+import uploader from '../middlewares/uploader.js'
 
 const router = Router();
 
@@ -41,6 +41,8 @@ this.get('/restoreRequest', ['NO_AUTH'], passportCall('login', { strategyType: '
 this.get('/restorePassword',['NO_AUTH'], passportCall('jwt', { strategyType: 'jwt' }), viewsController.restorePassword);
 //me trae la informacion del cliente
 this.get('/premium/:uid',['PRIVATE'], passportCall('jwt', { strategyType: "locals" }),viewsController.profileRole);
+
+this.get('/premium/:uid/documents', ['PRIVATE'], passportCall('jwt',{ strategyType: "jwt"}), viewsController.upload)
 
 this.get('/search',['ADMIN'], passportCall('jwt', { strategyType: "locals" }), viewsController.showUser);
 

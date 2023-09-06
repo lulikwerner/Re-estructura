@@ -9,10 +9,10 @@ export default class UsersManager {
     return userModel.find().lean();
   };
 
-  getUserBy = async (userId) => {
+  getUserBy = async (param) => {
     try {
-      const user = await userModel.findOne( userId ).lean();
-      return user;
+      const user = await userModel.findOne(param ).lean();
+     return user;
     } catch (error) {
       console.error('Error:', error);
       throw error;

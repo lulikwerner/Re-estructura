@@ -12,6 +12,7 @@ import DTemplates from "../constants/DTemplates.js";
 import MailingServices from "../services/mailService/mailService.js";
 import { createHash, isValidPassword } from "../services/auth.js";
 import nodemailer from "nodemailer";
+import Swal from 'sweetalert2';
 
 const logger = new LoggerService(config.logger.type);
 
@@ -95,14 +96,30 @@ const current = (req, res) => {
 const selectRole = async (req, res) => {
   try {
     const { uid } = req.params;
-    console.log("hastaa");
     const role = req.body;
-    console.log("elrol", role);
-    const newRole = await userService.updateUsersService(uid, role);
-    console.log("elnuevorole", newRole);
-    res
-      .status(200)
-      .json({ message: "User role updated successfully", newRole });
+    //Busco el usuario
+    const user = await userService.getUserByService({ _id: uid })
+    //Si no tiene documentos o el array de documentos es igual a 0
+    if (!user.documents || user.documents.length === 0) {
+      res.status(400).json({ message: "No se encontraron documentos para el usuario." });
+      return;
+    }
+    const iDriverDocument = user.documents.find(doc => doc.name === 'iDriver');
+    const addressProfFilesDocument = user.documents.find(doc => doc.name === 'addressProfFiles');
+    const bankProofFileDocument = user.documents.find(doc => doc.name === 'bankProofFile');
+    //Si estan todos los docs cargados 
+    if (iDriverDocument && addressProfFilesDocument && bankProofFileDocument) {
+      //Hago el update de perfil
+      const newRole = await userService.updateUsersService(uid, role);
+      res.status(200).json({ message: "User role updated successfully", newRole });
+    } else {
+      const errorMessage = "Faltan documentos para cargar. Por favor, suba todos los documentos requeridos.";
+      res.status(400).json({ message: errorMessage });
+      //Como faltan documento pasra subir lo redirijo a la pagina de uploads
+      setTimeout(() => {
+        res.redirect(`http://localhost:8080/premium/${uid}/documents`);
+      }, 3000);
+    }
   } catch (error) {
     logger.logger.error("Error updating user role:", error);
     res.status(500).json({ message: "Failed to update user role", error });
@@ -187,7 +204,7 @@ const deleteUsers = async (req, res) => {
     res.render("deleteUsers", { userh: deleteUsers });
   } catch (error) {
     console.error(error);
-    res.status(500).send("An internal server error occurred."); 
+    res.status(500).send("An internal server error occurred.");
   }
 };
 
@@ -203,7 +220,7 @@ const deleteInactiveUsers = async (req, res) => {
       deletedUsers.push(email);
     }
     console.log(deletedUsers);
-    
+
     const deletedUsersFilter = { email: { $in: deletedUsers } };
     const deletedUsersCount = await userService.deleteManyService(deletedUsersFilter);
 
@@ -237,45 +254,94 @@ const deleteInactiveUsers = async (req, res) => {
 };
 
 
-const deleteuS = async (req,res) => {
+const deleteuS = async (req, res) => {
   try {
-  const { uid } = req.params; 
-  //Busco el usuario
-  const userExist = await userService.getUserByService({_id:uid})
-  const userEmail = userExist.email
-  if(userExist){
-const deleteUser = await userService.deleteUsersService({_id:uid});
- res.status(200).json({ message: "Users deleted successfully" });
- if(deleteUser){
-  try {
-    // Enviar email al usuario
-    const result = await transport.sendMail({
-      from: "Luli Store <config.app.email>",
-      to: userEmail,
-      subject: "Su cuenta ha sido eliminada",
-      html: `
+    const { uid } = req.params;
+    //Busco el usuario
+    const userExist = await userService.getUserByService({ _id: uid })
+    const userEmail = userExist.email
+    if (userExist) {
+      const deleteUser = await userService.deleteUsersService({ _id: uid });
+      res.status(200).json({ message: "Users deleted successfully" });
+      if (deleteUser) {
+        try {
+          // Enviar email al usuario
+          const result = await transport.sendMail({
+            from: "Luli Store <config.app.email>",
+            to: userEmail,
+            subject: "Su cuenta ha sido eliminada",
+            html: `
         <div>
           <h1>Eliminacion</h1>
           <h2>Su cuenta ha sido eliminada. Si cree que esto fue un error contacte al administrador</h2>
         </div>
       `,
-    });
-    console.log(`Email sent to: ${userEmail}`);
-  } catch (emailError) {
-    console.error(`Error sending email to ${userEmail}:`, emailError);
+          });
+          console.log(`Email sent to: ${userEmail}`);
+        } catch (emailError) {
+          console.error(`Error sending email to ${userEmail}:`, emailError);
+        }
+      }
+    } else {
+      res.sendBadRequest({ message: "User does not exist" })
+    }
+  } catch (error) {
+    res.status(500).json({ message: "An internal server error occurred" });
   }
- }
-  }else{
-  res.sendBadRequest({message:"User does not exist"})}
-}catch(error){
-  res.status(500).json({ message: "An internal server error occurred" });
-}
 }
 
+const uploadDocuments = async (req, res) => {
+  const { uid } = req.params;
+  const updateFields = {};
+
+  function findFileByFieldname(files, fieldName) {
+    for (const file of files) {
+      if (file.fieldname === fieldName) {
+        return file;
+      }
+    }
+    return null;
+  }
+
+  const profileFiles = findFileByFieldname(req.files, 'profile');
+  const iDriverFiles = findFileByFieldname(req.files, 'iDriver');
+  const addressProofFiles = findFileByFieldname(req.files, 'addressProof');
+  const bankProofFiles = findFileByFieldname(req.files, 'bankProof');
+
+
+  try {
+    if (profileFiles) {
+      await userService.updateUsersService(uid, { thumbnail: profileFiles })
+    }
+
+
+    if (iDriverFiles) {
+      updateFields.documents = updateFields.documents || [];
+      updateFields.documents.push({ name: 'iDriver', reference: iDriverFiles.filename });
+    }
+
+    if (addressProofFiles) {
+      updateFields.documents = updateFields.documents || [];
+      updateFields.documents.push({ name: 'addressProfFiles', reference: addressProofFiles.filenam });
+    }
+
+    if (bankProofFiles) {
+      updateFields.documents = updateFields.documents || [];
+      updateFields.documents.push({ name: 'bankProofFile', reference: bankProofFiles.filename });
+    }
+
+    await userService.updateUsersService(uid, updateFields);
+    return res.sendSuccess('Los archivos fueron subidos exitosamente');
+
+  } catch (error) {
+    console.error('Error al cargar los archivos:', error);
+    return  res.sendInternalError('Uno o mas archivos no se pudieorn cargar.Intentelo nuevamente')
+  }
+}
 
 
 export default {
-  register, 
+  register,
   login,
   logout,
   loginGithub,
@@ -287,6 +353,6 @@ export default {
   getUsers,
   deleteUsers,
   deleteInactiveUsers,
-  deleteuS
-
+  deleteuS,
+  uploadDocuments
 };

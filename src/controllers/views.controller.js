@@ -96,6 +96,7 @@ const login = async(req,res)=>{
 const profile = async (req, res) => {
   try {
     const user = new TokenDTO(req.user) || new AdminDTO(req.user);
+    console.log(user)
     res.render('profile', { user: user });
   } catch (error) {
     return res.status(500).json({
@@ -167,7 +168,6 @@ const restorePassword = (req,res) => {
     res.render('restorePassword')
   }catch(error){
    return res.render('invalidToken');
-
   }
   res.render('restorePassword')
 }
@@ -193,6 +193,12 @@ const searchUser = async (req, res) => {
   }
 };
 
+const upload = async (req, res) => {
+  const { uid } = req.params;
+  res.render('uploadDocuments', { uid }); 
+};
+
+
 
 export default {
     realTimeProducts,
@@ -208,5 +214,6 @@ export default {
     restoreRequest,
     restorePassword,
     showUser,
-    searchUser
+    searchUser,
+    upload 
 }
