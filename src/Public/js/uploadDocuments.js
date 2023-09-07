@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('soy',userId)
         console.log('Form submitted');
         try {
-            const response = await fetch(`/api/sessions/premium/${userId}/documents`, {
+            const response = await fetch(`/api/users/premium/${userId}/documents`, {
                 method: 'POST',
                 body: formData,
             }); 

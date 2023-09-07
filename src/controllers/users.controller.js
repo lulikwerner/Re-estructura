@@ -99,6 +99,7 @@ const selectRole = async (req, res) => {
     const role = req.body;
     //Busco el usuario
     const user = await userService.getUserByService({ _id: uid })
+    console.log('eluser',user)
     //Si no tiene documentos o el array de documentos es igual a 0
     if (!user.documents || user.documents.length === 0) {
       res.status(400).json({ message: "No se encontraron documentos para el usuario." });
@@ -112,13 +113,12 @@ const selectRole = async (req, res) => {
       //Hago el update de perfil
       const newRole = await userService.updateUsersService(uid, role);
       res.status(200).json({ message: "User role updated successfully", newRole });
-    } else {
-      const errorMessage = "Faltan documentos para cargar. Por favor, suba todos los documentos requeridos.";
-      res.status(400).json({ message: errorMessage });
-      //Como faltan documento pasra subir lo redirijo a la pagina de uploads
-      setTimeout(() => {
-        res.redirect(`http://localhost:8080/premium/${uid}/documents`);
-      }, 3000);
+    } else {  
+      const response = {
+        message: "Faltan documentos para cargar. Por favor, suba todos los documentos requeridos.",
+        redirect: `http://localhost:8080/premium/${uid}/documents`
+      };
+      res.status(400).json(response);
     }
   } catch (error) {
     logger.logger.error("Error updating user role:", error);
@@ -171,7 +171,10 @@ const getUsers = async (req, res) => {
   try {
     const { uid } = req.params;
     const users = await userService.getUsersService();
-    const userDTOs = users.map((user) => new UserDTO(user));
+    const userDTOs = users.map((user) => {
+      console.log(user.thumbnail); // Add this line to log the thumbnail
+      return new UserDTO(user);
+    });
     res.render("users", { userh: userDTOs });
   } catch (error) {
     console.error(error);
@@ -293,7 +296,13 @@ const deleteuS = async (req, res) => {
 const uploadDocuments = async (req, res) => {
   const { uid } = req.params;
   const updateFields = {};
+  console.log('entro');
+  console.log({ uid });
+//Traigo al user
+const user = await userService.getUserByService({_id:uid})
 
+const userDocuments = user.documents.filter((document) => document !== null);
+console.log('los docs', userDocuments);
   function findFileByFieldname(files, fieldName) {
     for (const file of files) {
       if (file.fieldname === fieldName) {
@@ -303,41 +312,101 @@ const uploadDocuments = async (req, res) => {
     return null;
   }
 
-  const profileFiles = findFileByFieldname(req.files, 'profile');
-  const iDriverFiles = findFileByFieldname(req.files, 'iDriver');
-  const addressProofFiles = findFileByFieldname(req.files, 'addressProof');
-  const bankProofFiles = findFileByFieldname(req.files, 'bankProof');
-
-
   try {
+    const profileFiles = findFileByFieldname(req.files, 'profile');
+    const iDriverFiles = findFileByFieldname(req.files, 'iDriver');
+    const addressProofFiles = findFileByFieldname(req.files, 'addressProof');
+    const bankProofFiles = findFileByFieldname(req.files, 'bankProof');
+
     if (profileFiles) {
-      await userService.updateUsersService(uid, { thumbnail: profileFiles })
+      await userService.updateUsersService(uid, { thumbnail: profileFiles });
     }
 
+    const userDocuments = user.documents || [];
+      if (iDriverFiles) {
+        const existingIndex = userDocuments.findIndex(
+          (doc) => doc && doc.name === 'iDriverFiles'
+        );
+        if (existingIndex !== -1) {
+          // If an existing document with the same name exists, replace it
+          userDocuments[existingIndex] = {
+            name: 'iDriverFiles',
+            reference: iDriverFiles.filename,
+          };
+        } else {
+          console.log('entroaca')
+          // If not, push the new document to the array
+          userDocuments.push({
+            name: 'iDriverFiles',
+            reference: iDriverFiles.filename,
+          });
+        }
+      }
 
-    if (iDriverFiles) {
-      updateFields.documents = updateFields.documents || [];
-      updateFields.documents.push({ name: 'iDriver', reference: iDriverFiles.filename });
-    }
 
-    if (addressProofFiles) {
-      updateFields.documents = updateFields.documents || [];
-      updateFields.documents.push({ name: 'addressProfFiles', reference: addressProofFiles.filenam });
-    }
+      
+      // Check if a new addressProofFile was provided
+      if (addressProofFiles) {
+        // Find the index of the existing addressProfFiles document in the array
+        const existingIndex = userDocuments.findIndex(
+          (doc) => doc && doc.name === 'addressProfFiles'
+        );
+      
+        if (existingIndex !== -1) {
+          // If an existing document with the same name exists, replace it
+          userDocuments[existingIndex] = {
+            name: 'addressProfFiles',
+            reference: addressProofFiles.filename,
+          };
+        } else {
+          console.log('entroaca')
+          // If not, push the new document to the array
+          userDocuments.push({
+            name: 'addressProfFiles',
+            reference: addressProofFiles.filename,
+          });
+        }
+      }
+      
+      
+      
 
     if (bankProofFiles) {
-      updateFields.documents = updateFields.documents || [];
-      updateFields.documents.push({ name: 'bankProofFile', reference: bankProofFiles.filename });
+
+      const existingIndex = userDocuments.findIndex(
+        (doc) => doc && doc.name === 'bankProofFiles'
+      );
+      if (existingIndex !== -1) {
+        // If an existing document with the same name exists, replace it
+        userDocuments[existingIndex] = {
+          name: 'bankProofFiles',
+          reference: bankProofFiles.filename,
+        };
+      } else {
+        console.log('entroaca')
+        // If not, push the new document to the array
+        userDocuments.push({
+          name: 'bankProofFiles',
+          reference: bankProofFiles.filename,
+        });
+      }
     }
+// Now, userDocuments contains the updated array of documents
+console.log('Updated documents:', userDocuments);
+    await userService.updateUsersService(uid, {documents:userDocuments});
 
-    await userService.updateUsersService(uid, updateFields);
     return res.sendSuccess('Los archivos fueron subidos exitosamente');
-
   } catch (error) {
     console.error('Error al cargar los archivos:', error);
-    return  res.sendInternalError('Uno o mas archivos no se pudieorn cargar.Intentelo nuevamente')
+    return res.sendInternalError('Uno o mas archivos no se pudieron cargar. Intentelo nuevamente');
   }
-}
+};
+
+
+
+
+
+
 
 
 export default {

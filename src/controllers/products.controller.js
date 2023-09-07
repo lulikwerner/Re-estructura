@@ -179,11 +179,23 @@ const mock = (req, res) => {
     res.send({ status: 'success', payload: products })
 }
 
+const realTimeProductsFile = async (req, res) => {
+    const { pid } = req.params;
+    try{
+    await productService.updateProductService(pid,params)
+    return res.sendSuccess('Los archivos fueron subidos exitosamente');
+
+} catch (error) {
+    console.error('Error al cargar los archivos:', error);
+    return  res.sendInternalError('Uno o mas archivos no se pudieorn cargar.Intentelo nuevamente')
+  }
+}
 export default {
     getProductsById,
     postProducts,
     putProducts,
     deleteProducts,
-    mock
+    mock,
+    realTimeProductsFile
 }
 

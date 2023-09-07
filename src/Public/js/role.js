@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         //Le envio el nuevo role del usuario
         try {
-            const response = await fetch(`/api/sessions/premium/${userId}`, {
+            const response = await fetch(`/api/users/premium/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

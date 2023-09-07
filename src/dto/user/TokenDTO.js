@@ -7,7 +7,8 @@ export default class TokenDTO {
         this.email = user.email,
         this.role = user.role,
         this.cart = user.cart || [],
-        this.thumbnail = user.thumbnail || 'No Image'
+        this.thumbnail = user.thumbnail || 'No Image',
+        this.documents = user.documents
     }
 }
 

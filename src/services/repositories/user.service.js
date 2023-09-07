@@ -26,5 +26,4 @@ export default class UserRepository  {
         return this.dao.deleteManyUsers(params);
     };
 
-
 }

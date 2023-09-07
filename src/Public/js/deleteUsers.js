@@ -51,7 +51,7 @@ async function showConfirmationDialog() {
 }
 
 async function deleteUsers(params) {
-  const response = await fetch("/api/sessions/delete", {
+  const response = await fetch("/api/users/delete", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

@@ -57,6 +57,7 @@ console.log('agregando')
 
 //Muestro todos los productos
 socket.on('products', (data) => {
+    console.log(data)
     let productos = '';
    data.forEach(producto => {
         productos += `<div class="card bg-secondary mb-3 mx-4 my-4" style="max-width: 20rem;">
@@ -86,9 +87,13 @@ socket.on('products', (data) => {
                                 <li>
                                 status: ${producto.status}
                                 </li>
-                                <li>
-                                    thumbnail: ${producto.thumbnails}
-                                </li>
+                                <li>    
+                                thumbnail: ${
+                                    producto.thumbnail
+                                        ? `<img src="data:image/png;base64,${producto.thumbnail}" alt="Thumbnail">`
+                                        : 'No image available'
+                                }
+                            </li>
                             </p>
                         </div>
                         <div class="d-flex justify-content-center mb-4">
@@ -172,7 +177,6 @@ form.addEventListener('submit', async (event)  => {
     console.log("Submit event listener function called");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    console.log('soyladata',data)
     //Traigo la informacion del user desde current
     const response = await fetch('/api/sessions/current', {
         method: 'GET',
@@ -186,7 +190,7 @@ form.addEventListener('submit', async (event)  => {
     if (response.ok) {
         const userData = await response.json();
         console.log('User data:', userData);
-        userEmail = userData.message.email; // Si el fetch me trae un email entonces envio ese email encambio del de admin
+        userEmail = userData.message.email ||'adminCoder@coder.com'; // Si el fetch me trae un email entonces envio ese email encambio del de admin
     }
     socket.emit('newProduct', { data, userEmail });
   

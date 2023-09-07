@@ -4,6 +4,7 @@ import productsController from "../controllers/products.controller.js";
 import LoggerService from '../services/LoggerService.js';
 import config from '../config.js';
 import modifyProducts from '../middlewares/modifyProducts.js';
+import uploader from "../middlewares/uploader.js";
 
 const logger = new LoggerService(config.logger.type); 
 
@@ -57,6 +58,8 @@ this.put('/:pid',['ADMIN','PREMIUM'], passportCall('jwt', {strategyType: 'jwt'})
 //Borra el producto
 //http://localhost:8080/api/products/:pid
 this.delete('/:pid',['ADMIN', 'PREMIUM'], passportCall('jwt', {strategyType: 'jwt'}),modifyProducts,productsController.deleteProducts); 
+
+this.post('/realTimeProducts', ['ADMIN', 'PREMIUM'], passportCall('jwt', { strategyType: 'jwt' }), uploader.single('file'), productsController.realTimeProductsFile);
 
 }
 }

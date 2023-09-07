@@ -40,6 +40,7 @@ export default function  productSocket(io) {
             thumbnail: thumbnailBuffer ||'No image',
             owner:userEmail 
           });
+          console.log('elproductoagregar',product)
           socket.emit('productsAdd', product);
         });
         

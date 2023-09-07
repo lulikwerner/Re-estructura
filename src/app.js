@@ -16,6 +16,7 @@ import ProductRouter from "./routes/productsM.router.js";
 import CartRouter from "./routes/cartsM.router.js";
 import ViewsRouter from "./routes/views.router.js";
 import SessionRouter from "./routes/session.router.js"
+import UsersRouter from './routes/users.router.js'
 
 import registerChatHandler from "./listeners/chatHandler.js";
 import cartSocket from "./sockets/cart.sockets.js";
@@ -155,11 +156,13 @@ app.get('/loggerTest', (req, res) => {
   const sessionRouter = new SessionRouter();
   const cartRouter = new CartRouter();
   const productRouter = new ProductRouter();
+  const usersRouter = new UsersRouter();
   //Son las rutas que uso
   app.use('/', viewsRouter.getRouter());
   app.use("/api/products", productRouter.getRouter());
   app.use("/api/carts", cartRouter.getRouter());
   app.use("/api/sessions", sessionRouter.getRouter());
+  app.use("/api/users", usersRouter.getRouter());
   
 //El ErrorHandler va despues de mis rutas
   app.use(errorHandler)

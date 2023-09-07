@@ -19,7 +19,7 @@ this.get('/mail',['USER','PUBLIC'],passportCall('jwt', { strategyType: 'jwt' }),
 this.get('/sms', ['USER','PUBLIC'], passportCall('jwt', { strategyType: 'jwt' }), viewsController.sms)
 
 //Formulario para cargar productos nuevos y muestra los productos y los puedo eliminar 
-this.get('/realTimeProducts' ,['ADMIN','PREMIUM'], passportCall('jwt', { strategyType: 'jwt' }),uploader.single('file'),viewsController.realTimeProducts);
+this.get('/realTimeProducts' ,['ADMIN','PREMIUM'], passportCall('jwt', { strategyType: 'jwt' }),viewsController.realTimeProducts);
 
 //Muestra los productos, filtro y ordeno
 this.get('/products', ['USER','PUBLIC','PREMIUM','user'],passportCall('jwt', { strategyType: 'jwt' }), viewsController.getProducts);

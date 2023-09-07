@@ -11,9 +11,14 @@
 </button>
 {{/unless}}
 {{#if (equalsIgnoreCase user.role 'USER')}}
+
 <button>
     <a href="/premium/{{user.id}}" class="btn btn-secondary m-3 change-role-btn">Cambiar
         role</a>
+</button>
+<button>
+    <a href="/premium/{{user.id}}/documents"
+        class="btn btn-secondary m-3 add-product-btn">Cargar Documentos</a>
 </button>
 {{/if}}
 {{#if (equalsIgnoreCase user.role 'PREMIUM')}}
@@ -25,13 +30,16 @@
     <a href="/realTimeProducts" class="btn btn-secondary m-3 add-product-btn">Crear
         producto</a>
 </button>
-
-{{/if}}
-
 <button>
     <a href="/premium/{{user.id}}/documents"
         class="btn btn-secondary m-3 add-product-btn">Cargar Documentos</a>
 </button>
+{{/if}}
+{{#unless (equalsIgnoreCase user.role 'USER')}}
+    <button>
+        <a href="/realTimeProducts" class="btn btn-secondary m-3 keep-shopping-btn">Volver al Inicio</a>
+    </button>
+{{/unless}}
 
 <button id="logOutButton" type="submit" class="btn logOutButtonStyle m-3">Log
     Out</button>

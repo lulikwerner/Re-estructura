@@ -11,7 +11,7 @@ deleteUserBtn.addEventListener('click', async (event) => {
   
     if (confirmed) {
       try {
-        const response = await fetch(`/api/sessions/search/${userId}/delete`, {
+        const response = await fetch(`/api/users/search/${userId}/delete`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
