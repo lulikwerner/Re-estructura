@@ -99,15 +99,30 @@ const selectRole = async (req, res) => {
     const role = req.body;
     //Busco el usuario
     const user = await userService.getUserByService({ _id: uid })
-    console.log('eluser',user)
+  //Guardo los nombres de los campos que no se encuentren cargados en documents
+    const notUploadFiles = [];
+    const expectedDocumentNames = ['bankProofFiles', 'addressProfFiles', 'iDriverFiles'];
+    for (const expectedName of expectedDocumentNames) {
+      const foundDocument = user.documents.find((document) => document.name === expectedName);
+      if (!foundDocument) {
+        if (expectedName === 'bankProofFiles') {
+          notUploadFiles.push({ name: 'Comprobante de estado de cuenta'});
+        } else if (expectedName === 'addressProfFiles') {
+          notUploadFiles.push({ name: 'Comprobante de domicilio' });
+        } else if (expectedName === 'iDriverFiles') {
+          notUploadFiles.push({ name: 'DNI'});
+        }
+      }
+    }
+    console.log('not',notUploadFiles)
     //Si no tiene documentos o el array de documentos es igual a 0
     if (!user.documents || user.documents.length === 0) {
       res.status(400).json({ message: "No se encontraron documentos para el usuario." });
       return;
     }
-    const iDriverDocument = user.documents.find(doc => doc.name === 'iDriver');
+    const iDriverDocument = user.documents.find(doc => doc.name === 'iDriverFiles');
     const addressProfFilesDocument = user.documents.find(doc => doc.name === 'addressProfFiles');
-    const bankProofFileDocument = user.documents.find(doc => doc.name === 'bankProofFile');
+    const bankProofFileDocument = user.documents.find(doc => doc.name === 'bankProofFiles');
     //Si estan todos los docs cargados 
     if (iDriverDocument && addressProfFilesDocument && bankProofFileDocument) {
       //Hago el update de perfil
@@ -116,7 +131,7 @@ const selectRole = async (req, res) => {
     } else {  
       const response = {
         message: "Faltan documentos para cargar. Por favor, suba todos los documentos requeridos.",
-        redirect: `http://localhost:8080/premium/${uid}/documents`
+        notUploadFiles: notUploadFiles 
       };
       res.status(400).json(response);
     }
@@ -401,10 +416,6 @@ console.log('Updated documents:', userDocuments);
     return res.sendInternalError('Uno o mas archivos no se pudieron cargar. Intentelo nuevamente');
   }
 };
-
-
-
-
 
 
 
