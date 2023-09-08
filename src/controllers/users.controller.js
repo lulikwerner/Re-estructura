@@ -12,7 +12,7 @@ import DTemplates from "../constants/DTemplates.js";
 import MailingServices from "../services/mailService/mailService.js";
 import { createHash, isValidPassword } from "../services/auth.js";
 import nodemailer from "nodemailer";
-import Swal from 'sweetalert2';
+
 
 const logger = new LoggerService(config.logger.type);
 
@@ -99,7 +99,7 @@ const selectRole = async (req, res) => {
     const role = req.body;
     //Busco el usuario
     const user = await userService.getUserByService({ _id: uid })
-  //Guardo los nombres de los campos que no se encuentren cargados en documents
+  //Guardo los nombres de los campos que no se encuentren cargados en documents para enviarselos al
     const notUploadFiles = [];
     const expectedDocumentNames = ['bankProofFiles', 'addressProfFiles', 'iDriverFiles'];
     for (const expectedName of expectedDocumentNames) {
@@ -310,6 +310,7 @@ const deleteuS = async (req, res) => {
 
 const uploadDocuments = async (req, res) => {
   const { uid } = req.params;
+  console.log(req.body)
   const updateFields = {};
   console.log('entro');
   console.log({ uid });

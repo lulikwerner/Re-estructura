@@ -21,39 +21,45 @@ const transport = nodemailer.createTransport({
   })
 
 
-const postProducts = async (req, res, done) => {
-    const { title, description, code, price, status, stock, category, thumbnails } = req.body;
-    const thumbnailBuffer = req.file ? req.file.buffer : null;
- 
+  const postProducts = async (req, res, done) => {
+    let thumbnail = req.file || []; 
+
+    const { title, description, price, code, stock, status, category } = req.body;
+
     try {
-        //Si no me envian alguno de estos campos a excepcion de thumbnails(que no es obligatorio) arrojo error
-        if (!title || !description || !code || !price || !status || !stock || !category) {
+        // Check if any required fields are missing
+        if (!title || !description || !price || !code || !stock || !status || !category) {
             ErrorService.createError({
                 name: 'Product creation error',
                 cause: productsErrorIncompleteValue(req.body),
                 message: 'One or more fields are incomplete',
                 code: EErrors.INCOMPLETE_VALUES,
                 status: 400
-            })
+            });
         }
-        let thumbnail = 'No image';
-        if (thumbnailBuffer) {
-            // Convert buffer to base64-encoded string
-            thumbnail = thumbnailBuffer.toString('base64');
-          }
 
-    const product = new createProductDTO(req.body,req.user.email)
-        //Agrego el producto con la informacion enviada
+        const product = new createProductDTO({
+            title,
+            description,
+            price,
+            code,
+            stock,
+            status,
+            category,
+            thumbnail
+        }, req.body.userEmail);
+
+        // Add the product with the information sent
         const addedProduct = await productService.createProductService(product);
-        //Vuelvo a traer a mis productos
-        const resultProducts = await productService.getProductsService();
-        req.io.emit('resultProducts', resultProducts)
-        //Si queda undefined o null tira error de agregar
+        console.log(addedProduct);
+
+        // If it's undefined or null, return an error
         if (!addedProduct) return res.sendNotFound('Product not added');
-        //Devuelo el producto agregado
-        return res.send({ status: 'succes', payload: addedProduct })
+
+        // Return the added product
+        return res.send({ status: 'success', payload: addedProduct });
     } catch (error) {
-        done(error)
+        done(error);
     }
 };
 
@@ -88,12 +94,6 @@ const getProductsById = async (req, res, done) => {
 const putProducts = async (req, res, done) => {
     const { pid } = req.params;
     const productUpdate = req.body;
-    //console.log(productUpdate)
-   /* console.log(productUpdate.thumbnail)
-    //const base64ImageData = productUpdate.thumbnail.toString('base64');
-    const thumbnailBuffer = Buffer.from(productUpdate.thumbnail).toString('base64');
-    productUpdate.thumbnail=thumbnailBuffer
-    console.log(thumbnailBuffer)*/
 
     try {
         //Si no envian parametro de pid
@@ -179,23 +179,12 @@ const mock = (req, res) => {
     res.send({ status: 'success', payload: products })
 }
 
-const realTimeProductsFile = async (req, res) => {
-    const { pid } = req.params;
-    try{
-    await productService.updateProductService(pid,params)
-    return res.sendSuccess('Los archivos fueron subidos exitosamente');
 
-} catch (error) {
-    console.error('Error al cargar los archivos:', error);
-    return  res.sendInternalError('Uno o mas archivos no se pudieorn cargar.Intentelo nuevamente')
-  }
-}
 export default {
     getProductsById,
     postProducts,
     putProducts,
     deleteProducts,
     mock,
-    realTimeProductsFile
 }
 

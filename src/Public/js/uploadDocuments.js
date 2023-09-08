@@ -1,12 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
     const uploadForm = document.getElementById('uploadForm');
     const uploadFiles = document.getElementById('uploadFiles');
+
     uploadForm.addEventListener('submit', async (event) => {
         event.preventDefault();
+
         const userId = uploadFiles.getAttribute('data-id');
         const formData = new FormData(uploadForm); 
-        console.log('soy',userId)
-        console.log('Form submitted');
+
         try {
             const response = await fetch(`/api/users/premium/${userId}/documents`, {
                 method: 'POST',

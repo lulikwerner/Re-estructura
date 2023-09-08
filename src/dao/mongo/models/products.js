@@ -17,8 +17,12 @@ const schema = new mongoose.Schema(
     stock: Number,
     category: String,
     thumbnail: {
-      type: String, 
-      default: 'No image'//['No image'], 
+      type: [
+        {
+          name: String,
+          reference: String,
+        },
+      ],
     },
     owner:{
       type: String,
