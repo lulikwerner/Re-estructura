@@ -20,7 +20,7 @@ const modifyProducts = async (req, res, next) => {
     console.log('elmail',product.owner)
     if(decodedToken.email==='adminCoder@coder.com') return next();
     // Check if the decoded token email matches the product owner
-    if (decodedToken.email !== product.owner) return res.status(403).send({ status: 'error', error: 'Forbidden' });
+    if (decodedToken.email !== product.owner) return res.status(403).send({ status: 'error', error: 'You are not the owner of the product' });
     next();
   } catch (error) {
     logger.logger.error('Error fetching product:', error);

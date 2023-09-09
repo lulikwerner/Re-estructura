@@ -12,7 +12,8 @@ export default class UsersManager {
   getUserBy = async (param) => {
     try {
       const user = await userModel.findOne(param ).lean();
-     return user;
+
+    return user;
     } catch (error) {
       console.error('Error:', error);
       throw error;

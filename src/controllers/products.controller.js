@@ -11,6 +11,7 @@ import path from 'path'
 import config from "../config.js";
 import nodemailer from 'nodemailer'
 
+
 const transport = nodemailer.createTransport({
     service:'gmail',
     port:587,
@@ -22,8 +23,9 @@ const transport = nodemailer.createTransport({
 
 
   const postProducts = async (req, res, done) => {
-    let thumbnail = req.file || []; 
-
+    console.log('post')
+    let thumbnail = [req.file] || []; 
+console.log('lafoto',thumbnail)
     const { title, description, price, code, stock, status, category } = req.body;
 
     try {
@@ -38,6 +40,7 @@ const transport = nodemailer.createTransport({
             });
         }
 
+
         const product = new createProductDTO({
             title,
             description,
@@ -48,6 +51,8 @@ const transport = nodemailer.createTransport({
             category,
             thumbnail
         }, req.body.userEmail);
+
+
 
         // Add the product with the information sent
         const addedProduct = await productService.createProductService(product);
@@ -129,7 +134,9 @@ const putProducts = async (req, res, done) => {
 };
 
 const deleteProducts = async (req, res, done) => {
-    console.log(req.user.email)
+    console.log('entro al delete')
+    const emailUser = req.user.email;
+    console.log(emailUser )
     const { pid } = req.params
     try {
         if (!pid || !mongoose.Types.ObjectId.isValid(pid)) {
@@ -143,11 +150,14 @@ const deleteProducts = async (req, res, done) => {
         }
         //Busco el producto 
         const productoAEliminar =  await productService.getProductByService({ _id: pid })
-        console.log(productoAEliminar)
-        const emailUser =productoAEliminar.owner
-        //Busco el user 
+        console.log('prod a eliminar',productoAEliminar)
+        //const emailUser =productoAEliminar.owner
+        console.log('usermail',emailUser )
+        //Busco el user si no es admin
+        if(emailUser !== config.adminPas.adminEmail) {
         const userProductoAEliminar = await userService.getUserByService ({ email: emailUser })
         const userOwnerRole =userProductoAEliminar.role
+        console.log('elrol',userOwnerRole)
         if(userOwnerRole==='PREMIUM'){
             const result = await transport.sendMail({
                 from:'Luli Store <config.app.email>',
@@ -161,7 +171,9 @@ const deleteProducts = async (req, res, done) => {
                 </div>`
             })
         }
+    }
         const resultDelete = await productService.deleteProductService({ _id: pid })
+        console.log('borrado',resultDelete)
         //Busco el id del producto a eliminar si no lo encuentro devuelvo error sino devuelvo producto eliminado
         if (!resultDelete) return res.sendBadRequest('Product not found')
         return res.status(200).send({ status: 'success', message: { resultDelete } });

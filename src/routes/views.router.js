@@ -22,7 +22,7 @@ this.get('/sms', ['USER','PUBLIC'], passportCall('jwt', { strategyType: 'jwt' })
 this.get('/realTimeProducts' ,['ADMIN','PREMIUM'], passportCall('jwt', { strategyType: 'jwt' }),viewsController.realTimeProducts);
 
 //Muestra los productos, filtro y ordeno
-this.get('/products', ['USER','PUBLIC','PREMIUM','user'],passportCall('jwt', { strategyType: 'jwt' }), viewsController.getProducts);
+this.get('/products', ['USER','PUBLIC','PREMIUM','user','ADMIN'],passportCall('jwt', { strategyType: 'jwt' }), viewsController.getProducts);
 
 //Abre el chat
 this.get('/chat',['USER','PREMIUM'],viewsController.chat);

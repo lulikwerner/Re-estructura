@@ -99,6 +99,7 @@ const selectRole = async (req, res) => {
     const role = req.body;
     //Busco el usuario
     const user = await userService.getUserByService({ _id: uid })
+    console.log(user.role)
   //Guardo los nombres de los campos que no se encuentren cargados en documents para enviarselos al
     const notUploadFiles = [];
     const expectedDocumentNames = ['bankProofFiles', 'addressProfFiles', 'iDriverFiles'];
@@ -133,6 +134,7 @@ const selectRole = async (req, res) => {
         message: "Faltan documentos para cargar. Por favor, suba todos los documentos requeridos.",
         notUploadFiles: notUploadFiles 
       };
+
       res.status(400).json(response);
     }
   } catch (error) {

@@ -16,38 +16,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({role} )
+                body: JSON.stringify({ role })
             });
-
-            if (response.ok) {
+            
+            if (!response.ok) {
+                // Handle the case when the response status is not OK (e.g., 400)
+                const responseData = await response.json();
+                
+                if (responseData.notUploadFiles) {
+                    const missingFiles = responseData.notUploadFiles.map(file => file.name).join(', ');
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'No puedes modificar el rol',
+                        text: `Faltan cargar documentos a tu perfil: ${missingFiles}`,
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    
+                    setTimeout(() => {
+                        window.location.href = `http://localhost:8080/premium/${userId}/documents`;
+                    }, 3000);
+                } else {
+                    // Handle other error cases here
+                    console.error('Server error:', responseData);
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Error del servidor',
+                        text: `Error: ${responseData.message}`,
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    setTimeout(() => {
+                        window.location.href = `http://localhost:8080/premium/${userId}/documents`;
+                      }, 3000);
+                }
+            } else {
+                // Handle the case when the response is OK
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
-                    title: `Tienes un nuevo role asignado`,
+                    title: `Tienes un nuevo rol asignado`,
                     showConfirmButton: false,
                     timer: 1500
-                  })
-                  setTimeout(() => {
+                });
+                
+                setTimeout(() => {
                     window.location.reload();
-                  }, 1500);
+                }, 1500);
             }
-            else{
-                const responseData = await response.json(); 
-
-                if (responseData.notUploadFiles) {
-                    const missingFiles = responseData.notUploadFiles.map(file => file.name).join(', ');
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'error',
-                    title: 'No puedes modifcar el rol',
-                    text: `Faltan cargar documentos a tu perfil: ${missingFiles}`,
-                    showConfirmButton: false,
-                    timer: 3000
-                  });
-                  setTimeout(() => {
-                    window.location.href = `http://localhost:8080/premium/${userId}/documents`;
-                  }, 3000);
-                }}
+            
         } catch (error) {
             console.error('Error:', error);
         }

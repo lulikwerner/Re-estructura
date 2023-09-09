@@ -20,7 +20,7 @@ import UsersRouter from './routes/users.router.js'
 
 import registerChatHandler from "./listeners/chatHandler.js";
 import cartSocket from "./sockets/cart.sockets.js";
-import productSocket from "./sockets/product.sockets.js";
+
 import initlizePassportStrategies from './config/passport.config.js'
 import errorHandler from './middlewares/error.js'
 import attachLogger from "./middlewares/logger.js";
@@ -108,6 +108,11 @@ const startServer = async (persistenceType) => {
 });
 
 
+
+
+
+
+
   app.use(passport.initialize());
   initlizePassportStrategies();
 
@@ -173,7 +178,7 @@ app.get('/loggerTest', (req, res) => {
   });
 
   //Llama al ProductSocket y al cartSocket
-  productSocket(io);
+
   cartSocket(io);
 };
 //}

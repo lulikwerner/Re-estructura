@@ -18,7 +18,6 @@ const schema = new mongoose.Schema({
     default: "USER",
   },
   thumbnail: {
-    // Define thumbnail as an embedded object with subfields
     fieldname: String,
     originalname: String,
     encoding: String,
@@ -29,12 +28,12 @@ const schema = new mongoose.Schema({
     size: Number,
   },
   documents: {
-    type: [
+    type: 
       {
         name: String,
         reference: String,
       },
-    ],
+    
   },
   last_connection: {
     type: Date,

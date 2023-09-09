@@ -78,5 +78,53 @@
     <br>
     <button id="creatProductsFiles" type="submit" class="btn uploadButtonStyle m-3">Submit</button>
     </form>
+
+
+<h2>PRODUCTOS</h2>
+    {{#each producth }}
+   
+        <ul>
+            <li>
+                id: {{this.this._id}}
+            </li>
+               <li>
+            {{#if this.thumbnail}}
+             <img src="/img/products/{{this.thumbnail.[0].filename}}" alt="{{ this.thumbnail.[0].originalname }}" width="300">
+            {{else}}
+                No Image
+            {{/if}} 
+        </li>
+            <li>
+                title: {{this.title}}
+            </li>
+            <li>
+                description: {{this.description}}
+            </li>
+            <li>
+                price: ${{this.price}}
+            </li>
+            <li>
+                category: {{this.category}}
+            </li>
+            <li>
+                status: {{this.status}}
+            </li>
+            <li>
+                code: {{this.code}}
+            </li>
+            <li>
+                stock: {{this.stock}}
+            </li>
+         
+      
+
+
+ <button type="button" class="btn btn-danger" id="{{this.this._id}}">Delete</button>
+
+
+        </ul>
+
+   {{/each}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/realTimeProducts.js" type="module"></script>
+<script src="/js/logout.js" type="module"></script>

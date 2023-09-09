@@ -647,3 +647,64 @@
 {"level":"error"}
 {"level":"error"}
 {"level":"error"}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"code":2,"level":"error","name":"Product input error","status":400}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error","message":"Missing helper: \"user.role\"","name":"Error"}
+{"level":"error","message":"Missing helper: \"user.role\"","name":"Error"}
+{"level":"error","message":"Error updating user role: Cannot read properties of undefined (reading 'find')","stack":"TypeError: Cannot read properties of undefined (reading 'find')\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:107:44)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error updating user role: Cannot read properties of undefined (reading 'find')","stack":"TypeError: Cannot read properties of undefined (reading 'find')\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:107:44)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error updating user role: Cannot read properties of undefined (reading 'find')","stack":"TypeError: Cannot read properties of undefined (reading 'find')\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:107:44)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error updating user role: Cannot read properties of undefined (reading 'find')","stack":"TypeError: Cannot read properties of undefined (reading 'find')\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:107:44)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error updating user role: Cannot read properties of undefined (reading 'find')","stack":"TypeError: Cannot read properties of undefined (reading 'find')\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:107:44)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error updating user role: Cannot read properties of undefined (reading 'find')","stack":"TypeError: Cannot read properties of undefined (reading 'find')\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:107:44)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error updating user role: Cannot read properties of undefined (reading 'find')","stack":"TypeError: Cannot read properties of undefined (reading 'find')\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:107:44)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error updating user role: response is not defined","stack":"ReferenceError: response is not defined\n    at UsersRouter.selectRole (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/controllers/users.controller.js:139:28)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Missing helper: \"notEqual\"","name":"Error"}
+{"level":"error","message":"Missing helper: \"notEqual\"","name":"Error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error","message":"Missing helper: \"notEqual\"","name":"Error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"column":7,"endColumn":11,"endLineNumber":24,"level":"error","lineNumber":24,"message":"each doesn't match if - 24:7","name":"Error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error","message":"Error fetching product: Cannot read properties of null (reading 'owner')","stack":"TypeError: Cannot read properties of null (reading 'owner')\n    at ProductsRouter.modifyProducts (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/middlewares/modifyProducts.js:20:34)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error","message":"Error fetching product: Cannot read properties of null (reading 'owner')","stack":"TypeError: Cannot read properties of null (reading 'owner')\n    at ProductsRouter.modifyProducts (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/middlewares/modifyProducts.js:20:34)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"_message":"products validation failed","errors":{"thumbnail":{"kind":"string","message":"Cast to string failed for value \"[\n  {\n    fieldname: 'thumbnail',\n    originalname: 'camisas.png',\n    encoding: '7bit',\n    mimetype: 'image/png',\n    destination: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products',\n    filename: '1694291256153-camisas.png',\n    path: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291256153-camisas.png',\n    size: 252775\n  }\n]\" (type Array) at path \"thumbnail\"","name":"CastError","path":"thumbnail","reason":null,"stringValue":"\"[\n  {\n    fieldname: 'thumbnail',\n    originalname: 'camisas.png',\n    encoding: '7bit',\n    mimetype: 'image/png',\n    destination: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products',\n    filename: '1694291256153-camisas.png',\n    path: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291256153-camisas.png',\n    size: 252775\n  }\n]\"","value":[{"destination":"/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products","encoding":"7bit","fieldname":"thumbnail","filename":"1694291256153-camisas.png","mimetype":"image/png","originalname":"camisas.png","path":"/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291256153-camisas.png","size":252775}],"valueType":"Array"}},"level":"error","message":"products validation failed: thumbnail: Cast to string failed for value \"[\n  {\n    fieldname: 'thumbnail',\n    originalname: 'camisas.png',\n    encoding: '7bit',\n    mimetype: 'image/png',\n    destination: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products',\n    filename: '1694291256153-camisas.png',\n    path: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291256153-camisas.png',\n    size: 252775\n  }\n]\" (type Array) at path \"thumbnail\"","name":"ValidationError"}
+{"_message":"products validation failed","errors":{"thumbnail":{"kind":"Embedded","message":"Cast to Embedded failed for value \"[\n  {\n    fieldname: 'thumbnail',\n    originalname: 'camisas.png',\n    encoding: '7bit',\n    mimetype: 'image/png',\n    destination: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products',\n    filename: '1694291360426-camisas.png',\n    path: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291360426-camisas.png',\n    size: 252775\n  }\n]\" (type Array) at path \"thumbnail\" because of \"ObjectExpectedError\"","name":"CastError","path":"thumbnail","reason":{"path":"thumbnail"},"stringValue":"\"[\n  {\n    fieldname: 'thumbnail',\n    originalname: 'camisas.png',\n    encoding: '7bit',\n    mimetype: 'image/png',\n    destination: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products',\n    filename: '1694291360426-camisas.png',\n    path: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291360426-camisas.png',\n    size: 252775\n  }\n]\"","value":[{"destination":"/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products","encoding":"7bit","fieldname":"thumbnail","filename":"1694291360426-camisas.png","mimetype":"image/png","originalname":"camisas.png","path":"/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291360426-camisas.png","size":252775}],"valueType":"Array"}},"level":"error","message":"products validation failed: thumbnail: Cast to Embedded failed for value \"[\n  {\n    fieldname: 'thumbnail',\n    originalname: 'camisas.png',\n    encoding: '7bit',\n    mimetype: 'image/png',\n    destination: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products',\n    filename: '1694291360426-camisas.png',\n    path: '/Users/luli/Desktop/entrega 3/Re-estructura/src/public/img/products/1694291360426-camisas.png',\n    size: 252775\n  }\n]\" (type Array) at path \"thumbnail\" because of \"ObjectExpectedError\"","name":"ValidationError"}
+{"level":"error","message":"Error fetching product: Cannot read properties of null (reading 'owner')","stack":"TypeError: Cannot read properties of null (reading 'owner')\n    at ProductsRouter.modifyProducts (file:///Users/luli/Desktop/entrega%203/Re-estructura/src/middlewares/modifyProducts.js:20:34)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async file:///Users/luli/Desktop/entrega%203/Re-estructura/src/routes/Router.js:91:9"}

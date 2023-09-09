@@ -17,12 +17,9 @@ const schema = new mongoose.Schema(
     stock: Number,
     category: String,
     thumbnail: {
-      type: [
-        {
-          name: String,
-          reference: String,
-        },
-      ],
+      type: mongoose.Schema.Types.Mixed,
+      reference: String,
+
     },
     owner:{
       type: String,

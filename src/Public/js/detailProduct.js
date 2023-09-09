@@ -93,3 +93,7 @@ cartButton.addEventListener('click', async (event) => {
     console.error('Failed to fetch current session');
   }
 });
+
+
+
+

@@ -1,5 +1,6 @@
 
 {{#if user}}
+
     <div>
         <h1>Hola {{user.first_name}}</h1>
         <p>Tu rol es de {{user.role}}</p>
@@ -19,8 +20,6 @@
 {{/if}}
 
 <h2>PRODUCTOS</h2>
-
-
     {{#each producth }}
    
         <ul>
@@ -51,7 +50,7 @@
          <li>
              thumbnail:
             {{#if this.thumbnail}}
-
+     <img src="/img/products/{{this.thumbnail.[0].filename}}" alt="{{ this.thumbnail.[0].originalname }}" width="300">
                 <img src="data:image/png;base64, {{this.thumbnail}}" alt="Thumbnail">
             {{else}}
                 No Image
@@ -60,9 +59,9 @@
 
         </ul>
 
-<button id="addProductButton" type="submit" class="btn addButtonStyle m-3" data-id="{{this._id}}">Agregar al carrito</button>
+<button id="addProductButton" type="submit" class="btn addButtonStyle m-3" data-id="{{this.this._id}}">Agregar al carrito</button>
 
-
+ 
     {{/each}}
     {{#if hasPrevPage}}
     <a href="/products?page={{prevPage}}"><button>Anterior</button></a>

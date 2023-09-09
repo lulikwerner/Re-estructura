@@ -6,6 +6,7 @@ form.addEventListener('submit', async (event) => {
     const data = new FormData(form);
     const obj = {};
     data.forEach((value, key) => (obj[key] = value));
+
 console.log(obj)
     const response = await fetch("/api/sessions/login", {
         method: 'POST',
@@ -37,7 +38,7 @@ console.log(response)
             timer: 1500
         }).then(() => {
             if (role === 'USER' || role === 'user' || role === 'PREMIUM') {
-                window.location.replace('/products');
+             window.location.replace('/products');
             } else if (role === 'ADMIN') {
                 window.location.replace('/realTimeProducts');
             }
