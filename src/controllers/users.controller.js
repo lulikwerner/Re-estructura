@@ -95,7 +95,9 @@ const current = (req, res) => {
 
 const selectRole = async (req, res) => {
   try {
+    console.log('entro')
     const { uid } = req.params;
+    console.log({ uid })
     const role = req.body;
     //Busco el usuario
     const user = await userService.getUserByService({ _id: uid })
@@ -211,7 +213,8 @@ const deleteUsers = async (req, res) => {
 
     const deleteUsers = [];
     users.forEach((user) => {
-      if (user.last_connection || user.role != "ADMIN") {
+      console.log(user.email)
+      if (user.last_connection && user.role != "ADMIN" && user.email!=null ) {
         // Calculate the time difference between the current date and user's last_connection
         const connectionDate = dateToday - new Date(user.last_connection); // Convert to Date object
         if (connectionDate > 1800000) {
@@ -236,7 +239,10 @@ const deleteInactiveUsers = async (req, res) => {
   try {
     for (const obj of emailArray) {
       const email = obj.email;
-      console.log(email);
+      console.log('elid',obj)
+
+      console.log('elemail',email);
+   
       deletedUsers.push(email);
     }
     console.log(deletedUsers);

@@ -13,12 +13,12 @@ window.addEventListener("DOMContentLoaded", () => {
       const userElements = userContainer.querySelectorAll("ul");
 
       userElements.forEach((userElement) => {
-        const userId = userElement
+       /* const userId = userElement
           .querySelector("#uid")
           .innerText.trim()
           .split("id:")[1]
-          .trim();
-        console.log(userId);
+          .trim();*/
+
 
         const userEmail = userElement
           .querySelector("#uemail")
@@ -27,7 +27,7 @@ window.addEventListener("DOMContentLoaded", () => {
           .trim();
         console.log(userEmail);
         usersToDelete.push({ email: userEmail });
-        userElement.remove(); // Remove user container
+        userElement.remove(); 
       });
 
       deleteUsers(usersToDelete);

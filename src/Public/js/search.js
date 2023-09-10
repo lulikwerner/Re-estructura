@@ -56,7 +56,7 @@ async function showNotConfirmationDialog() {
             });
         }
 
-        async function showInvalidDialog() {
+async function showInvalidDialog() {
             return Swal.fire({
                     position: 'top-end',
                     icon: 'error',

@@ -2,7 +2,7 @@
     <h1>Hola {{user.first_name}} {{user.last_name}}</h1>
      <img src="/img/profiles/{{user.thumbnail.filename}}" alt="{{ user.thumbnail.originalname }}" width="300">
     <p>{{user.email}}</p>
-    <p>Tu rol es de {{user.role}}</p>
+    <p id=>Tu rol es de {{user.role}}</p>
 </div>
 {{#unless (equalsIgnoreCase user.role 'ADMIN')}}
 <button>
@@ -35,11 +35,16 @@
         class="btn btn-secondary m-3 add-product-btn">Cargar Documentos</a>
 </button>
 {{/if}}
-{{#unless (equalsIgnoreCase user.role 'USER')}}
+{{#unless (equalsIgnoreCase user.role 'ADMIN')}}
+    <button>
+        <a href="/products" class="btn btn-secondary m-3 keep-shopping-btn">Volver al Inicio</a>
+    </button>
+{{/unless}}
+{{#if (equalsIgnoreCase user.role 'ADMIN')}}
     <button>
         <a href="/realTimeProducts" class="btn btn-secondary m-3 keep-shopping-btn">Volver al Inicio</a>
     </button>
-{{/unless}}
+{{/if}}
 
 <button id="logOutButton" type="submit" class="btn logOutButtonStyle m-3">Log
     Out</button>

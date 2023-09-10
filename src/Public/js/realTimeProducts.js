@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }); 
           if(response.ok){
           showConfirmationDialog() 
-          //window.location.reload();
+          window.location.reload();
           console.log(response)
           }else{
             showNotConfirmationDialog()

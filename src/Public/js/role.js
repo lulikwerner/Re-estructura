@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     const roleForm = document.getElementById('roleForm');
     const modifyRole = document.getElementById('modifyRole');
+    const roleElement = document.getElementById("roleValue");
+    const roleText = roleElement.textContent;
+
+    // Log the extracted text
+    console.log('ELROLEACTUAL',roleText);
 
     roleForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         console.log('Form submitted');
+        console.log(roleElement)
         const formData = new FormData(roleForm);
         const role = formData.get('role');
+        console.log('rol seleccionado',role)
         const userId = modifyRole.getAttribute('data-id');
 
         //Le envio el nuevo role del usuario
         try {
+    
             const response = await fetch(`/api/users/premium/${userId}`, {
                 method: 'PUT',
                 headers: {
@@ -18,9 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ role })
             });
-            
+            console.log('soy',response)
             if (!response.ok) {
-                // Handle the case when the response status is not OK (e.g., 400)
+              
                 const responseData = await response.json();
                 
                 if (responseData.notUploadFiles) {
@@ -43,16 +51,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'error',
-                        title: 'Error del servidor',
+                        title: 'Error del servidorr',
                         text: `Error: ${responseData.message}`,
                         showConfirmButton: false,
                         timer: 3000
                     });
                     setTimeout(() => {
-                        window.location.href = `http://localhost:8080/premium/${userId}/documents`;
+                       window.location.href = `http://localhost:8080/premium/${userId}/documents`;
                       }, 3000);
                 }
-            } else {
+            } else if(roleText!==role){
                 // Handle the case when the response is OK
                 Swal.fire({
                     position: 'top-end',

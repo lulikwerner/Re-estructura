@@ -25,7 +25,7 @@ const transport = nodemailer.createTransport({
   const postProducts = async (req, res, done) => {
     console.log('post')
     let thumbnail = [req.file] || []; 
-console.log('lafoto',thumbnail)
+
     const { title, description, price, code, stock, status, category } = req.body;
 
     try {

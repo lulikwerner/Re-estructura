@@ -2,7 +2,8 @@
     <title>User Role</title>
 
     <h1>{{ userh.email }}</h1> 
-    <h2> Tu rol actual es: {{userh.role}}</h2>
+    <h2 id="actualRole">Tu rol es de <span id="roleValue">{{userh.role}}</span></h2>
+
     <div>
         <form id="roleForm">
             <label for="roles">Elige un tipo de rol:</label>
