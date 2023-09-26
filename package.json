@@ -6,7 +6,7 @@
   "type": "module",
   "engines":{"node":">=14 <17"},
   "scripts": {
-    "start": "node src/app.js --MONGO",
+    "start": "node src/index.js",
     "dev": "nodemon src/app.js",
     "test": "mocha test/superTest.test.js"
   },
