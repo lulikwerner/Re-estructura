@@ -1,31 +1,26 @@
-import passport from "passport";
-import local from "passport-local";
+import passport from 'passport';
+import local from 'passport-local';
+import GithubStrategy from 'passport-github2';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { usersServices, cartsM } from '../dao/mongo/managers/index.js';
-import ErrorService from '../services/Error/ErrorService.js';
-import { userErrorIncompleteValue } from '../constants/userErrors.js'
-import EErrors from '../constants/EErrors.js'
 
-
-import GithubStrategy from "passport-github2";
-import { createHash, isValidPassword } from "../services/auth.js";
-import { cookieExtractor } from "../utils.js";
+import { cookieExtractor } from '../utils.js';
 import config from '../config.js';
 import TokenDTO from '../dto/user/TokenDTO.js'
 import AdminDTO from '../dto/user/AdminDTO.js'
+import ErrorService from '../services/Error/ErrorService.js';
 import LoggerService from '../services/LoggerService.js';
+import { createHash, isValidPassword } from '../services/auth.js';
+import { userErrorIncompleteValue } from '../constants/userErrors.js'
+import EErrors from '../constants/EErrors.js'
+import { usersServices, cartsM } from '../dao/mongo/managers/index.js';
 
 
-
-const logger = new LoggerService(config.logger.type); 
-
-
+const logger = new LoggerService(config.logger.type);
 const LocalStrategy = local.Strategy; //Es la estrategia
 const JWTStrategy = Strategy;
 
 const initlizePassportStrategies = () => {
   logger.logger.debug('entro al initialized');
-
 
   //username y password son obligatorios extraerlos por eso te lo pide. Pongo el valor en true passReqToCallback: true para que me deje extraer la otra info del user y le digo que el email va a ser el username field usernameField:'email' 
   passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, email, password, done) => {
@@ -63,44 +58,42 @@ const initlizePassportStrategies = () => {
         }
         const result = await usersServices.createUsers(newUser);
         logger.logger.info('el resultado es', result);
-       
-        const products = []; // Using const to declare an empty array
-        // Initialize with an empty array or any initial products
-      
 
+        //Para crearle el cart al usuario
+        // Inizializo el array vacio de products
+        const products = [];
+        //Creo el cart
         const newCart = await cartsM.createCart(products);
+        //Conviero el cartId y el userId a string
         const cartId = newCart._id.toString();
         const userId = result._id.toString();
-        const user = await usersServices.updateUsers({ _id: userId }, { cart: cartId });
-
+        const user = await usersServices.updateUsers({ _id: userId }, { cart: cartId }); //VER DE SACARLE EL CONST USER
         //Si todo salio ok,
         done(null, result);
       }
     } catch (error) {
       done(error)
     }
-  }))
+  }));
 
-  //le digo que el email va a ser el field username
+  //Le digo que el email va a ser el field username
   passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     //PASSPORT SOLO DEBE DEVOLVER EL USUARIO FINAL. NO ES RESPONSABLE DE LA SESION
     logger.logger.debug('entro al initialized');
-    
     let user;
     try {
+      //si el usuario es admin
       if (email === config.adminPas.adminEmail && password === config.adminPas.adminPassword) {
         //Aca inicializo el admin
         user = new AdminDTO(user)
         logger.logger.info('user admin', user);
         return done(null, user);
-
       }
-      console.log(email)
-      user = await usersServices.getUserBy({ email }); //Solo busco por email
-      console.log(email)
+      //Busco el usuario usando el email
+      user = await usersServices.getUserBy({ email }); 
       if (!user) return done(null, false, { message: "Credenciales incorrectas" });
       // Si el usuario existe valido el pw
-      const isPasswordValid = await isValidPassword(password, user.password);
+      const isPasswordValid = await isValidPassword(password, user.password); //VER el await
       logger.logger.debug(password);
       logger.logger.debug(user.password);
       if (!isPasswordValid) return done(null, false, { message: "contrasenia incorrecta" });
@@ -117,7 +110,6 @@ const initlizePassportStrategies = () => {
           role: user.role
       };*/
       return done(null, user);
-
     } catch (error) {
       return done(error);
     }
@@ -129,13 +121,11 @@ const initlizePassportStrategies = () => {
     callbackURL: 'http://localhost:8080/api/sessions/githubcallback' //config.gitHub.callbackURL
   }, async (accessToken, refreshToken, profile, done) => {
     try {
- 
       logger.logger.debug('entrostrategygithub');
       logger.logger.info('el perfil', profile);
       //Tomo los datos que me sirven
       const { name, email } = profile._json;
       const user = await usersServices.getUserBy({ email });
-
       if (!user) {
         //Si el usuario no existe lo creo yo
         const newUser = {
@@ -144,7 +134,6 @@ const initlizePassportStrategies = () => {
           age: 23,
           password: '',
         }
-
         //Creo el nuevo usuario
         const result = await usersServices.createUsers(newUser);
         done(null, result)
@@ -155,7 +144,7 @@ const initlizePassportStrategies = () => {
       logger.logger.error('errorrrr')
       done(error);
     }
-  }))
+  }));
 
   passport.use('jwt', new JWTStrategy({
     jwtFromRequest: cookieExtractor,
@@ -170,7 +159,7 @@ const initlizePassportStrategies = () => {
         return done(null, user);
       }
       //Si el id es 0 entonces es admin y devuelvo el admin
-      if (payload.id === 0 || payload._id === 0) {
+      if (payload.id === 0) {
         logger.logger.debug('Admin user detected');
         const adminUser = new AdminDTO(user)
         return done(null, adminUser);
@@ -182,8 +171,7 @@ const initlizePassportStrategies = () => {
       console.error('Error fetching user:', error);
       return done(error);
     }
-  }
-  )
-  );
-};
+  })
+  )};
+  
 export default initlizePassportStrategies;

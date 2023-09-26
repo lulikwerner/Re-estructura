@@ -1,15 +1,17 @@
+import { v4 as uuidv4 } from 'uuid';
+import mongoose from 'mongoose';
+
+import config from '../config.js';
+import EErrors from '../constants/EErrors.js'
+import { cartsInvalidValue } from '../constants/cartErrors.js';
+import { productsInvalidValue } from '../constants/productErrors.js';
+import LoggerService from '../services/LoggerService.js';
+import ErrorService from '../services/Error/ErrorService.js';
 import { cartService, productService, checkoutService } from '../services/repositories.js'
 import ticketModel from '../dao/mongo/models/tickets.js';
 import checkoutTicketModel from '../dao/mongo/models/checkout.js';
-import { cartsInvalidValue } from '../constants/cartErrors.js';
-import ErrorService from '../services/Error/ErrorService.js';
-import { productsInvalidValue } from '../constants/productErrors.js';
-import config from '../config.js';
-import LoggerService from '../services/LoggerService.js';
 
-import EErrors from '../constants/EErrors.js'
-import { v4 as uuidv4 } from 'uuid';
-import mongoose from 'mongoose';
+
 
 const logger = new LoggerService(config.logger.type);
 

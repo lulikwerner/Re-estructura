@@ -3,7 +3,6 @@ export const userErrorIncompleteValue = (user) => {
     Required properties:
    *  first_name: A defined string was expected, but received ${user.first_name}.
    *  email: A defined string was expected, but received ${user.email}.
-   *  password: A defined string was expected, but received ${user.password}.
-    `
-}
+   *  password: A defined string was expected, but received ${user.password}.`
+};
 

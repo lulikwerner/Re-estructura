@@ -12,7 +12,6 @@ export const productsErrorIncompleteValue = (product) => {
   export const productsInvalidValue = (product) => {
     return "One or more required parameters are invalid values:\n" +
       `The ${product.pid} is not a valid product id\n`
-
   };
 
 

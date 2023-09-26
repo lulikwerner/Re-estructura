@@ -12,6 +12,5 @@ export default{
     },
     restore:{
         subject:'Restaurar contrasenia',
-      
     }
-}
+};

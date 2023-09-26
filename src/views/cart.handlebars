@@ -5,34 +5,38 @@
 
 <ul>
   {{#each carth.products}}
-    <li>
-      <h4>Id: {{this.product._id}}</h4>
-      <h2>Title: {{this.product.title}}</h2>
-      <p>Description: {{this.product.description}}</p>
-      <h4>Code: {{this.product.code}}</h4>
-      <p>Price: {{this.product.price}}</p>
-      <p>Status: {{this.product.status}}</p>
-      <p>Image: {{this.product.thumbnail}}</p>
-      <p >Cantidad: <p class="quantity">{{this.quantity}}</p></p>
-    </li>
-    <button id="addButton" type="add" class="btn addButtonStyle m-3" data-pid="{{this.product._id}}" data-cid="{{carth._id}}">+</button>
-    <button id="substractButton" type="add" class="btn substractButtonStyle m-3" data-pid="{{this.product._id}}" data-cid="{{carth._id}}">-</button>
-    <button id="dButton" type="add" class="btn deleteButtonStyle m-3" data-cid-delete="{{carth._id}}" data-pid="{{this.product._id}}">Delete</button>
-
+  <li>
+    <h4>Id: {{this.product._id}}</h4>
+    <h2>Title: {{this.product.title}}</h2>
+    <p>Description: {{this.product.description}}</p>
+    <h4>Code: {{this.product.code}}</h4>
+    <p>Price: {{this.product.price}}</p>
+    <p>Status: {{this.product.status}}</p>
+    <p>Image: {{this.product.thumbnail}}</p>
+    <p>Cantidad:
+    <p class="quantity">{{this.quantity}}</p>
+    </p>
+  </li>
+  <button id="addButton" type="add" class="btn addButtonStyle m-3" data-pid="{{this.product._id}}"
+    data-cid="{{carth._id}}">+</button>
+  <button id="substractButton" type="add" class="btn substractButtonStyle m-3" data-pid="{{this.product._id}}"
+    data-cid="{{carth._id}}">-</button>
+  <button id="dButton" type="add" class="btn deleteButtonStyle m-3" data-cid-delete="{{carth._id}}"
+    data-pid="{{this.product._id}}">Delete</button>
   {{/each}}
 </ul>
+
 {{#if carth.products.length}}
-<button id="checkoutButton" type="submit" class="btn checkoutButtonStyle m-3" data-cid="{{carth._id}}" >Checkout</button>
-
+<button id="checkoutButton" type="submit" class="btn checkoutButtonStyle m-3" data-cid="{{carth._id}}">Checkout</button>
 {{else}}
-  <h3>El carrito esta vacio</h3>
+<h3>El carrito esta vacio</h3>
 {{/if}}
+
 <button>
-  <a href="/products" class="btn btn-secondary m-3 seguir-comprando-btn">Seguir Comprando</a>
+  <a href="/products" class="btn btn-secondary m-3 seguir-comprando-btn">Seguir
+    Comprando</a>
 </button>
-<div class="row mt-4" id="cart"></div>
-
-
+<div class="row mt-4" id="cart"></div><!--?-->
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/checkout.js" type="module"></script>
