@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", () => {
   deleteUserButton.addEventListener("click", async (event) => {
     event.preventDefault();
 
-    const confirmed = await showConfirmationDialog();
+    const confirmed = showConfirmationDialog();
 
     if (confirmed) {
       const usersToDelete = [];

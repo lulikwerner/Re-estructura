@@ -239,9 +239,6 @@ const deleteInactiveUsers = async (req, res) => {
   try {
     for (const obj of emailArray) {
       const email = obj.email;
-      console.log('elid',obj)
-
-      console.log('elemail',email);
    
       deletedUsers.push(email);
     }
